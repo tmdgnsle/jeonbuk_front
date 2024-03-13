@@ -1,0 +1,94 @@
+import 'package:flutter/material.dart';
+import 'package:jeonbuk_front/components/custom_text_field.dart';
+import 'package:jeonbuk_front/const/color.dart';
+import 'package:get/get.dart';
+import 'package:jeonbuk_front/screen/signup_screen.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _idController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CustomTextField(
+                controller: _idController,
+                hintText: 'yourID',
+                obscure: false,
+                prefixIcons: const Icon(Icons.email_outlined)),
+            const SizedBox(height: 8),
+            CustomTextField(
+              controller: _passwordController,
+              hintText: 'yourPassword',
+              obscure: true,
+              prefixIcons: const Icon(Icons.lock_outline),
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text('로그인'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: BLUE_COLOR,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Divider(
+                    thickness: 1, // 선의 두께
+                    color: Colors.grey, // 선의 색상
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  // 양쪽 여백 조절
+                  child: Text("OR"),
+                ),
+                Expanded(
+                  child: Divider(
+                    thickness: 1, // 선의 두께
+                    color: Colors.grey, // 선의 색상
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            TextButton(
+              onPressed: () {
+                Get.to(() => SignUpScreen());
+              },
+              child: const Text(
+                '회원가입',
+                style: TextStyle(
+                  color: GREEN_COLOR,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
