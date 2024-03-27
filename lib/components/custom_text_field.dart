@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../const/color.dart';
-
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscure;
-  final Icon prefixIcons;
+  final Icon? prefixIcons;
+  final TextButton? textButton;
 
   const CustomTextField({
     required this.controller,
     required this.hintText,
     required this.obscure,
-    required this.prefixIcons,
+  this.prefixIcons,
+    this.textButton,
     super.key,
   });
 
@@ -25,6 +25,7 @@ class CustomTextField extends StatelessWidget {
         labelStyle: const TextStyle(color: Colors.grey),
         hintStyle: const TextStyle(color: Colors.grey),
         prefixIcon: prefixIcons,
+        suffixIcon: textButton,
       ),
       obscureText: obscure,
     );

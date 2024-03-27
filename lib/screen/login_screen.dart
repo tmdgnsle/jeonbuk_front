@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:get/get.dart';
-import 'package:jeonbuk_front/screen/signup_screen.dart';
+import 'package:jeonbuk_front/screen/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             TextButton(
               onPressed: () {
-                Get.to(() => SignUpScreen());
+                Get.to(() => RegisterScreen());
               },
               child: const Text(
                 '회원가입',
