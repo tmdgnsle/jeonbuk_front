@@ -124,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (check == true) {
                       final memberId = await OpenApis().register(
                           _idController.text, _passwordController.text);
-                      Get.to(() => RegisterInfoScreen());
+                      Get.to(() => RegisterInfoScreen(id: memberId,));
                     } else {
                       showDialog(
                         context: context,

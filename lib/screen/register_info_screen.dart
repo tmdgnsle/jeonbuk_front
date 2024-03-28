@@ -6,7 +6,10 @@ import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/screen/login_screen.dart';
 
 class RegisterInfoScreen extends StatefulWidget {
-  const RegisterInfoScreen({super.key});
+
+  final String? id;
+
+  const RegisterInfoScreen({super.key, this.id,});
 
   @override
   State<RegisterInfoScreen> createState() => _RegisterInfoScreenState();
@@ -61,7 +64,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async{
-                await OpenApis().registerInfo('abcd1234', _nameController.text, _phoneController.text, _emergencyController.text);
+                await OpenApis().registerInfo(widget.id!, _nameController.text, _phoneController.text, _emergencyController.text);
                 Get.to(() => LoginScreen());
               },
               child: Text('다음'),
