@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:get/get.dart';
+import 'package:jeonbuk_front/screen/main_screen.dart';
 import 'package:jeonbuk_front/screen/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,7 +41,32 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final loginSuccess = await OpenApis()
+                    .login(_idController.text, _passwordController.text);
+
+                if (loginSuccess == true) {
+                  Get.to(() => MainScreen());
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('알림'),
+                        content: Text('아이디 혹은 비밀번호가 틀렸습니다.'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('확인'),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // 알림창 닫기
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
               child: Text('로그인'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,

@@ -35,7 +35,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'ID',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
-            //TODO 사용자 비밀번호 최소 6자 이상
             CustomTextField(
               controller: _idController,
               hintText: 'yourID',
@@ -115,18 +114,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                if (_passwordController.text ==
-                    _passwordconfirmController.text) {
-                  if (check == true) {
-                    final memberId = await OpenApis()
-                        .register(_idController.text, _passwordController.text);
+                final String? idError = validateLength(_idController.text);
+                final String? passError =
+                    validateLength(_passwordController.text);
+
+                if (idError == null && passError == null) {
+                  if (_passwordController.text ==
+                      _passwordconfirmController.text) {
+                    if (check == true) {
+                      final memberId = await OpenApis().register(
+                          _idController.text, _passwordController.text);
+                      Get.to(() => RegisterInfoScreen());
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('알림'),
+                            content: Text('아이디 중복체크를 하지 않았습니다.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('확인'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // 알림창 닫기
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   } else {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text('알림'),
-                          content: Text('아이디 중복체크를 하지 않았습니다.'),
+                          content: Text('비밀번호가 일치하지 않습니다.'),
                           actions: <Widget>[
                             TextButton(
                               child: Text('확인'),
@@ -145,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('알림'),
-                        content: Text('비밀번호가 일치하지 않습니다.'),
+                        content: Text(idError ?? passError!),
                         actions: <Widget>[
                           TextButton(
                             child: Text('확인'),
@@ -158,7 +182,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   );
                 }
-                Get.to(() => RegisterInfoScreen());
               },
               child: Text('다음'),
               style: ElevatedButton.styleFrom(
@@ -214,4 +237,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+}
+
+String? validateLength(String? value) {
+  if (value == null || value.isEmpty || value.length < 6) {
+    return '아이디와 비밀번호는 최소 6글자 이상이어야합니다.';
+  }
+  return null; // The input is valid
 }
