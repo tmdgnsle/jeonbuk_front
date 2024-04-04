@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jeonbuk_front/screen/login_screen.dart';
-import 'package:jeonbuk_front/screen/main_screen.dart';
+import 'package:jeonbuk_front/screen/home_screen.dart';
 import 'package:jeonbuk_front/screen/register_info_screen.dart';
 import 'package:jeonbuk_front/screen/register_screen.dart';
 
@@ -18,11 +18,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routes: {
-        '/': (context) => LoginScreen(),
+        '/': (context) => HomeScreen(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/register/info': (context) => RegisterInfoScreen(),
-        '/main': (context) => MainScreen(),
+        '/main': (context) => HomeScreen(),
       },
     );
   }

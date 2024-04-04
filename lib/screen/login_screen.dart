@@ -3,7 +3,7 @@ import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:get/get.dart';
-import 'package:jeonbuk_front/screen/main_screen.dart';
+import 'package:jeonbuk_front/screen/home_screen.dart';
 import 'package:jeonbuk_front/screen/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     .login(_idController.text, _passwordController.text);
 
                 if (loginSuccess == true) {
-                  Get.to(() => MainScreen());
+                  Get.to(() => HomeScreen());
                 } else {
                   showDialog(
                     context: context,
