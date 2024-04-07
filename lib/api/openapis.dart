@@ -48,6 +48,7 @@ class OpenApis {
         'id': id,
         'password': password,
       });
+      print('response ${response.headers}');
       // 로그인 성공 시, true를 반환합니다.
       return response.statusCode == 200;
     } catch (e) {
@@ -64,18 +65,11 @@ class OpenApis {
       print(response.statusCode);
       if (response.statusCode == 200) {
         return true; // 중복되지 않음
-      } else if (response.statusCode == 409) {
+      } else if (response.statusCode == 400) {
         return false; // 아이디 중복
       } else {
         // 다른 HTTP 상태 코드를 처리합니다.
         throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
-      }
-    } on DioError catch (e) {
-      if (e.response?.statusCode == 409) {
-        return false; // 아이디 중복
-      } else {
-        // DioError로 인한 다른 오류를 처리합니다.
-        throw Exception('아이디 중복 확인에 실패하였습니다.\n ${e.toString()}');
       }
     } catch (e) {
       // 그 외 예외 상황을 처리합니다.

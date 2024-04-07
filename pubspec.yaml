@@ -39,6 +39,7 @@ dependencies:
   bloc: ^8.1.4
   flutter_bloc: ^8.1.5
   equatable: ^2.0.5
+  logger: ^2.2.0
 
 dev_dependencies:
   flutter_test:

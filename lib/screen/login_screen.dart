@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     .login(_idController.text, _passwordController.text);
 
                 if (loginSuccess == true) {
-                  Get.to(() => HomeScreen());
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
                 } else {
                   showDialog(
                     context: context,
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             TextButton(
               onPressed: () {
-                Get.to(() => RegisterScreen());
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
               },
               child: const Text(
                 '회원가입',

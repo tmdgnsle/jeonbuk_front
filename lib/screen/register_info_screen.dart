@@ -65,7 +65,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
             ElevatedButton(
               onPressed: () async{
                 await OpenApis().registerInfo(widget.id!, _nameController.text, _phoneController.text, _emergencyController.text);
-                Get.to(() => LoginScreen());
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
               },
               child: Text('다음'),
               style: ElevatedButton.styleFrom(

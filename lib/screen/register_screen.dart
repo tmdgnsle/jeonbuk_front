@@ -124,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (check == true) {
                       final memberId = await OpenApis().register(
                           _idController.text, _passwordController.text);
-                      Get.to(() => RegisterInfoScreen(id: memberId,));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterInfoScreen(id: memberId,)));
                     } else {
                       showDialog(
                         context: context,
@@ -223,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             TextButton(
               onPressed: () {
-                Get.to(() => LoginScreen());
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
               },
               child: const Text(
                 '로그인',
