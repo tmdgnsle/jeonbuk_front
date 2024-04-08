@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jeonbuk_front/model/discount_store_result.dart';
+import 'package:jeonbuk_front/model/discount_store.dart';
 
 class DiscountStoreList extends StatelessWidget {
   final DiscountStore discountStore;

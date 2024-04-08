@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:jeonbuk_front/cubit/discount_store_cubit.dart';
+import 'package:jeonbuk_front/components/app_navigation_bar.dart';
+import 'package:jeonbuk_front/const/color.dart';
+import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
+import 'package:jeonbuk_front/model/discount_store.dart';
 
 class DiscountStoreMapScreen extends StatefulWidget {
   @override
@@ -10,16 +13,50 @@ class DiscountStoreMapScreen extends StatefulWidget {
 }
 
 class _MyAppState extends State<DiscountStoreMapScreen> {
-  late NaverMapController mapController;
+  NaverMapController? mapController;
 
   NLatLng? myLocation;
 
-  void _onMapCreated(NaverMapController controller) async{
-    mapController = controller;
-    await MarkUp(myLocation!);
+  void firstLoadMapData() async {
+    try {
+      Position position = await determinePosition();
+      setState(() {
+        myLocation = NLatLng(position.latitude, position.longitude);
+      });
+      // double? zoomlevel = await _CurrentZoomLevel();
+      // print('zoomlevel: $zoomlevel');
+      // final width = MediaQuery.of(context).size.width / 2;
+      // final meterPerDp = mapController.getMeterPerDpAtLatitude(
+      //     latitude: position.latitude.toDouble(), zoom: zoomlevel);
+      final radius = 50.0;
+      // width * meterPerDp;
+      // 위치 정보와 반지름을 Cubit에 전달
+      context
+          .read<DiscountStoreMapCubit>()
+          .loadDiscountStoreMap(position.latitude, position.longitude, radius);
+    } catch (e) {
+      print('에러: ${e.toString()}');
+      // 오류 처리, 예: 사용자에게 오류 메시지 표시
+    }
   }
 
-
+  void loadMapData(NLatLng centerLocation) async {
+    try {
+      double? zoomlevel = await _CurrentZoomLevel();
+      print('zoomlevel: $zoomlevel');
+      final width = MediaQuery.of(context).size.width / 2;
+      final meterPerDp = mapController!.getMeterPerDpAtLatitude(
+          latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
+      final radius = width * meterPerDp;
+      print('radius: $radius');
+      // 위치 정보와 반지름을 Cubit에 전달
+      context.read<DiscountStoreMapCubit>().loadDiscountStoreMap(
+          centerLocation.latitude, centerLocation.longitude, radius);
+    } catch (e) {
+      print('에러: ${e.toString()}');
+      // 오류 처리, 예: 사용자에게 오류 메시지 표시
+    }
+  }
 
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -49,92 +86,125 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
-  Future<void> MarkUp(NLatLng centerLocation) async {
-    var storeList = [];
-    double? zoomlevel = await _CurrentZoomLevel();
-    print('zoomlevel: $zoomlevel');
-    final width = MediaQuery.of(context).size.width /2;
-    final meterPerDp = mapController.getMeterPerDpAtLatitude(latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
-    final radius = width * meterPerDp;
-    print('radius: $radius');
-    print('latitude: ${centerLocation.latitude}\n longitude: ${centerLocation.longitude}');
-    storeList = await context
-        .read<DiscountStoreCubit>()
-        .loadDiscountStoreMapCenter(centerLocation.latitude.toDouble(), centerLocation.longitude.toDouble(),
-            radius); // 상점 리스트를 비동기적으로 가져옴
-
-
+  void MarkUp(List<DiscountStore> storeList, BuildContext context) {
     for (var store in storeList) {
-      // 각 상점 위치에 대해 마커 생성 및 추가
       var marker = NMarker(
-        id: store.id.toString(), // 고유한 마커 ID 할당
-        position: NLatLng(store.latitude, store.longitude), // 상점의 위도와 경도 사용
-        // 마커에 추가할 수 있는 다른 속성들을 여기에 추가할 수 있습니다.
+        id: store.id.toString(),
+        position: NLatLng(store.latitude, store.longitude),
+        // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
+
       marker.setOnTapListener((NMarker marker) {
-        return Text(store.id.toString());
-      }); // 마커를 tab 했을 때 이벤트
-      mapController.addOverlay(marker); // 마커를 지도에 추가
+        showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(16)),
+              height: 250, // 원하는 높이 설정
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(store.storeName),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.star)),
+                    ],
+                  ),
+                  Text('${store.storeType}'),
+                  Text('주소: ${store.roadAddress}'),
+                  Text(store.etc.toString()),
+                ],
+              ),
+            );
+          },
+        );
+      });
+
+      mapController!.addOverlay(marker);
     }
   }
 
   Future<double> _CurrentZoomLevel() async {
-    final cameraPosition = await mapController.getCameraPosition();
+    final cameraPosition = await mapController!.getCameraPosition();
     final currentZoom = cameraPosition.zoom;
     return currentZoom;
+  }
+
+  Future<NLatLng> _CenterCoordinate() async {
+    final cameraPosition = await mapController!.getCameraPosition();
+    final centercoordinate = cameraPosition.target;
+    return centercoordinate;
   }
 
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(Duration.zero, () async {
-      final Position position = await determinePosition();
-      setState(() {
-        myLocation = NLatLng(position.latitude, position.longitude);
-      });
-    });
+    firstLoadMapData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final double radius = MediaQuery.of(context).size.width /2;
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('내 주변'),
-        ),
-        body: Stack(
-          children: [
-            if (myLocation != null)
-              NaverMap(
-                options: NaverMapViewOptions(
-                  initialCameraPosition: NCameraPosition(
-                    target: myLocation!,
-                    zoom: 18,
-                  ),
-                  mapType: NMapType.basic,
-                  indoorEnable: true,
-                  activeLayerGroups: [
-                    NLayerGroup.building,
-                    NLayerGroup.transit,
-                  ],
-                  pickTolerance: 8,
-                  rotationGesturesEnable: true,
-                  scrollGesturesEnable: true,
-                  zoomGesturesEnable: true,
-                  extent: const NLatLngBounds(
-                      southWest: NLatLng(31.43, 122.37),
-                      northEast: NLatLng(44.35, 132.0)),
-                  scaleBarEnable: true,
-                  locationButtonEnable: true,
-                ),
-                onMapReady: _onMapCreated,
-              )
-            else
-              Center(child: CircularProgressIndicator()),
-          ],
-        ),
+      home: BlocConsumer<DiscountStoreMapCubit, DiscountStoreMapCubitState>(
+        listener: (context, state) {
+          // Here, you can perform actions based on the state changes
+          if (state is LoadedDiscountStoreMapCubitState &&
+              mapController != null) {
+            mapController!.clearOverlays();
+            MarkUp(state.discountStoreMapResult.discountStoreMap, context);
+            print(state.discountStoreMapResult.discountStoreMap);
+
+            // Perform any additional actions if needed
+          }
+        },
+        builder: (context, state) {
+          void _onMapCreated(NaverMapController controller) async {
+            mapController = controller;
+            if (state is LoadedDiscountStoreMapCubitState) {
+              MarkUp(state.discountStoreMapResult.discountStoreMap, context);
+            }
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('내 주변'),
+            ),
+            body: Stack(
+              children: [
+                if (myLocation != null)
+                  NaverMap(
+                    options: NaverMapViewOptions(
+                      initialCameraPosition: NCameraPosition(
+                        target: myLocation!,
+                        zoom: 18,
+                      ),
+                      locationButtonEnable: true,
+                    ),
+                    onMapReady: _onMapCreated,
+                  )
+                else
+                  Center(child: CircularProgressIndicator()),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                final NLatLng centerCoordinate = await _CenterCoordinate();
+                loadMapData(centerCoordinate);
+              },
+              child: Icon(
+                Icons.refresh,
+                color: Colors.white,
+              ),
+              backgroundColor: GREEN_COLOR,
+            ),
+            bottomNavigationBar: AppNavigationBar(),
+          );
+        },
       ),
     );
   }

@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:jeonbuk_front/model/restaurant_result.dart';
+import 'package:jeonbuk_front/model/restaurant_list_result.dart';
 
-class RestaurantCubit extends Cubit<RestaurantCubitState>{
+class RestaurantListCubit extends Cubit<RestaurantCubitState>{
   late Dio _dio;
-  RestaurantCubit() : super(InitRestaurantCubitState()){
+  RestaurantListCubit() : super(InitRestaurantCubitState()){
     _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
     loadRestaurantList();
   }
@@ -29,12 +29,12 @@ class RestaurantCubit extends Cubit<RestaurantCubitState>{
 }
 
 abstract class RestaurantCubitState extends Equatable{
-  final RestaurantResult restaurantResult;
+  final RestaurantListResult restaurantResult;
   const RestaurantCubitState({required this.restaurantResult});
 }
 
 class InitRestaurantCubitState extends RestaurantCubitState{
-  InitRestaurantCubitState() : super(restaurantResult: RestaurantResult.init());
+  InitRestaurantCubitState() : super(restaurantResult: RestaurantListResult.init());
 
   @override
   List<Object?> get props => [restaurantResult];

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_box.dart';
 import 'package:jeonbuk_front/const/color.dart';
-import 'package:jeonbuk_front/cubit/discount_store_cubit.dart';
-import 'package:jeonbuk_front/cubit/restaurant_cubit.dart';
+import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
 import 'package:jeonbuk_front/screen/Restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
 
@@ -80,7 +80,7 @@ class _MainScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
-                                    create: (context) => RestaurantCubit(),
+                                    create: (context) => RestaurantListCubit(),
                                     child: const RestaurantScreen(),
                                   ),
                                 ));
@@ -103,7 +103,7 @@ class _MainScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
-                                    create: (context) => DiscountStoreCubit(),
+                                    create: (context) => DiscountStoreListCubit(),
                                     child: const DiscountStoreScreen(),
                                   ),
                                 ));

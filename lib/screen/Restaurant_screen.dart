@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/restaurant_list.dart';
-import 'package:jeonbuk_front/cubit/restaurant_cubit.dart';
-import 'package:jeonbuk_front/model/restaurant_result.dart';
+import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
+import 'package:jeonbuk_front/model/restaurant.dart';
+import 'package:jeonbuk_front/model/restaurant_list_result.dart';
 
 class RestaurantScreen extends StatefulWidget {
   const RestaurantScreen({super.key});
@@ -20,7 +22,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent - 200 <=
           scrollController.offset) {
-        context.read<RestaurantCubit>().loadRestaurantList();
+        context.read<RestaurantListCubit>().loadRestaurantList();
       }
     });
   }
@@ -60,7 +62,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
           IconButton(onPressed: (){}, icon: Icon(Icons.map)),
         ],
       ),
-      body: BlocBuilder<RestaurantCubit, RestaurantCubitState>(
+      body: BlocBuilder<RestaurantListCubit, RestaurantCubitState>(
         builder: (context, state) {
           if (state is ErrorRestaurantCubitState) {
             return _error(state.errorMessage);
@@ -71,6 +73,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
           return Container();
         },
       ),
+      bottomNavigationBar: AppNavigationBar(),
     );
   }
 }

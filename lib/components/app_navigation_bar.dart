@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jeonbuk_front/const/color.dart';
 
 class AppNavigationBar extends StatelessWidget {
-  AppNavigationBar({required this.currentIndex, Key? key}) : super(key: key);
+  AppNavigationBar({this.currentIndex, Key? key}) : super(key: key);
 
-  int currentIndex;
+  int? currentIndex;
 
   final List<String> _screens = [
     "/main",
@@ -18,7 +18,7 @@ class AppNavigationBar extends StatelessWidget {
     return BottomNavigationBar(
       showUnselectedLabels: true,
       backgroundColor: Colors.white,
-      currentIndex: currentIndex,
+      currentIndex: currentIndex ?? 0,
       onTap: (index) {
         // Handle item tap
         if (index != currentIndex) {

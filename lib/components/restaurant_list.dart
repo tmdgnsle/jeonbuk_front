@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jeonbuk_front/model/restaurant_result.dart';
+import 'package:jeonbuk_front/model/restaurant.dart';
+import 'package:jeonbuk_front/model/restaurant_list_result.dart';
 
 class RestaurantList extends StatelessWidget {
   final Restaurant restaurant;

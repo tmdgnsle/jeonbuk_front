@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/discount_store_list.dart';
-import 'package:jeonbuk_front/cubit/discount_store_cubit.dart';
-import 'package:jeonbuk_front/model/discount_store_result.dart';
+import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
+import 'package:jeonbuk_front/model/discount_store.dart';
+import 'package:jeonbuk_front/model/discount_store_list_result.dart';
 import 'package:jeonbuk_front/screen/discount_store_map_screen.dart';
 
 class DiscountStoreScreen extends StatefulWidget {
@@ -21,7 +24,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent - 200 <=
           scrollController.offset) {
-        context.read<DiscountStoreCubit>().loadDiscountStoreList();
+        context.read<DiscountStoreListCubit>().loadDiscountStoreList();
       }
     });
   }
@@ -63,24 +66,25 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (context) => DiscountStoreCubit(),
+                    create: (context) => DiscountStoreMapCubit(),
                     child: DiscountStoreMapScreen(),
                   ),
                 ));
           }, icon: const Icon(Icons.map)),
         ],
       ),
-      body: BlocBuilder<DiscountStoreCubit, DiscountStoreCubitState>(
+      body: BlocBuilder<DiscountStoreListCubit, DiscountStoreListCubitState>(
         builder: (context, state) {
-          if (state is ErrorDiscountStoreCubitState) {
+          if (state is ErrorDiscountStoreListCubitState) {
             return _error(state.errorMessage);
           }
-          if(state is LoadedDiscountStoreCubitState || state is LoadingDiscountStoreCubitState){
-            return _discountStoreListWidget(state.discountStoreResult.discountStoreList);
+          if(state is LoadedDiscountStoreListCubitState || state is LoadingDiscountStoreListCubitState){
+            return _discountStoreListWidget(state.discountStoreListResult.discountStoreList);
           }
           return Container();
         },
       ),
+      bottomNavigationBar: AppNavigationBar(),
     );
   }
 }
