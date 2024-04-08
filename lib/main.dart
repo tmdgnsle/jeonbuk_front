@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:jeonbuk_front/screen/login_screen.dart';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
+  await NaverMapSdk.instance.initialize(
+      clientId: 'nf68z75anv',
+      onAuthFailed: (error) {
+        print('Auth failed: $error');
+      });
+
   runApp(const MyApp());
 }
 
@@ -11,10 +19,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'JeonbukState_SB'),
       debugShowCheckedModeBanner: false,
       title: 'JeonBuk',
-      home: LoginScreen(),
+      home: const LoginScreen(),
     );
   }
 }

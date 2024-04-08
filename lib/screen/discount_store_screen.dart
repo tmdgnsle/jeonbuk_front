@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jeonbuk_front/components/discount_store_list.dart';
 import 'package:jeonbuk_front/cubit/discount_store_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store_result.dart';
+import 'package:jeonbuk_front/screen/discount_store_map_screen.dart';
 
 class DiscountStoreScreen extends StatefulWidget {
   const DiscountStoreScreen({super.key});
@@ -57,7 +58,16 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(onPressed: (){}, icon: Icon(Icons.map)),
+          IconButton(onPressed: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => DiscountStoreCubit(),
+                    child: DiscountStoreMapScreen(),
+                  ),
+                ));
+          }, icon: const Icon(Icons.map)),
         ],
       ),
       body: BlocBuilder<DiscountStoreCubit, DiscountStoreCubitState>(
