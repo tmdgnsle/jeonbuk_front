@@ -4,8 +4,8 @@ class OpenApis {
   final Dio _dio = Dio();
   final String _baseUrl = 'http://10.0.2.2:8080';
 
-  OpenApis(){
-    _dio.options.validateStatus = (status){
+  OpenApis() {
+    _dio.options.validateStatus = (status) {
       return status! < 500;
     };
   }
@@ -26,7 +26,8 @@ class OpenApis {
   }
 
   // 추가 정보(이름, 전화번호, 비상연락망) 등록 기능을 수행합니다.
-  Future<void> registerInfo(String id, String name, String phoneNumber, String emergencyNumber) async {
+  Future<void> registerInfo(String id, String name, String phoneNumber,
+      String emergencyNumber) async {
     try {
       await _dio.post('$_baseUrl/account/register/info', data: {
         'id': id,
@@ -42,15 +43,19 @@ class OpenApis {
   }
 
   // 로그인 기능을 수행합니다. 사용자 아이디와 비밀번호를 서버로 전송합니다.
-  Future<bool> login(String id, String password) async {
+  Future<String> login(String id, String password) async {
     try {
       final response = await _dio.post('$_baseUrl/account/login', data: {
         'id': id,
         'password': password,
       });
-      print('response ${response.headers}');
-      // 로그인 성공 시, true를 반환합니다.
-      return response.statusCode == 200;
+      print('response ${response.headers['authorization'].toString()}');
+      if (response.statusCode == 200) {
+        return response.headers['authorization'].toString();
+      } else if (response.statusCode == 401) {
+        return 'login failed';
+      } else
+        throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
     } catch (e) {
       // 로그인 실패 시, 예외를 발생시킵니다.
       throw Exception('로그인에 실패하였습니다.\n ${e.toString()}');
@@ -76,5 +81,4 @@ class OpenApis {
       throw Exception('아이디 중복 확인에 실패하였습니다.\n ${e.toString()}');
     }
   }
-
 }

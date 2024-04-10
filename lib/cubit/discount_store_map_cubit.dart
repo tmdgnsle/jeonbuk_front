@@ -11,13 +11,12 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
     _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
   }
 
-  // 위치 정보를 파라미터로 받는 loadDiscountStoreMap 함수
-  Future<void> loadDiscountStoreMap(double latitude, double longitude, double radius) async {
+  Future<void> loadDiscountStoreMapFilter(double latitude, double longitude, double radius, String category) async {
     try {
       emit(LoadingDiscountStoreMapCubitState(
           discountStoreMapResult: state.discountStoreMapResult));
 
-      var result = await _dio.get('/discountStore/map/all', queryParameters: {
+      var result = await _dio.get('/discountStore/map/$category', queryParameters: {
         'latitude': latitude,
         'longitude': longitude,
         'radius': radius,
@@ -29,6 +28,7 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
             latitude,
             longitude,
             radius,
+            category,
           )));
     } catch (e) {
       emit(ErrorDiscountStoreMapCubitState(
@@ -36,6 +36,7 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
           errorMessage: e.toString()));
     }
   }
+
 }
 
 

@@ -5,7 +5,6 @@ import 'package:jeonbuk_front/components/discount_store_list.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
-import 'package:jeonbuk_front/model/discount_store_list_result.dart';
 import 'package:jeonbuk_front/screen/discount_store_map_screen.dart';
 
 class DiscountStoreScreen extends StatefulWidget {

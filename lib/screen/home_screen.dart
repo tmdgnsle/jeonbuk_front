@@ -5,7 +5,7 @@ import 'package:jeonbuk_front/components/custom_box.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
-import 'package:jeonbuk_front/screen/Restaurant_screen.dart';
+import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
 
 class HomeScreen extends StatefulWidget {

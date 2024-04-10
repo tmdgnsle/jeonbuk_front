@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:get/get.dart';
+import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/screen/home_screen.dart';
 import 'package:jeonbuk_front/screen/register_screen.dart';
 
@@ -42,11 +44,17 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                final loginSuccess = await OpenApis()
+                final loginJwt = await OpenApis()
                     .login(_idController.text, _passwordController.text);
 
-                if (loginSuccess == true) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+                if (loginJwt != 'login failed') {
+                  final bloc = BlocProvider.of<IdJwtCubit>(context);
+                  bloc.Login(
+                      IdJwtCubitState.login, _idController.text, loginJwt);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()));
                 } else {
                   showDialog(
                     context: context,
@@ -104,7 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterScreen()));
               },
               child: const Text(
                 '회원가입',
