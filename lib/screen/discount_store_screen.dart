@@ -4,6 +4,7 @@ import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/discount_store_list.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
+import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
 import 'package:jeonbuk_front/screen/discount_store_map_screen.dart';
 
@@ -60,16 +61,19 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(onPressed: (){
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => DiscountStoreMapCubit(),
-                    child: DiscountStoreMapScreen(),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => DiscountStoreMapCubit(),
+                      child: DiscountStoreMapScreen(),
+                    ),
                   ),
-                ));
-          }, icon: const Icon(Icons.map)),
+                );
+              },
+              icon: const Icon(Icons.map)),
         ],
       ),
       body: BlocBuilder<DiscountStoreListCubit, DiscountStoreListCubitState>(
@@ -77,8 +81,10 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
           if (state is ErrorDiscountStoreListCubitState) {
             return _error(state.errorMessage);
           }
-          if(state is LoadedDiscountStoreListCubitState || state is LoadingDiscountStoreListCubitState){
-            return _discountStoreListWidget(state.discountStoreListResult.discountStoreList);
+          if (state is LoadedDiscountStoreListCubitState ||
+              state is LoadingDiscountStoreListCubitState) {
+            return _discountStoreListWidget(
+                state.discountStoreListResult.discountStoreList);
           }
           return Container();
         },

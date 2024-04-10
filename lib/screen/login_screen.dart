@@ -49,12 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 if (loginJwt != 'login failed') {
                   final bloc = BlocProvider.of<IdJwtCubit>(context);
-                  bloc.Login(
-                      IdJwtCubitState.login, _idController.text, loginJwt);
+                  bloc.Login(_idController.text, loginJwt);
+                  print('Id: ${bloc.state.idJwt.id}');
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()));
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
                 } else {
                   showDialog(
                     context: context,

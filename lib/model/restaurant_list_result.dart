@@ -10,7 +10,7 @@ class RestaurantListResult extends Equatable{
     required this.restaurantList,
   });
 
-  RestaurantListResult.init() : this(currentPage: 1, restaurantList: []);
+  RestaurantListResult.init() : this(currentPage: 0, restaurantList: []);
 
   factory RestaurantListResult.fromJson(Map<String, dynamic> json) {
     return RestaurantListResult(

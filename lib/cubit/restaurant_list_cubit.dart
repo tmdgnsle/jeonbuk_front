@@ -20,7 +20,6 @@ class RestaurantListCubit extends Cubit<RestaurantCubitState>{
       var result = await _dio.get('/restaurant/list/all', queryParameters: {
         'page': state.restaurantResult.currentPage,
       });
-      await Future.delayed(Duration(milliseconds: 500));
       emit(LoadedRestaurantCubitState(restaurantResult: state.restaurantResult.copywithFromJson(result.data)));
     } catch (e) {
       emit(ErrorRestaurantCubitState(restaurantResult: state.restaurantResult, errorMessage: e.toString()));

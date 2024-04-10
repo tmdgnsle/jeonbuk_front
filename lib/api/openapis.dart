@@ -81,4 +81,21 @@ class OpenApis {
       throw Exception('아이디 중복 확인에 실패하였습니다.\n ${e.toString()}');
     }
   }
+
+  Future<int> bookmarkStore(String memberId, int storeId, String bookmarkType) async {
+
+    final String store = (bookmarkType == 'RESTAURANT') ? 'restaurant' : 'discountStore';
+
+    try{
+      final response = await _dio.post('$_baseUrl/$store/bookmark', data: {
+        'memberId': memberId,
+        'storeId': storeId,
+        'bookmarkType' : bookmarkType,
+      });
+
+      return response.data['bookmarkId'] as int;
+    } catch (e) {
+      throw Exception('즐겨찾기에 실패하였습니다. \n ${e.toString()}');
+    }
+  }
 }

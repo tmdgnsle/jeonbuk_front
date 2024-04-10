@@ -23,7 +23,6 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
       var result = await _dio.get('/discountStore/list/all', queryParameters: {
         'page': state.discountStoreListResult.currentPage,
       });
-      await Future.delayed(Duration(milliseconds: 500));
       emit(LoadedDiscountStoreListCubitState(
           discountStoreListResult:
               state.discountStoreListResult.copywithFromJson(result.data)));

@@ -1,38 +1,17 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
+import 'package:jeonbuk_front/components/bookmark_button.dart';
 import 'package:jeonbuk_front/const/color.dart';
+import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
+import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
 import 'package:sheet/sheet.dart';
-
-const List<Color> filterColor = [
-  Colors.red,
-  Colors.orange,
-  Colors.yellow,
-  Colors.green,
-  Colors.blue,
-  Colors.indigo,
-  Colors.purple,
-  Colors.amber,
-  Colors.teal,
-  Colors.black
-];
-
-const Map<String, String> filter = {
-  '여가/레저': 'LEISURE',
-  '서비스업': 'SERVICES',
-  '음식': 'FOOD',
-  '잡화': 'GOODS',
-  '식품/음료': 'FOOD_BEVERAGE',
-  '도서/문구': 'BOOKS_STATIONERY',
-  '도소매': 'RETAIL',
-  '교육': 'EDUCATION',
-  '자동차/주유': 'AUTOMOTIVE',
-  '기타': 'ETC',
-};
 
 class DiscountStoreMapScreen extends StatefulWidget {
   @override
@@ -51,11 +30,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       setState(() {
         myLocation = NLatLng(position.latitude, position.longitude);
       });
-      // double? zoomlevel = await _CurrentZoomLevel();
-      // print('zoomlevel: $zoomlevel');
-      // final width = MediaQuery.of(context).size.width / 2;
-      // final meterPerDp = mapController.getMeterPerDpAtLatitude(
-      //     latitude: position.latitude.toDouble(), zoom: zoomlevel);
+
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
@@ -133,6 +108,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   }
 
   Widget bottomSheet(DiscountStore store) {
+    final bloc = BlocProvider.of<IdJwtCubit>(context);
     return Sheet(
       initialExtent: 180,
       maxExtent: 180,
@@ -150,7 +126,17 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(store.storeName),
-                IconButton(onPressed: () {}, icon: Icon(Icons.star)),
+                BookmarkButton(
+                    isBookmarked: store.isBookmark,
+                    onTap: () {
+                      //TODO 즐겨찾기 버튼 구현하기
+                      int bookmarkId = OpenApis().bookmarkStore(
+                              bloc.state.idJwt.id!, store.id, 'DISCOUNT_STORE')
+                          as int;
+                      // setState(() {
+                      //   store.isBookmark != store.isBookmark;
+                      // });
+                    })
               ],
             ),
             Text('${store.storeType}'),
@@ -174,11 +160,13 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       // 높이 지정
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: filter.keys.length, // Map의 키 개수를 itemCount로 사용
+        itemCount: discountStoreFilter.keys.length, // Map의 키 개수를 itemCount로 사용
         itemBuilder: (context, index) {
-          final filterKeys = filter.keys.toList(); // Map의 키를 리스트로 변환
+          final filterKeys =
+              discountStoreFilter.keys.toList(); // Map의 키를 리스트로 변환
           final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
-          final filterValue = filter[filterName]; // 키를 사용하여 Map에서 값을 얻음
+          final filterValue =
+              discountStoreFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
           final filterWidth = MediaQuery.of(context).size.width / 5;
 
           return Padding(
@@ -287,7 +275,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   @override
   void initState() {
     super.initState();
-
     firstLoadMapData();
   }
 
@@ -295,14 +282,11 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<DiscountStoreMapCubit, DiscountStoreMapCubitState>(
       listener: (context, state) {
-        // Here, you can perform actions based on the state changes
         if (state is LoadedDiscountStoreMapCubitState &&
             mapController != null) {
           mapController!.clearOverlays();
           MarkUp(state.discountStoreMapResult.discountStoreMap, context);
           print(state.discountStoreMapResult.discountStoreMap);
-
-          // Perform any additional actions if needed
         }
       },
       builder: (context, state) {
@@ -315,7 +299,10 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('내 주변', textAlign: TextAlign.center,),
+            title: const Text(
+              '내 주변',
+              textAlign: TextAlign.center,
+            ),
           ),
           body: Stack(
             children: [
@@ -333,7 +320,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
               Positioned(top: 0, child: FilterView(context)),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
-                Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator()),
             ],
           ),
           floatingActionButton: FloatingActionButton(

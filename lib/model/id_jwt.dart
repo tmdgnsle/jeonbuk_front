@@ -1,16 +1,20 @@
 import 'package:equatable/equatable.dart';
 
 class IdJwt extends Equatable {
-  final String id;
-  final String jwt;
+  String? id;
+  String? jwt;
 
-  const IdJwt({required this.id, required this.jwt});
+  IdJwt({this.id, this.jwt});
 
-  IdJwt.init() : this(id: '', jwt: '');
+  IdJwt.init() : this();
 
 
-  factory IdJwt.enter(String id, String jwt) {
+  factory IdJwt.login(String id, String jwt) {
     return IdJwt(id: id, jwt: jwt);
+  }
+
+  factory IdJwt.logout(){
+    return IdJwt(id: null, jwt: null);
   }
 
   @override

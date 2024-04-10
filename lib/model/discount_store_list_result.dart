@@ -10,7 +10,7 @@ class DiscountStoreListResult extends Equatable {
     required this.discountStoreList,
   });
 
-  DiscountStoreListResult.init() : this(currentPage: 1, discountStoreList: []);
+  DiscountStoreListResult.init() : this(currentPage: 0, discountStoreList: []);
 
   factory DiscountStoreListResult.fromJson(Map<String, dynamic> json) {
     return DiscountStoreListResult(

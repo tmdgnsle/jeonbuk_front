@@ -21,13 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: 'JeonbukState_SB'),
-      debugShowCheckedModeBanner: false,
-      title: 'JeonBuk',
-      home: BlocProvider(
-        create: (context) => IdJwtCubit(),
-        child: const LoginScreen(),
+    return BlocProvider(
+      create: (context) => IdJwtCubit(),
+      child: MaterialApp(
+        theme: ThemeData(fontFamily: 'JeonbukState_SB'),
+        debugShowCheckedModeBanner: false,
+        title: 'JeonBuk',
+        home: const LoginScreen(),
       ),
     );
   }

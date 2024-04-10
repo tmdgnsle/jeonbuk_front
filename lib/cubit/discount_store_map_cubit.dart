@@ -7,16 +7,19 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
   late Dio _dio;
 
   DiscountStoreMapCubit()
-      : super(InitDiscountStoreMapCubitState(discountStoreMapResult: DiscountStoreMapResult.init())) {
+      : super(InitDiscountStoreMapCubitState(
+            discountStoreMapResult: DiscountStoreMapResult.init())) {
     _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
   }
 
-  Future<void> loadDiscountStoreMapFilter(double latitude, double longitude, double radius, String category) async {
+  Future<void> loadDiscountStoreMapFilter(
+      double latitude, double longitude, double radius, String category) async {
     try {
       emit(LoadingDiscountStoreMapCubitState(
           discountStoreMapResult: state.discountStoreMapResult));
 
-      var result = await _dio.get('/discountStore/map/$category', queryParameters: {
+      var result =
+          await _dio.get('/discountStore/map/$category', queryParameters: {
         'latitude': latitude,
         'longitude': longitude,
         'radius': radius,
@@ -24,21 +27,19 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
 
       emit(LoadedDiscountStoreMapCubitState(
           discountStoreMapResult: DiscountStoreMapResult.fromJson(
-            result.data,
-            latitude,
-            longitude,
-            radius,
-            category,
-          )));
+        result.data,
+        latitude,
+        longitude,
+        radius,
+        category,
+      )));
     } catch (e) {
       emit(ErrorDiscountStoreMapCubitState(
           discountStoreMapResult: state.discountStoreMapResult,
           errorMessage: e.toString()));
     }
   }
-
 }
-
 
 abstract class DiscountStoreMapCubitState extends Equatable {
   final DiscountStoreMapResult discountStoreMapResult;
@@ -47,13 +48,13 @@ abstract class DiscountStoreMapCubitState extends Equatable {
 }
 
 class InitDiscountStoreMapCubitState extends DiscountStoreMapCubitState {
-  InitDiscountStoreMapCubitState({required DiscountStoreMapResult discountStoreMapResult})
+  InitDiscountStoreMapCubitState(
+      {required DiscountStoreMapResult discountStoreMapResult})
       : super(discountStoreMapResult: discountStoreMapResult);
 
   @override
   List<Object?> get props => [discountStoreMapResult];
 }
-
 
 class LoadingDiscountStoreMapCubitState extends DiscountStoreMapCubitState {
   const LoadingDiscountStoreMapCubitState(
