@@ -6,10 +6,12 @@ import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/screen/login_screen.dart';
 
 class RegisterInfoScreen extends StatefulWidget {
-
   final String? id;
 
-  const RegisterInfoScreen({super.key, this.id,});
+  const RegisterInfoScreen({
+    super.key,
+    this.id,
+  });
 
   @override
   State<RegisterInfoScreen> createState() => _RegisterInfoScreenState();
@@ -38,34 +40,41 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
             ),
             CustomTextField(
               controller: _nameController,
-              hintText: '이름을 적어주세요',
+              hintText: '이름을 입력하세요',
               obscure: false,
+              height: 50.0,
             ),
             const SizedBox(height: 8),
             Text(
-              '핸드폰',
+              '전화번호',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
             CustomTextField(
               controller: _phoneController,
-              hintText: '전화번호를 적어주세요',
+              hintText: '본인의 전화번호를 입력하세요',
               obscure: false,
+              height: 50.0,
             ),
             const SizedBox(height: 8),
             Text(
-              '긴급 연락망',
+              '긴급연락망',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
             CustomTextField(
               controller: _emergencyController,
-              hintText: '전화번호를 적어주세요',
+              hintText: '긴급상황시 연락이 갈 전화번호를 입력하세요.',
               obscure: false,
+              height: 50.0,
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () async{
-                await OpenApis().registerInfo(widget.id!, _nameController.text, _phoneController.text, _emergencyController.text);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+              onPressed: () async {
+                await OpenApis().registerInfo(widget.id!, _nameController.text,
+                    _phoneController.text, _emergencyController.text);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
               },
               child: Text('다음'),
               style: ElevatedButton.styleFrom(

@@ -31,13 +31,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'ID',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
-            ),
             CustomTextField(
               controller: _idController,
-              hintText: 'yourID',
+              hintText: '아이디(jeonbuk123)',
               obscure: false,
               prefixIcons: const Icon(Icons.email_outlined),
               textButton: TextButton(
@@ -87,29 +83,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(color: BLUE_COLOR),
                 ),
               ),
+              height: 50.0,
             ),
             const SizedBox(height: 8),
-            Text(
-              'PASSWORD',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
-            ),
+
             //TODO 사용자 비밀번호 최소 6자 이상
             CustomTextField(
               controller: _passwordController,
-              hintText: 'yourPassword',
+              hintText: '비밀번호',
               obscure: true,
               prefixIcons: const Icon(Icons.lock_outline),
+              height: 50.0,
             ),
             const SizedBox(height: 8),
-            Text(
-              'PASSWORD CONFIRM',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
-            ),
+
             CustomTextField(
               controller: _passwordconfirmController,
-              hintText: 'recheck password',
+              hintText: '비밀번호 재입력',
               obscure: true,
               prefixIcons: const Icon(Icons.lock_outline),
+              height: 50.0,
             ),
             const SizedBox(height: 32),
             ElevatedButton(
@@ -124,7 +117,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (check == true) {
                       final memberId = await OpenApis().register(
                           _idController.text, _passwordController.text);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterInfoScreen(id: memberId,)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterInfoScreen(
+                                    id: memberId,
+                                  )));
                     } else {
                       showDialog(
                         context: context,
@@ -223,7 +221,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
               },
               child: const Text(
                 '로그인',

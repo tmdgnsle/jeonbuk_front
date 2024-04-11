@@ -23,108 +23,129 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CustomTextField(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Image.asset('assets/images/jeonbuk_logo.png'),
+              CustomTextField(
                 controller: _idController,
-                hintText: 'yourID',
+                hintText: '아이디(jeonbuk1234)',
                 obscure: false,
-                prefixIcons: const Icon(Icons.email_outlined)),
-            const SizedBox(height: 8),
-            CustomTextField(
-              controller: _passwordController,
-              hintText: 'yourPassword',
-              obscure: true,
-              prefixIcons: const Icon(Icons.lock_outline),
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () async {
-                final loginJwt = await OpenApis()
-                    .login(_idController.text, _passwordController.text);
+                prefixIcons: const Icon(Icons.email_outlined),
+                height: 50.0,
+              ),
+              const SizedBox(height: 8),
+              CustomTextField(
+                controller: _passwordController,
+                hintText: '비밀번호',
+                obscure: true,
+                prefixIcons: const Icon(Icons.lock_outline),
+                height: 50.0,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () async {
+                  final loginJwt = await OpenApis()
+                      .login(_idController.text, _passwordController.text);
 
-                if (loginJwt != 'login failed') {
-                  final bloc = BlocProvider.of<IdJwtCubit>(context);
-                  bloc.Login(_idController.text, loginJwt);
-                  print('Id: ${bloc.state.idJwt.id}');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('알림'),
-                        content: Text('아이디 혹은 비밀번호가 틀렸습니다.'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('확인'),
-                            onPressed: () {
-                              Navigator.of(context).pop(); // 알림창 닫기
-                            },
-                          ),
-                        ],
-                      );
+                  if (loginJwt != 'login failed') {
+                    final bloc = BlocProvider.of<IdJwtCubit>(context);
+                    bloc.Login(_idController.text, loginJwt);
+                    print('Id: ${bloc.state.idJwt.id}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('알림'),
+                          content: Text('아이디 혹은 비밀번호가 틀렸습니다.'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('확인'),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // 알림창 닫기
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Text('로그인'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: BLUE_COLOR,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Divider(
+                      thickness: 1, // 선의 두께
+                      color: Colors.grey, // 선의 색상
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    // 양쪽 여백 조절
+                    child: Text("OR"),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      thickness: 1, // 선의 두께
+                      color: Colors.grey, // 선의 색상
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterScreen()));
                     },
-                  );
-                }
-              },
-              child: Text('로그인'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: BLUE_COLOR,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Divider(
-                    thickness: 1, // 선의 두께
-                    color: Colors.grey, // 선의 색상
+                    child: const Text(
+                      '회원가입',
+                      style: TextStyle(
+                        color: GREEN_COLOR,
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  // 양쪽 여백 조절
-                  child: Text("OR"),
-                ),
-                Expanded(
-                  child: Divider(
-                    thickness: 1, // 선의 두께
-                    color: Colors.grey, // 선의 색상
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      '비밀번호 찾기',
+                      style: TextStyle(
+                        color: GREEN_COLOR,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterScreen()));
-              },
-              child: const Text(
-                '회원가입',
-                style: TextStyle(
-                  color: GREEN_COLOR,
-                ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
