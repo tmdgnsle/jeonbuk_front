@@ -8,10 +8,10 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
 
   DiscountStoreListCubit() : super(InitDiscountStoreListCubitState()) {
     _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
-    loadDiscountStoreList();
+    loadDiscountStoreList('all');
   }
 
-  loadDiscountStoreList() async {
+  loadDiscountStoreList(String category) async {
     try {
       if (state is LoadingDiscountStoreListCubitState ||
           state is ErrorDiscountStoreListCubitState) {
@@ -20,12 +20,12 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
       print(state.discountStoreListResult.currentPage);
       emit(LoadingDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult));
-      var result = await _dio.get('/discountStore/list/all', queryParameters: {
+      var result = await _dio.get('/discountStore/list/${category}', queryParameters: {
         'page': state.discountStoreListResult.currentPage,
       });
       emit(LoadedDiscountStoreListCubitState(
           discountStoreListResult:
-              state.discountStoreListResult.copywithFromJson(result.data)));
+              state.discountStoreListResult.copywithFromJson(result.data, category)));
     } catch (e) {
       emit(ErrorDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult,

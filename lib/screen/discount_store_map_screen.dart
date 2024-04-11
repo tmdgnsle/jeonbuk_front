@@ -14,6 +14,7 @@ import 'package:jeonbuk_front/model/discount_store.dart';
 import 'package:sheet/sheet.dart';
 
 class DiscountStoreMapScreen extends StatefulWidget {
+
   @override
   State<DiscountStoreMapScreen> createState() => _MyAppState();
 }
@@ -23,6 +24,8 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   Widget? bottomsheet;
 
   NLatLng? myLocation;
+
+  bool? _isBookmark;
 
   void firstLoadMapData() async {
     try {

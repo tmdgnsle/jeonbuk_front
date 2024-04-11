@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
+import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/components/discount_store_list.dart';
+import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
-import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
 import 'package:jeonbuk_front/screen/discount_store_map_screen.dart';
 
@@ -17,6 +19,7 @@ class DiscountStoreScreen extends StatefulWidget {
 
 class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
   ScrollController scrollController = ScrollController();
+  TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -24,7 +27,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent - 200 <=
           scrollController.offset) {
-        context.read<DiscountStoreListCubit>().loadDiscountStoreList();
+        context.read<DiscountStoreListCubit>().loadDiscountStoreList('all');
       }
     });
   }
@@ -44,6 +47,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
   Widget _discountStoreListWidget(List<DiscountStore> discountStore) {
     return ListView.separated(
         controller: scrollController,
+        shrinkWrap: true,
         itemBuilder: (context, index) {
           if (index == discountStore.length) {
             return _loading();
@@ -54,6 +58,53 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
               color: Colors.grey,
             ),
         itemCount: discountStore.length);
+  }
+
+  Widget FilterView(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    const filterHeight = 30.0;
+    return SizedBox(
+      width: screenWidth - 16,
+      height: filterHeight,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: discountStoreFilter.keys.length, // Map의 키 개수를 itemCount로 사용
+        itemBuilder: (context, index) {
+          final filterKeys =
+              discountStoreFilter.keys.toList(); // Map의 키를 리스트로 변환
+          final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
+          discountStoreFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
+          final filterWidth = screenWidth / 5;
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: InkWell(
+              onTap: () async {},
+              child: Container(
+                width: filterWidth,
+                decoration: BoxDecoration(
+                  color: filterColor[index], // 이 예제에서는 색상을 고정값으로 설정
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      blurRadius: 8,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  filterName, // Map의 키를 텍스트로 사용
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -83,8 +134,24 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
           }
           if (state is LoadedDiscountStoreListCubitState ||
               state is LoadingDiscountStoreListCubitState) {
-            return _discountStoreListWidget(
-                state.discountStoreListResult.discountStoreList);
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CustomTextField(
+                      controller: _textEditingController,
+                      hintText: '검색',
+                      obscure: false),
+                  FilterView(context),
+                  Expanded(
+                    child: _discountStoreListWidget(
+                        state.discountStoreListResult.discountStoreList),
+                  ),
+                ],
+              ),
+            );
           }
           return Container();
         },
