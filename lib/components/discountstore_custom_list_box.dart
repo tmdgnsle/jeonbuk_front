@@ -8,6 +8,7 @@ class DiscountStoreCustomListBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String modifiedEtc = discountStore.etc.toString().replaceAll('<', '\n');
     return InkWell(
       onTap: () {},
       child: Container(
@@ -42,7 +43,7 @@ class DiscountStoreCustomListBox extends StatelessWidget {
               ),
             ),
             Text(
-              discountStore.etc.toString(),
+              modifiedEtc,
               style: const TextStyle(
                 fontSize: 12,
                 height: 2.0,

@@ -14,7 +14,6 @@ import 'package:jeonbuk_front/model/discount_store.dart';
 import 'package:sheet/sheet.dart';
 
 class DiscountStoreMapScreen extends StatefulWidget {
-
   @override
   State<DiscountStoreMapScreen> createState() => _MyAppState();
 }
@@ -24,8 +23,8 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   Widget? bottomsheet;
 
   NLatLng? myLocation;
-
-  bool? _isBookmark;
+  bool isBookmarkLoading = false;
+  Map<int, bool> bookmarkStatus = {};
 
   void firstLoadMapData() async {
     try {
@@ -110,8 +109,40 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
-  Widget bottomSheet(DiscountStore store) {
-    final bloc = BlocProvider.of<IdJwtCubit>(context);
+  Future<void> toggleBookmark(String memberId, int storeId) async {
+    int? bookmarkId;
+    setState(() {
+      isBookmarkLoading = true; // 즐겨찾기 로딩 상태 시작
+    });
+
+    try {
+      bookmarkId =
+          await OpenApis().isBookmark(memberId, 'DISCOUNT_STORE', storeId);
+      if (bookmarkId != 0) {
+        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
+        await OpenApis().deleteBookmark(bookmarkId);
+        setState(() {
+          bookmarkStatus[storeId] = false;
+        });
+      } else {
+        // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
+        await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
+        setState(() {
+          bookmarkStatus[storeId] = true;
+        });
+      }
+    } catch (e) {
+      print("즐겨찾기 상태 변경 중 오류 발생: $e");
+    } finally {
+      setState(() {
+        bookmarkStatus[storeId] = bookmarkId != null && bookmarkId != 0;
+        isBookmarkLoading = false; // 즐겨찾기 로딩 상태 종료
+      });
+    }
+  }
+
+  Widget bottomSheet(DiscountStore store, String memberId) {
+    String modifiedEtc = store.etc.toString().replaceAll('<', '\n');
     return Sheet(
       initialExtent: 180,
       maxExtent: 180,
@@ -129,22 +160,22 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(store.storeName),
-                BookmarkButton(
-                    isBookmarked: store.isBookmark,
-                    onTap: () {
-                      //TODO 즐겨찾기 버튼 구현하기
-                      int bookmarkId = OpenApis().bookmarkStore(
-                              bloc.state.idJwt.id!, store.id, 'DISCOUNT_STORE')
-                          as int;
-                      // setState(() {
-                      //   store.isBookmark != store.isBookmark;
-                      // });
-                    })
+                IconButton(
+                  icon: Icon(
+                    Icons.star,
+                    color: bookmarkStatus[store.id] ?? false
+                        ? Colors.yellow
+                        : Colors.grey,
+                  ),
+                  onPressed: () {
+                    toggleBookmark(memberId, store.id);
+                  },
+                ),
               ],
             ),
             Text('${store.storeType}'),
             Text('주소: ${store.roadAddress}'),
-            Text(store.etc.toString()),
+            Text(modifiedEtc),
           ],
         ),
       ),
@@ -206,7 +237,9 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
     );
   }
 
-  void MarkUp(List<DiscountStore> storeList, BuildContext context) {
+  void MarkUp(List<DiscountStore> storeList, BuildContext context) async {
+    final bloc = BlocProvider.of<IdJwtCubit>(context);
+    String memberId = bloc.state.idJwt.id!;
     for (var store in storeList) {
       final Color? markerColor;
 
@@ -255,11 +288,28 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
 
       marker.setOnTapListener((NMarker marker) {
         setState(() {
-          bottomsheet = bottomSheet(store);
+          bottomsheet = bottomSheet(store, memberId);
         });
       });
 
       mapController!.addOverlay(marker);
+
+      //TODO store마다 bookmark되어있는지 안되어있는지 체크
+      try {
+        final bookmarkId =
+            await OpenApis().isBookmark(memberId, 'DISCOUNT_STORE', store.id);
+        if (bookmarkId != 0) {
+          setState(() {
+            bookmarkStatus[store.id] = true;
+          });
+        } else {
+          setState(() {
+            bookmarkStatus[store.id] = false;
+          });
+        }
+      } catch (e) {
+        print("북마크 아이디 찾던 중 오류 발생: $e");
+      }
     }
   }
 
@@ -289,7 +339,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
             mapController != null) {
           mapController!.clearOverlays();
           MarkUp(state.discountStoreMapResult.discountStoreMap, context);
-          print(state.discountStoreMapResult.discountStoreMap);
         }
       },
       builder: (context, state) {

@@ -145,6 +145,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  //TODO 검색기능
                   CustomTextField(
                     controller: _textEditingController,
                     hintText: '검색',

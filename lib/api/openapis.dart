@@ -82,20 +82,55 @@ class OpenApis {
     }
   }
 
-  Future<int> bookmarkStore(String memberId, int storeId, String bookmarkType) async {
+  Future<void> bookmarkStore(
+      String memberId, int storeId, String bookmarkType) async {
+    final String store =
+        (bookmarkType == 'RESTAURANT') ? 'restaurant' : 'discountStore';
 
-    final String store = (bookmarkType == 'RESTAURANT') ? 'restaurant' : 'discountStore';
-
-    try{
+    try {
       final response = await _dio.post('$_baseUrl/$store/bookmark', data: {
         'memberId': memberId,
         'storeId': storeId,
-        'bookmarkType' : bookmarkType,
+        'bookmarkType': bookmarkType,
       });
-
-      return response.data['bookmarkId'] as int;
+      //TODO 에러메세지일때 반환
+      print('response.data: ${response.data}');
+      // return response.data['bookmarkId'] as int;
     } catch (e) {
       throw Exception('즐겨찾기에 실패하였습니다. \n ${e.toString()}');
+    }
+  }
+
+  Future<void> deleteBookmark(int bookmarkId) async {
+    try {
+      await _dio.delete('$_baseUrl/bookmark/$bookmarkId');
+    } catch (e) {
+      throw Exception('즐겨찾기 삭제에 실패하였습니다. \n ${e.toString()}');
+    }
+  }
+
+  //TODO 로직 수정하기 print가 되고있지않음
+  Future<int> isBookmark(
+      String memberId, String bookmarkType, int storeId) async {
+    try {
+      final response = await _dio.get('$_baseUrl/bookmark/check', queryParameters: {
+        'memberId': memberId,
+        'bookmarkType': bookmarkType,
+        'storeId': storeId,
+      });
+      print('response: $response');
+
+      if (response.statusCode == 200) {
+        print('북마크 아이디: ${response.data['bookmarkId'] as int}');
+        return response.data['bookmarkId'] as int; // 북마크 아이디 반환
+      } else if (response.statusCode == 400) {
+        return 0; // 북마크 안되어있음
+      } else {
+        // 다른 HTTP 상태 코드를 처리합니다.
+        throw Exception('예상치 못한 오류가 발생했습니다.\n 오류: ${response.toString()}');
+      }
+    } catch (e) {
+      throw Exception('예상치 못한 오류가 발생했습니다.. \n ${e.toString()}');
     }
   }
 }
