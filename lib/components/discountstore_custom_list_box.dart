@@ -3,14 +3,14 @@ import 'package:jeonbuk_front/model/discount_store.dart';
 
 class DiscountStoreCustomListBox extends StatelessWidget {
   final DiscountStore discountStore;
-
-  const DiscountStoreCustomListBox({required this.discountStore, super.key});
+  GestureTapCallback? onTap;
+  DiscountStoreCustomListBox({required this.discountStore, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
     String modifiedEtc = discountStore.etc.toString().replaceAll('<', '\n');
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
         decoration: BoxDecoration(

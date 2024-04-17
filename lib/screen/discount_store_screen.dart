@@ -8,6 +8,7 @@ import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
+import 'package:jeonbuk_front/screen/discount_store_detail_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_map_screen.dart';
 
 class DiscountStoreScreen extends StatefulWidget {
@@ -172,7 +173,17 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                       controller: scrollController,
                       itemBuilder: (context, index) =>
                           DiscountStoreCustomListBox(
-                              discountStore: stores[index]),
+                        discountStore: stores[index],
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DiscountStoreDetailScreen(
+                                  discountStore: stores[index]),
+                            ),
+                          );
+                        },
+                      ),
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 10),
                       itemCount: stores.length,

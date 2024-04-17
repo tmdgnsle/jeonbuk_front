@@ -82,7 +82,7 @@ class OpenApis {
     }
   }
 
-  Future<void> bookmarkStore(
+  Future<int> bookmarkStore(
       String memberId, int storeId, String bookmarkType) async {
     final String store =
         (bookmarkType == 'RESTAURANT') ? 'restaurant' : 'discountStore';
@@ -93,9 +93,11 @@ class OpenApis {
         'storeId': storeId,
         'bookmarkType': bookmarkType,
       });
+
+
       //TODO 에러메세지일때 반환
       print('response.data: ${response.data}');
-      // return response.data['bookmarkId'] as int;
+      return response.data['bookmarkId'] as int;
     } catch (e) {
       throw Exception('즐겨찾기에 실패하였습니다. \n ${e.toString()}');
     }

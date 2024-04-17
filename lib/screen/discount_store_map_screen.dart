@@ -119,14 +119,14 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       bookmarkId =
           await OpenApis().isBookmark(memberId, 'DISCOUNT_STORE', storeId);
       if (bookmarkId != 0) {
-        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
+        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
         await OpenApis().deleteBookmark(bookmarkId);
         setState(() {
           bookmarkStatus[storeId] = false;
         });
       } else {
         // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
-        await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
+        bookmarkId = await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
         setState(() {
           bookmarkStatus[storeId] = true;
         });
