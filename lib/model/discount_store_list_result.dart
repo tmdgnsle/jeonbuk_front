@@ -3,7 +3,7 @@ import 'package:jeonbuk_front/model/discount_store.dart';
 
 class DiscountStoreListResult extends Equatable {
   final int currentPage;
-  final List<DiscountStore> discountStoreList;
+  List<DiscountStore> discountStoreList;
   final String category;
   List<DiscountStore> searchStoreList;
 
@@ -15,7 +15,12 @@ class DiscountStoreListResult extends Equatable {
   });
 
   DiscountStoreListResult.init()
-      : this(currentPage: 0, discountStoreList: [], category: '', searchStoreList: [],);
+      : this(
+          currentPage: 0,
+          discountStoreList: [],
+          category: '',
+          searchStoreList: [],
+        );
 
   factory DiscountStoreListResult.fromJson(
       Map<String, dynamic> json, String category) {
@@ -45,17 +50,35 @@ class DiscountStoreListResult extends Equatable {
   }
 
   DiscountStoreListResult copywithFromJsonSearch(Map<String, dynamic> json) {
-
     searchStoreList = json['content']
-        .map<DiscountStore>((item) => DiscountStore.fromJson(item))
-        .toList() ?? [];
+            .map<DiscountStore>((item) => DiscountStore.fromJson(item))
+            .toList() ??
+        [];
 
     return DiscountStoreListResult(
-      currentPage: 0,
-      discountStoreList: discountStoreList,
-      category: 'all',
-      searchStoreList: searchStoreList
-    );
+        currentPage: 0,
+        discountStoreList: discountStoreList,
+        category: 'all',
+        searchStoreList: searchStoreList);
+  }
+
+  DiscountStoreListResult copywithFromJsonFilter(
+      Map<String, dynamic> json, String category) {
+
+
+    bool isMismatch = (json['content'] as List).any((item) => item['category'] != category);
+    int currentPage = isMismatch ? 0 : (json['pageable']['pageNumber'] as int) + 1;
+
+    discountStoreList = json['content']
+            .map<DiscountStore>((item) => DiscountStore.fromJson(item))
+            .toList() ??
+        [];
+
+    return DiscountStoreListResult(
+        currentPage: currentPage,
+        discountStoreList: discountStoreList,
+        category: category,
+        searchStoreList: searchStoreList);
   }
 
   @override
@@ -63,5 +86,6 @@ class DiscountStoreListResult extends Equatable {
         currentPage,
         discountStoreList,
         category,
+        searchStoreList,
       ];
 }

@@ -10,11 +10,36 @@ import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
 import 'package:jeonbuk_front/screen/discount_store_map_screen.dart';
 
-class DiscountStoreScreen extends StatelessWidget {
+class DiscountStoreScreen extends StatefulWidget {
   DiscountStoreScreen({Key? key}) : super(key: key);
 
-  final TextEditingController textEditingController = TextEditingController();
   static List<DiscountStore> lastNonEmptyList = [];
+
+  @override
+  State<DiscountStoreScreen> createState() => _DiscountStoreScreenState();
+}
+
+class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
+  final TextEditingController textEditingController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent - 200 <=
+          scrollController.offset) {
+        context.read<DiscountStoreListCubit>().loadDiscountStoreList('all');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
 
   Widget _loading() {
     return const Center(
@@ -39,10 +64,14 @@ class DiscountStoreScreen extends StatelessWidget {
           itemCount: discountStoreFilter.keys.length,
           itemBuilder: (context, index) {
             final filterName = discountStoreFilter.keys.elementAt(index);
+            final filterValue = discountStoreFilter.values.elementAt(index);
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: InkWell(
                 onTap: () {
+                  context
+                      .read<DiscountStoreListCubit>()
+                      .loadDiscountStoreList(filterValue);
                   // Implement filter application logic or context.read<DiscountStoreListCubit>().applyFilter(filterName);
                 },
                 child: Container(
@@ -77,6 +106,12 @@ class DiscountStoreScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              DiscountStoreScreen.lastNonEmptyList = [];
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.arrow_back)),
         actions: <Widget>[
           IconButton(
               onPressed: () {
@@ -101,13 +136,16 @@ class DiscountStoreScreen extends StatelessWidget {
           if (state is LoadedDiscountStoreListCubitState ||
               state is LoadingDiscountStoreListCubitState) {
             List<DiscountStore> stores =
-            state.discountStoreListResult.searchStoreList.isNotEmpty
-                ? state.discountStoreListResult.searchStoreList
-                : (lastNonEmptyList.isNotEmpty ? lastNonEmptyList : state.discountStoreListResult.discountStoreList);
+                state.discountStoreListResult.searchStoreList.isNotEmpty
+                    ? state.discountStoreListResult.searchStoreList
+                    : (DiscountStoreScreen.lastNonEmptyList.isNotEmpty
+                        ? DiscountStoreScreen.lastNonEmptyList
+                        : state.discountStoreListResult.discountStoreList);
 
             // Update the last non-empty list if the current store list is not empty
             if (stores.isNotEmpty) {
-              lastNonEmptyList = stores;
+              DiscountStoreScreen.lastNonEmptyList =
+                  state.discountStoreListResult.searchStoreList;
             }
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -131,11 +169,12 @@ class DiscountStoreScreen extends StatelessWidget {
                   filterView(context, screenWidth),
                   Expanded(
                     child: ListView.separated(
+                      controller: scrollController,
                       itemBuilder: (context, index) =>
                           DiscountStoreCustomListBox(
                               discountStore: stores[index]),
                       separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
+                          const SizedBox(height: 10),
                       itemCount: stores.length,
                     ),
                   ),

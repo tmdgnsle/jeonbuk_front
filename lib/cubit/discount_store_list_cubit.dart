@@ -25,8 +25,13 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
         'page': state.discountStoreListResult.currentPage,
       });
       emit(LoadedDiscountStoreListCubitState(
-          discountStoreListResult: state.discountStoreListResult
-              .copywithFromJson(result.data, category)));
+          discountStoreListResult:
+              category != state.discountStoreListResult.category
+                  ? state.discountStoreListResult
+                      .copywithFromJsonFilter(result.data, category)
+                  : state.discountStoreListResult
+                      .copywithFromJson(result.data, category)));
+      print('DiscountStoreList: ${state.discountStoreListResult.discountStoreList}');
     } catch (e) {
       emit(ErrorDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult,
@@ -54,8 +59,6 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
           discountStoreListResult: state.discountStoreListResult,
           errorMessage: e.toString()));
     }
-
-    // await Future.delayed(Duration(milliseconds: 1000));
   }
 }
 
