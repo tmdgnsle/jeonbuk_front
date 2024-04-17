@@ -104,7 +104,7 @@ class _MainScreenState extends State<HomeScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
                                     create: (context) => DiscountStoreListCubit(),
-                                    child: const DiscountStoreScreen(),
+                                    child: DiscountStoreScreen(),
                                   ),
                                 ));
                           },

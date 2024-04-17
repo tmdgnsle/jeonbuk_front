@@ -20,12 +20,13 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
       print(state.discountStoreListResult.currentPage);
       emit(LoadingDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult));
-      var result = await _dio.get('/discountStore/list/${category}', queryParameters: {
+      var result =
+          await _dio.get('/discountStore/list/${category}', queryParameters: {
         'page': state.discountStoreListResult.currentPage,
       });
       emit(LoadedDiscountStoreListCubitState(
-          discountStoreListResult:
-              state.discountStoreListResult.copywithFromJson(result.data, category)));
+          discountStoreListResult: state.discountStoreListResult
+              .copywithFromJson(result.data, category)));
     } catch (e) {
       emit(ErrorDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult,
@@ -33,6 +34,29 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
     }
   }
 
+  void search(String key) async {
+    try {
+      if (state is LoadingDiscountStoreListCubitState ||
+          state is ErrorDiscountStoreListCubitState) {
+        return;
+      }
+      emit(LoadingDiscountStoreListCubitState(
+          discountStoreListResult: state.discountStoreListResult));
+      var result = await _dio
+          .get('/discountStore/search', queryParameters: {'storeName': key});
+      print('result: ${result.data}');
+      emit(LoadedDiscountStoreListCubitState(
+        discountStoreListResult:
+            state.discountStoreListResult.copywithFromJsonSearch(result.data),
+      ));
+    } catch (e) {
+      emit(ErrorDiscountStoreListCubitState(
+          discountStoreListResult: state.discountStoreListResult,
+          errorMessage: e.toString()));
+    }
+
+    // await Future.delayed(Duration(milliseconds: 1000));
+  }
 }
 
 abstract class DiscountStoreListCubitState extends Equatable {
@@ -50,14 +74,16 @@ class InitDiscountStoreListCubitState extends DiscountStoreListCubitState {
 }
 
 class LoadingDiscountStoreListCubitState extends DiscountStoreListCubitState {
-  const LoadingDiscountStoreListCubitState({required super.discountStoreListResult});
+  const LoadingDiscountStoreListCubitState(
+      {required super.discountStoreListResult});
 
   @override
   List<Object?> get props => [discountStoreListResult];
 }
 
 class LoadedDiscountStoreListCubitState extends DiscountStoreListCubitState {
-  const LoadedDiscountStoreListCubitState({required super.discountStoreListResult});
+  const LoadedDiscountStoreListCubitState(
+      {required super.discountStoreListResult});
 
   @override
   List<Object?> get props => [discountStoreListResult];

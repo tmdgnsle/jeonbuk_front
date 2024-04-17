@@ -5,15 +5,17 @@ class DiscountStoreListResult extends Equatable {
   final int currentPage;
   final List<DiscountStore> discountStoreList;
   final String category;
+  List<DiscountStore> searchStoreList;
 
-  const DiscountStoreListResult({
+  DiscountStoreListResult({
     required this.currentPage,
     required this.discountStoreList,
     required this.category,
+    required this.searchStoreList,
   });
 
   DiscountStoreListResult.init()
-      : this(currentPage: 0, discountStoreList: [], category: '');
+      : this(currentPage: 0, discountStoreList: [], category: '', searchStoreList: [],);
 
   factory DiscountStoreListResult.fromJson(
       Map<String, dynamic> json, String category) {
@@ -23,6 +25,7 @@ class DiscountStoreListResult extends Equatable {
           .map<DiscountStore>((item) => DiscountStore.fromJson(item))
           .toList(),
       category: category,
+      searchStoreList: [],
     );
   }
 
@@ -37,6 +40,21 @@ class DiscountStoreListResult extends Equatable {
               .toList(),
         ),
       category: category,
+      searchStoreList: [],
+    );
+  }
+
+  DiscountStoreListResult copywithFromJsonSearch(Map<String, dynamic> json) {
+
+    searchStoreList = json['content']
+        .map<DiscountStore>((item) => DiscountStore.fromJson(item))
+        .toList() ?? [];
+
+    return DiscountStoreListResult(
+      currentPage: 0,
+      discountStoreList: discountStoreList,
+      category: 'all',
+      searchStoreList: searchStoreList
     );
   }
 

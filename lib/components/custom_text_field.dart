@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final Icon? prefixIcons;
   final TextButton? textButton;
   final IconButton? suffixIcons;
+  final ValueChanged<String>? onChanged;
 
   const CustomTextField({
     required this.controller,
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcons,
     this.textButton,
     this.suffixIcons,
+    this.onChanged,
     super.key,
   });
 
@@ -26,6 +28,7 @@ class CustomTextField extends StatelessWidget {
     return Container(
       height: height,
       child: TextField(
+        onChanged: onChanged,
         controller: controller,
         decoration: InputDecoration(
             hintText: hintText,
