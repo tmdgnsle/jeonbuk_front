@@ -3,7 +3,7 @@ import 'package:jeonbuk_front/const/color.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String hintText;
+  final String? hintText;
   final bool obscure;
   final double height;
   final Icon? prefixIcons;
@@ -13,7 +13,7 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     required this.controller,
-    required this.hintText,
+    this.hintText,
     required this.obscure,
     required this.height,
     this.prefixIcons,

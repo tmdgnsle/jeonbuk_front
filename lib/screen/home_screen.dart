@@ -7,6 +7,7 @@ import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
 import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
+import 'package:jeonbuk_front/screen/safe_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,7 +51,13 @@ class _MainScreenState extends State<HomeScreen> {
                           backgroundColor: SKY_COLOR,
                           firstDescription: '내가 설정한 위치까지의',
                           secontDescription: '안전정보 확인',
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SafeHomeScreen()));
+                          },
                         ),
                         const SizedBox(
                           width: 8,
@@ -103,7 +110,8 @@ class _MainScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
-                                    create: (context) => DiscountStoreListCubit(),
+                                    create: (context) =>
+                                        DiscountStoreListCubit(),
                                     child: DiscountStoreScreen(),
                                   ),
                                 ));
