@@ -27,7 +27,7 @@ class CustomBox extends StatelessWidget {
       onTap: onTap,
       child: Stack(children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(16),
           width: size,
           height: size,
           decoration: BoxDecoration(

@@ -87,13 +87,14 @@ class OpenApis {
     final String store =
         (bookmarkType == 'RESTAURANT') ? 'restaurant' : 'discountStore';
 
+    print('store: $store');
+
     try {
       final response = await _dio.post('$_baseUrl/$store/bookmark', data: {
         'memberId': memberId,
         'storeId': storeId,
         'bookmarkType': bookmarkType,
       });
-
 
       //TODO 에러메세지일때 반환
       print('response.data: ${response.data}');
@@ -115,7 +116,8 @@ class OpenApis {
   Future<int> isBookmark(
       String memberId, String bookmarkType, int storeId) async {
     try {
-      final response = await _dio.get('$_baseUrl/bookmark/check', queryParameters: {
+      final response =
+          await _dio.get('$_baseUrl/bookmark/check', queryParameters: {
         'memberId': memberId,
         'bookmarkType': bookmarkType,
         'storeId': storeId,

@@ -6,23 +6,19 @@ import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/const/filter.dart';
-import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
-import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
-import 'package:jeonbuk_front/model/discount_store.dart';
+import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
+import 'package:jeonbuk_front/model/my_safe_home.dart';
 import 'package:sheet/sheet.dart';
 
-class DiscountStoreMapScreen extends StatefulWidget {
+class MySafeHomeScreen extends StatefulWidget {
   @override
-  State<DiscountStoreMapScreen> createState() => _MyAppState();
+  State<MySafeHomeScreen> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<DiscountStoreMapScreen> {
+class _MyAppState extends State<MySafeHomeScreen> {
   NaverMapController? mapController;
-  Widget? bottomsheet;
 
   NLatLng? myLocation;
-  bool isBookmarkLoading = false;
-  Map<int, bool> bookmarkStatus = {};
 
   void firstLoadMapData() async {
     try {
@@ -34,7 +30,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<DiscountStoreMapCubit>().loadDiscountStoreMapFilter(
+      context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           position.latitude, position.longitude, radius, 'all');
     } catch (e) {
       print('에러: ${e.toString()}');
@@ -52,7 +48,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       final radius = width * meterPerDp;
       print('radius: $radius');
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<DiscountStoreMapCubit>().loadDiscountStoreMapFilter(
+      context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           centerLocation.latitude, centerLocation.longitude, radius, 'all');
     } catch (e) {
       print('에러: ${e.toString()}');
@@ -68,7 +64,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
       final radius = width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<DiscountStoreMapCubit>().loadDiscountStoreMapFilter(
+      context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           centerLocation.latitude,
           centerLocation.longitude,
           radius,
@@ -107,79 +103,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
-  Future<void> toggleBookmark(String memberId, int storeId) async {
-    int? bookmarkId;
-    setState(() {
-      isBookmarkLoading = true; // 즐겨찾기 로딩 상태 시작
-    });
-
-    try {
-      bookmarkId =
-          await OpenApis().isBookmark(memberId, 'DISCOUNT_STORE', storeId);
-      if (bookmarkId != 0) {
-        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
-        await OpenApis().deleteBookmark(bookmarkId);
-        // setState(() {
-        //   bookmarkStatus[storeId] = false;
-        // });
-      } else {
-        // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
-        bookmarkId =
-            await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
-        // setState(() {
-        //   bookmarkStatus[storeId] = true;
-        // });
-      }
-    } catch (e) {
-      print("즐겨찾기 상태 변경 중 오류 발생: $e");
-    } finally {
-      setState(() {
-        bookmarkStatus[storeId] = bookmarkId != null && bookmarkId != 0;
-        isBookmarkLoading = false; // 즐겨찾기 로딩 상태 종료
-      });
-    }
-  }
-
-  Widget bottomSheet(DiscountStore store, String memberId) {
-    String modifiedEtc = store.etc.toString().replaceAll('<', '\n');
-    return Sheet(
-      initialExtent: 180,
-      maxExtent: 180,
-      minExtent: 60,
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        height: 250, // 원하는 높이 설정
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(store.storeName),
-                IconButton(
-                  icon: Icon(
-                    Icons.star,
-                    color:
-                        bookmarkStatus[store.id]! ? Colors.yellow : Colors.grey,
-                  ),
-                  onPressed: () {
-                    toggleBookmark(memberId, store.id);
-                  },
-                ),
-              ],
-            ),
-            Text('${store.storeType}'),
-            Text('주소: ${store.roadAddress}'),
-            Text(modifiedEtc),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget FilterView(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     const filterHeight = 30.0;
@@ -190,16 +113,15 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       // 스크린의 전체 너비를 사용
       height: filterHeight,
       // 높이 지정
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: discountStoreFilter.keys.length, // Map의 키 개수를 itemCount로 사용
-        itemBuilder: (context, index) {
-          final filterKeys =
-              discountStoreFilter.keys.toList(); // Map의 키를 리스트로 변환
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: List<Widget>.generate(mysafeHomeFilter.keys.length, (index) {
+          final filterKeys = mysafeHomeFilter.keys.toList(); // Map의 키를 리스트로 변환
           final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
           final filterValue =
-              discountStoreFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
-          final filterWidth = MediaQuery.of(context).size.width / 5;
+              mysafeHomeFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
+          final filterWidth = MediaQuery.of(context).size.width / 4;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -223,91 +145,56 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                   ],
                 ),
                 alignment: Alignment.center,
-                child: Text(
-                  filterName, // Map의 키를 텍스트로 사용
-                  style: const TextStyle(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      mysafeHomeIcon[index],
+                      color: Colors.white,
+                    ),
+                    Text(
+                      filterName, // Map의 키를 텍스트로 사용
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
               ),
             ),
           );
-        },
+        }),
       ),
     );
   }
 
-  void MarkUp(List<DiscountStore> storeList, BuildContext context) async {
-    final bloc = BlocProvider.of<IdJwtCubit>(context);
-    String memberId = bloc.state.idJwt.id!;
-    for (var store in storeList) {
+  void MarkUp(List<MySafeHome> mysafeHomeList, BuildContext context) async {
+    for (var mySafeHome in mysafeHomeList) {
       final Color? markerColor;
 
-      switch (store.category.toString()) {
-        case 'LEISURE':
+      switch (mySafeHome.type.toString()) {
+        case 'WarningBell':
           markerColor = Colors.red;
           break;
-        case 'SERVICES':
+        case 'CCTV':
           markerColor = Colors.orange;
           break;
-        case 'FOOD':
+        case 'StreetLamp':
           markerColor = Colors.yellow;
-          break;
-        case 'GOODS':
-          markerColor = Colors.green;
-          break;
-        case 'FOOD_BEVERAGE':
-          markerColor = Colors.blue;
-          break;
-        case 'BOOKS_STATIONERY':
-          markerColor = Colors.indigo;
-          break;
-        case 'RETAIL':
-          markerColor = Colors.purple;
-          break;
-        case 'EDUCATION':
-          markerColor = Colors.amber;
-          break;
-        case 'AUTOMOTIVE':
-          markerColor = Colors.teal;
           break;
         default:
           markerColor = Colors.black;
           break;
       }
-      print('Store Category: ${store.category}, Marker Color: $markerColor');
 
       var marker = NMarker(
-        id: store.id.toString(),
-        position: NLatLng(store.latitude, store.longitude),
+        id: mySafeHome.id.toString(),
+        position: NLatLng(mySafeHome.latitude, mySafeHome.longitude),
         iconTintColor: markerColor,
         size: Size(20, 30),
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
       print('marker.iconTintColor: ${marker.iconTintColor}');
 
-      marker.setOnTapListener((NMarker marker) {
-        setState(() {
-          bottomsheet = bottomSheet(store, memberId);
-        });
-      });
-
       mapController!.addOverlay(marker);
-
-      //TODO store마다 bookmark되어있는지 안되어있는지 체크
-      try {
-        final bookmarkId =
-            await OpenApis().isBookmark(memberId, 'DISCOUNT_STORE', store.id);
-        if (bookmarkId != 0) {
-          setState(() {
-            bookmarkStatus[store.id] = true;
-          });
-        } else {
-          setState(() {
-            bookmarkStatus[store.id] = false;
-          });
-        }
-      } catch (e) {
-        print("북마크 아이디 찾던 중 오류 발생: $e");
-      }
     }
   }
 
@@ -331,19 +218,18 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DiscountStoreMapCubit, DiscountStoreMapCubitState>(
+    return BlocConsumer<MySafeHomeMapCubit, MySafeHomeMapCubitState>(
       listener: (context, state) {
-        if (state is LoadedDiscountStoreMapCubitState &&
-            mapController != null) {
+        if (state is LoadedMySafeHomeMapCubitState && mapController != null) {
           mapController!.clearOverlays();
-          MarkUp(state.discountStoreMapResult.discountStoreMap, context);
+          MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
         }
       },
       builder: (context, state) {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
-          if (state is LoadedDiscountStoreMapCubitState) {
-            MarkUp(state.discountStoreMapResult.discountStoreMap, context);
+          if (state is LoadedMySafeHomeMapCubitState) {
+            MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
           }
         }
 
@@ -368,7 +254,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                   onMapReady: _onMapCreated,
                 ),
               Positioned(top: 0, child: FilterView(context)),
-              if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),
             ],
@@ -376,11 +261,13 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final NLatLng centerCoordinate = await _CenterCoordinate();
-              if (state.discountStoreMapResult.category == 'all') {
+              print(
+                  '경도: ${centerCoordinate.latitude}, 위도: ${centerCoordinate.longitude}');
+              if (state.mysafeHomeMapResult.category == 'all') {
                 loadMapDataAll(centerCoordinate);
               } else {
                 loadMapDataFilter(
-                    centerCoordinate, state.discountStoreMapResult.category);
+                    centerCoordinate, state.mysafeHomeMapResult.category);
               }
             },
             child: Icon(

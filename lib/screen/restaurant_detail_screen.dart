@@ -4,20 +4,19 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
-import 'package:jeonbuk_front/model/discount_store.dart';
+import 'package:jeonbuk_front/model/restaurant.dart';
 import 'package:sheet/sheet.dart';
 
-class DiscountStoreDetailScreen extends StatefulWidget {
-  final DiscountStore discountStore;
+class RestaurantDetailScreen extends StatefulWidget {
+  final Restaurant restaurant;
 
-  const DiscountStoreDetailScreen({required this.discountStore, super.key});
+  const RestaurantDetailScreen({required this.restaurant, super.key});
 
   @override
-  State<DiscountStoreDetailScreen> createState() =>
-      _DiscountStoreDetailScreenState();
+  State<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
 }
 
-class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
+class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
   NaverMapController? mapController;
   int? bookmarkId;
   bool isBookmarkLoading = false;
@@ -26,18 +25,17 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
   findBookmarkId(int storeId) async {
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     memberId = bloc.state.idJwt.id!;
-    bookmarkId =
-        await OpenApis().isBookmark(memberId, 'DISCOUNT_STORE', storeId);
+    bookmarkId = await OpenApis().isBookmark(memberId, 'RESTAURANT', storeId);
     setState(() {});
   }
 
   @override
   void initState() {
-    findBookmarkId(widget.discountStore.id);
+    findBookmarkId(widget.restaurant.id);
     super.initState();
   }
 
-  Widget bottomSheet(DiscountStore store, String memberId) {
+  Widget bottomSheet(Restaurant store, String memberId) {
     String modifiedEtc = store.etc.toString().replaceAll('<', '\n');
     return Sheet(
       initialExtent: 180,
@@ -69,7 +67,6 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
                 ),
               ],
             ),
-            Text('${store.storeType}'),
             Text('주소: ${store.roadAddress}'),
             Text(modifiedEtc),
           ],
@@ -93,7 +90,7 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
       } else {
         // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
         bookmarkId =
-            await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
+            await OpenApis().bookmarkStore(memberId, storeId, 'RESTAURANT');
         setState(() {});
       }
     } catch (e) {
@@ -110,9 +107,9 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
     void _onMapCreated(NaverMapController controller) async {
       mapController = controller;
       var marker = NMarker(
-        id: widget.discountStore.id.toString(),
-        position: NLatLng(
-            widget.discountStore.latitude, widget.discountStore.longitude),
+        id: widget.restaurant.id.toString(),
+        position:
+            NLatLng(widget.restaurant.latitude, widget.restaurant.longitude),
         iconTintColor: Colors.green,
         size: Size(20, 30),
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
@@ -127,14 +124,14 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
           NaverMap(
             options: NaverMapViewOptions(
               initialCameraPosition: NCameraPosition(
-                  target: NLatLng(widget.discountStore.latitude,
-                      widget.discountStore.longitude),
+                  target: NLatLng(
+                      widget.restaurant.latitude, widget.restaurant.longitude),
                   zoom: 18),
               locationButtonEnable: true,
             ),
             onMapReady: _onMapCreated,
           ),
-          bottomSheet(widget.discountStore, memberId),
+          bottomSheet(widget.restaurant, memberId),
         ],
       ),
       bottomNavigationBar: AppNavigationBar(),

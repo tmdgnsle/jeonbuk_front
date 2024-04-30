@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/screen/home_screen.dart';
 import 'package:jeonbuk_front/screen/my_setting_screen.dart';
+import 'package:jeonbuk_front/screen/safe_screen.dart';
 
 class AppNavigationBar extends StatelessWidget {
   AppNavigationBar({this.currentIndex, Key? key}) : super(key: key);
 
-  int? currentIndex;
+  final int? currentIndex;
 
   final List _screens = [
     HomeScreen(),
+    SafeScreen(),
     HomeScreen(),
     MySettingScreen(),
   ];
@@ -17,44 +19,51 @@ class AppNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed, // 아이템 고정 타입 설정
       showUnselectedLabels: true,
       selectedItemColor: GREEN_COLOR,
-      selectedIconTheme: IconThemeData(color: GREEN_COLOR),
+      selectedIconTheme: IconThemeData(color: GREEN_COLOR, size: 32),
+      selectedFontSize: 8,
       unselectedItemColor: BLUE_COLOR,
-      // fixedColor: GREEN_COLOR,
+      unselectedIconTheme: IconThemeData(color: BLUE_COLOR, size: 32),
+      unselectedFontSize: 8,
       backgroundColor: Colors.white,
       currentIndex: currentIndex ?? 0,
       onTap: (index) {
-        // Handle item tap
         if (index != currentIndex) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => _screens[index]));
-          currentIndex = index;
         }
       },
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          icon: Icon(
-            Icons.home,
+          icon: Padding(
+            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            child: Icon(Icons.home),
           ),
           label: '홈',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          icon: Icon(
-            Icons.star,
+          icon: Padding(
+            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            child: Icon(Icons.health_and_safety),
+          ),
+          label: '안심귀가',
+        ),
+        BottomNavigationBarItem(
+          icon: Padding(
+            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            child: Icon(Icons.star),
           ),
           label: '나만의 지도',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          icon: Icon(
-            Icons.person,
+          icon: Padding(
+            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            child: Icon(Icons.person),
           ),
           label: 'MY',
         ),
-        // Add more BottomNavigationBarItems as needed
       ],
     );
   }

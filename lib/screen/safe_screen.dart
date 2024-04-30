@@ -4,19 +4,21 @@ import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_box.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
+import 'package:jeonbuk_front/screen/my_safe_home_screen.dart';
 import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
 import 'package:jeonbuk_front/screen/safe_home_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class SafeScreen extends StatefulWidget {
+  const SafeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _MainScreenState();
+  State<SafeScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<HomeScreen> {
+class _MainScreenState extends State<SafeScreen> {
   @override
   Widget build(BuildContext context) {
     final double boxSize = (MediaQuery.of(context).size.width - 48) / 2;
@@ -43,41 +45,37 @@ class _MainScreenState extends State<HomeScreen> {
                       children: [
                         CustomBox(
                           size: boxSize,
-                          title: '음식점',
-                          titleIcon: const Icon(Icons.restaurant),
-                          firstDescription: '전북의 맛있는 음식점들',
-                          secontDescription: '야무지게 먹어야징~',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (context) => RestaurantListCubit(),
-                                    child: RestaurantScreen(),
-                                  ),
-                                ));
-                          },
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        CustomBox(
-                          size: boxSize,
-                          title: '할인매장',
+                          title: '안심귀가',
                           titleIcon: const Icon(
-                            Icons.shopping_bag,
+                            Icons.home,
+                            color: BLUE_COLOR,
                           ),
-                          backgroundColor: const Color(0xFF69F7B4),
-                          firstDescription: '전북의 알뜰 소식을',
-                          secontDescription: '한눈에 쏘옥~',
+                          backgroundColor: SKY_COLOR,
+                          firstDescription: '내가 설정한 위치까지의',
+                          secontDescription: '안전정보 확인',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SafeHomeScreen()));
+                          },
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        CustomBox(
+                          size: boxSize,
+                          title: '내 안심귀가',
+                          firstDescription: '현재 내 주변의',
+                          secontDescription: '안전정보 확인',
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
-                                    create: (context) =>
-                                        DiscountStoreListCubit(),
-                                    child: DiscountStoreScreen(),
+                                    create: (context) => MySafeHomeMapCubit(),
+                                    child: MySafeHomeScreen(),
                                   ),
                                 ));
                           },
@@ -91,35 +89,9 @@ class _MainScreenState extends State<HomeScreen> {
                       children: [
                         CustomBox(
                           size: boxSize,
-                          title: '축제',
-                          firstDescription: '전북의 모든 축제정보를',
-                          secontDescription: '만나보세요~',
-                          onTap: () {},
-                        ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        CustomBox(
-                          size: boxSize,
-                          title: '동네 마실',
-                          titleIcon: const Icon(Icons.directions_walk),
-                          firstDescription: '우리 집앞에',
-                          secontDescription: '이런곳이~~!',
-                          onTap: () {},
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      children: [
-                        CustomBox(
-                          size: boxSize,
-                          title: '챗봇',
-                          titleIcon: const Icon(Icons.restaurant),
-                          firstDescription: '짹짹이에게 물어',
-                          secontDescription: '보세요',
+                          title: '비상전화',
+                          firstDescription: '연락처에 저장된',
+                          secontDescription: '사람에게 전화',
                           onTap: () {},
                         ),
                       ],
@@ -132,7 +104,7 @@ class _MainScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: AppNavigationBar(
-        currentIndex: 0,
+        currentIndex: 1,
       ),
     );
   }

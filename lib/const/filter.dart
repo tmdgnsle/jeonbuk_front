@@ -11,6 +11,26 @@ const Map<String, String> discountStoreFilter = {
   '기타': 'ETC',
 };
 
+const Map<String, String> restaurantFilter = {
+  '착한가격업소': 'GOOD_PRICE',
+  '아이조아카드': 'CHILD_LIKE',
+  '아동급식카드': 'CHILD_MEAL',
+  '모범음식점': 'MODEL',
+  '문화누리카드': 'CULTURE_NURI ',
+};
+
+const Map<String, String> mysafeHomeFilter = {
+  '비상벨': 'WarningBell',
+  'CCTV': 'CCTV',
+  '가로등': 'StreetLamp'
+};
+
+const List<IconData> mysafeHomeIcon = [
+  Icons.notification_important,
+  Icons.videocam,
+  Icons.wb_incandescent,
+];
+
 const List<Color> filterColor = [
   Colors.red,
   Colors.orange,
