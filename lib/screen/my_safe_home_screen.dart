@@ -166,32 +166,55 @@ class _MyAppState extends State<MySafeHomeScreen> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   void MarkUp(List<MySafeHome> mysafeHomeList, BuildContext context) async {
     for (var mySafeHome in mysafeHomeList) {
-      final Color? markerColor;
+      Color? markerColor;
+      NOverlayImage? markerIcon;
+
+      print('타입: ${mySafeHome.type}');
 
       switch (mySafeHome.type.toString()) {
-        case 'WarningBell':
+        case 'WARNING_BELL':
           markerColor = Colors.red;
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'CCTV':
           markerColor = Colors.orange;
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                Icons.videocam,
+                color: Colors.grey,
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
-        case 'StreetLamp':
+        case 'STREET_LAMP':
           markerColor = Colors.yellow;
-          break;
-        default:
-          markerColor = Colors.black;
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(Icons.wb_incandescent, color: Colors.yellowAccent),
+              size: Size(20, 30),
+              context: context);
           break;
       }
 
       var marker = NMarker(
         id: mySafeHome.id.toString(),
         position: NLatLng(mySafeHome.latitude, mySafeHome.longitude),
-        iconTintColor: markerColor,
-        size: Size(20, 30),
+        // iconTintColor: markerColor!,
+        icon: markerIcon,
+        // NOverlayImage.fromAssetImage('assets/images/${markerIcon}'),
+        // size: Size(15, 20),
+
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
+
       print('marker.iconTintColor: ${marker.iconTintColor}');
 
       mapController!.addOverlay(marker);
