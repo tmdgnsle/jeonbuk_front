@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
+import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
+import 'package:jeonbuk_front/screen/login_screen.dart';
 
 class MySettingScreen extends StatefulWidget {
   const MySettingScreen({super.key});
@@ -19,6 +23,10 @@ class _MySettingScreenState extends State<MySettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<IdJwtCubit>(context);
+    nameController.text = bloc.state.idJwt.name!;
+    phoneController.text = bloc.state.idJwt.phoneNum!;
+    emergencyController.text = bloc.state.idJwt.emergencyNum!;
     return Scaffold(
       appBar: AppBar(
         title: Text('MY 설정'),
@@ -36,21 +44,30 @@ class _MySettingScreenState extends State<MySettingScreen> {
               ),
               Text('이름'),
               CustomTextField(
-                  controller: nameController, obscure: false, height: 50),
+                controller: nameController,
+                obscure: false,
+                height: 50,
+                enable: modify,
+              ),
               SizedBox(
                 height: 10,
               ),
-              Text('출발지'),
+              Text('전화번호'),
               CustomTextField(
-                  controller: phoneController, obscure: false, height: 50),
+                controller: phoneController,
+                obscure: false,
+                height: 50,
+                enable: modify,
+              ),
               SizedBox(
                 height: 10,
               ),
-              Text('도착치'),
+              Text('긴급연락망'),
               CustomTextField(
                 controller: emergencyController,
                 obscure: false,
                 height: 50,
+                enable: modify,
               ),
               SizedBox(
                 height: 10,
@@ -66,6 +83,15 @@ class _MySettingScreenState extends State<MySettingScreen> {
                     height: 50,
                     child: InkWell(
                       onTap: () {
+                        if (modify) {
+                          OpenApis().modifyInformation(
+                              bloc.state.idJwt.id!,
+                              nameController.text,
+                              phoneController.text,
+                              emergencyController.text);
+                          bloc.Modify(nameController.text, phoneController.text,
+                              emergencyController.text);
+                        }
                         setState(() {
                           modify = !modify;
                         });
@@ -85,8 +111,23 @@ class _MySettingScreenState extends State<MySettingScreen> {
               SizedBox(
                 height: 10,
               ),
-              TextButton(onPressed: () {}, child: Text('로그아웃')),
-              TextButton(onPressed: () {}, child: Text('탈퇴하기')),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        bloc.Logout();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                      child: Text('로그아웃')),
+                  TextButton(onPressed: () {}, child: Text('탈퇴하기')),
+                ],
+              ),
             ],
           ),
         ),

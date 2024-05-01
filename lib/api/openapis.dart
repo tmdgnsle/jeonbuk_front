@@ -43,7 +43,7 @@ class OpenApis {
   }
 
   // 로그인 기능을 수행합니다. 사용자 아이디와 비밀번호를 서버로 전송합니다.
-  Future<String> login(String id, String password) async {
+  Future<List<String>> login(String id, String password) async {
     try {
       final response = await _dio.post('$_baseUrl/account/login', data: {
         'id': id,
@@ -51,9 +51,14 @@ class OpenApis {
       });
       print('response ${response.headers['authorization'].toString()}');
       if (response.statusCode == 200) {
-        return response.headers['authorization'].toString();
+        final String jwt = response.headers['authoriztion'].toString();
+        final String name = response.data['name'].toString();
+        final String phoneNum = response.data['phoneNumber'].toString();
+        final String emergencyNum = response.data['emergencyNumber'].toString();
+
+        return [jwt, name, phoneNum, emergencyNum];
       } else if (response.statusCode == 401) {
-        return 'login failed';
+        return ['login failed'];
       } else
         throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
     } catch (e) {
@@ -79,6 +84,27 @@ class OpenApis {
     } catch (e) {
       // 그 외 예외 상황을 처리합니다.
       throw Exception('아이디 중복 확인에 실패하였습니다.\n ${e.toString()}');
+    }
+  }
+
+  Future<int> modifyInformation(
+      String id, String name, String phoneNum, String emergencyNum) async {
+    try {
+      final response = await _dio.post('$_baseUrl/account/modify', data: {
+        'id': id,
+        'name': name,
+        'phoneNumber': phoneNum,
+        'emergencyNumber': emergencyNum
+      });
+      if (response.statusCode == 200) {
+        return response.statusCode!.toInt();
+      } else if (response.statusCode == 401) {
+        return response.statusCode!.toInt();
+      } else
+        throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
+    } catch (e) {
+      // 로그인 실패 시, 예외를 발생시킵니다.
+      throw Exception('로그인에 실패하였습니다.\n ${e.toString()}');
     }
   }
 

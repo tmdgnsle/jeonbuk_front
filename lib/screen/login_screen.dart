@@ -49,15 +49,19 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () async {
-                  final loginJwt = await OpenApis()
+                  final information = await OpenApis()
                       .login(_idController.text, _passwordController.text);
 
-                  if (loginJwt != 'login failed') {
+                  if (information[0] != 'login failed') {
+                    final String loginJwt = information[0];
+                    final String name = information[1];
+                    final String phoneNum = information[2];
+                    final String emergencyNum = information[3];
                     final bloc = BlocProvider.of<IdJwtCubit>(context);
-                    bloc.Login(_idController.text, loginJwt);
+                    bloc.Login(_idController.text, loginJwt, name, phoneNum,
+                        emergencyNum);
                     print('Id: ${bloc.state.idJwt.id}');
-                    Navigator.push(
-                      context,
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                           builder: (context) => const HomeScreen()),
                     );
@@ -117,8 +121,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 8,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    width: 105,
+                  ),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -132,6 +139,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: GREEN_COLOR,
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    width: 20,
                   ),
                   TextButton(
                     onPressed: () {},

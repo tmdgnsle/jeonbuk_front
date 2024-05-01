@@ -169,14 +169,12 @@ class _MyAppState extends State<MySafeHomeScreen> {
   // ignore: non_constant_identifier_names
   void MarkUp(List<MySafeHome> mysafeHomeList, BuildContext context) async {
     for (var mySafeHome in mysafeHomeList) {
-      Color? markerColor;
       NOverlayImage? markerIcon;
 
       print('타입: ${mySafeHome.type}');
 
       switch (mySafeHome.type.toString()) {
         case 'WARNING_BELL':
-          markerColor = Colors.red;
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 Icons.notification_important,
@@ -186,7 +184,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
               context: context);
           break;
         case 'CCTV':
-          markerColor = Colors.orange;
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 Icons.videocam,
@@ -196,7 +193,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
               context: context);
           break;
         case 'STREET_LAMP':
-          markerColor = Colors.yellow;
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(Icons.wb_incandescent, color: Colors.yellowAccent),
               size: Size(20, 30),

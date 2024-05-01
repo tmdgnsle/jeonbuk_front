@@ -5,12 +5,20 @@ import 'package:jeonbuk_front/model/id_jwt.dart';
 class IdJwtCubit extends Cubit<IdJwtCubitState> {
   IdJwtCubit() : super(InitIdJwtCubitState());
 
-  Login(String loginId, String loginJwt) {
-    emit(LoginIdJwtCubitState(idJwt: IdJwt.login(loginId, loginJwt)));
+  Login(String loginId, String loginJwt, String name, String phoneNum,
+      String emergencyNum) {
+    emit(LoginIdJwtCubitState(
+        idJwt: IdJwt.login(loginId, loginJwt, name, phoneNum, emergencyNum)));
   }
 
   Logout() {
     emit(LogoutIdJwtCubitState(idJwt: IdJwt.logout()));
+  }
+
+  Modify(String name, String phoneNum, String emergencyNum) {
+    emit(LoginIdJwtCubitState(
+        idJwt: IdJwt.login(
+            state.idJwt.id!, state.idJwt.jwt!, name, phoneNum, emergencyNum)));
   }
 }
 

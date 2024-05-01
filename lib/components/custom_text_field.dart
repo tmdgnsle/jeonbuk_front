@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final TextButton? textButton;
   final IconButton? suffixIcons;
   final ValueChanged<String>? onChanged;
+  final bool? enable;
 
   const CustomTextField({
     required this.controller,
@@ -20,6 +21,7 @@ class CustomTextField extends StatelessWidget {
     this.textButton,
     this.suffixIcons,
     this.onChanged,
+    this.enable,
     super.key,
   });
 
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
     return SizedBox(
       height: height,
       child: TextField(
+        enabled: enable,
         onChanged: onChanged,
         controller: controller,
         decoration: InputDecoration(
