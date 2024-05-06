@@ -118,7 +118,7 @@ class OpenApis {
     try {
       final response = await _dio.post('$_baseUrl/$store/bookmark', data: {
         'memberId': memberId,
-        'storeId': storeId,
+        'typeId': storeId,
         'bookmarkType': bookmarkType,
       });
 
@@ -130,9 +130,13 @@ class OpenApis {
     }
   }
 
-  Future<void> deleteBookmark(int bookmarkId) async {
+  Future<void> deleteBookmark(String memberId, int storeId, String bookmarkType) async {
     try {
-      await _dio.delete('$_baseUrl/bookmark/$bookmarkId');
+      await _dio.delete('$_baseUrl/bookmark/delete', data: {
+        'memberId': memberId,
+        'typeId': storeId,
+        'bookmarkType': bookmarkType,
+      });
     } catch (e) {
       throw Exception('즐겨찾기 삭제에 실패하였습니다. \n ${e.toString()}');
     }
@@ -146,7 +150,7 @@ class OpenApis {
           await _dio.get('$_baseUrl/bookmark/check', queryParameters: {
         'memberId': memberId,
         'bookmarkType': bookmarkType,
-        'storeId': storeId,
+        'typeId': storeId,
       });
       print('response: $response');
 

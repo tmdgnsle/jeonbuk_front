@@ -12,7 +12,7 @@ class BookmarkMapCubit extends Cubit<BookmarkMapCubitState> {
     _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
   }
 
-  Future<void> loadBookmarkMapFilter(String memberId, String category) async {
+  Future<void> loadBookmarkMap(String memberId, String category) async {
     try {
       emit(LoadingBookmarkMapCubitState(
           bookmarkMapResult: state.bookmarkMapResult));
@@ -20,10 +20,7 @@ class BookmarkMapCubit extends Cubit<BookmarkMapCubitState> {
       var result = await _dio.get('/bookmark/$memberId');
 
       emit(LoadedBookmarkMapCubitState(
-          bookmarkMapResult: BookmarkMap.fromJson(
-        result.data,
-        category,
-      )));
+          bookmarkMapResult: BookmarkMap.fromJson(result.data, category)));
     } catch (e) {
       emit(ErrorBookmarkMapCubitState(
           bookmarkMapResult: state.bookmarkMapResult,

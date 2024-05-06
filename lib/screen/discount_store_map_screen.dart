@@ -118,7 +118,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           await OpenApis().isBookmark(memberId, 'DISCOUNT_STORE', storeId);
       if (bookmarkId != 0) {
         // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
-        await OpenApis().deleteBookmark(bookmarkId);
+        await OpenApis().deleteBookmark(memberId, storeId, 'DISCOUNT_STORE');
         // setState(() {
         //   bookmarkStatus[storeId] = false;
         // });

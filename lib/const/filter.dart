@@ -25,6 +25,13 @@ const Map<String, String> mysafeHomeFilter = {
   '가로등': 'StreetLamp'
 };
 
+const Map<String, String> bookmarkFilter = {
+  '음식점': 'RESTAURANT',
+  '할인매장': 'DISCOUNT_STORE',
+  '축제': 'FESTIVAL',
+  '동네 마실': 'TOWN_STROLL'
+};
+
 const List<IconData> mysafeHomeIcon = [
   Icons.notification_important,
   Icons.videocam,
