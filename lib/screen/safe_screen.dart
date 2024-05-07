@@ -6,6 +6,7 @@ import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
 import 'package:jeonbuk_front/screen/my_safe_home_screen.dart';
 import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
@@ -57,8 +58,11 @@ class _MainScreenState extends State<SafeScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SafeHomeScreen()));
+                                  builder: (context) => BlocProvider(
+                                    create: (context) => SafeHomeCubit(),
+                                    child: SafeHomeScreen(),
+                                  ),
+                                ));
                           },
                         ),
                         const SizedBox(
