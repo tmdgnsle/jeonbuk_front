@@ -7,6 +7,7 @@ import 'package:jeonbuk_front/screen/login_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+
   await NaverMapSdk.instance.initialize(
       clientId: 'nf68z75anv',
       onAuthFailed: (error) {

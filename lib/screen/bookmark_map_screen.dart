@@ -4,6 +4,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
+import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/bookmark_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
@@ -21,18 +22,21 @@ class _MyAppState extends State<BookmarkMapScreen> {
   NaverMapController? mapController;
   Widget? bottomsheet;
 
-
   NLatLng? myLocation;
   bool isBookmarkLoading = false;
   Map<int, bool> bookmarkStatus = {};
+  List<bool> filterTap = [false, false, false, false];
+  String? memberId;
 
   void firstLoadMapData() async {
+    final bloc = BlocProvider.of<IdJwtCubit>(context);
+    memberId = bloc.state.idJwt.id!;
     try {
       Position position = await determinePosition();
       setState(() {
         myLocation = NLatLng(position.latitude, position.longitude);
       });
-      context.read<BookmarkMapCubit>().loadBookmarkMap('abcd1234', 'ALL');
+      context.read<BookmarkMapCubit>().loadBookmarkMap(memberId!, 'ALL');
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -43,7 +47,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
     try {
       context
           .read<BookmarkMapCubit>()
-          .loadBookmarkMap('abcd1234', filter.toString());
+          .loadBookmarkMap(memberId!, filter.toString());
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -213,11 +217,25 @@ class _MyAppState extends State<BookmarkMapScreen> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  for(int i = 0; i < filterTap.length; i++){
+                    if (i == index){
+                      filterTap[i] = true;
+                    } else {
+                      filterTap[i] = false;
+                    }
+                  }
+                });
+
+
+                loadMapDataFilter(filterValue!);
+
+              },
               child: Container(
                 width: filterWidth,
                 decoration: BoxDecoration(
-                  color: filterColor[index], // 이 예제에서는 색상을 고정값으로 설정
+                  color: filterTap[index] ? GREEN_COLOR : BLUE_COLOR, // 이 예제에서는 색상을 고정값으로 설정
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
@@ -242,10 +260,10 @@ class _MyAppState extends State<BookmarkMapScreen> {
   }
 
   void MarkUp(BookmarkMap bookmarkMap, BuildContext context) async {
-    final bloc = BlocProvider.of<IdJwtCubit>(context);
-    String memberId = bloc.state.idJwt.id!;
 
-    if(bookmarkMap.discountStoreMap != null && bookmarkMap.discountStoreMap!.isNotEmpty){
+
+    if (bookmarkMap.discountStoreMap != null &&
+        bookmarkMap.discountStoreMap!.isNotEmpty) {
       for (var store in bookmarkMap.discountStoreMap!) {
         var marker = NMarker(
           id: 'DISCOUNT_STORE${store.id.toString()}',
@@ -257,7 +275,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         marker.setOnTapListener((NMarker marker) {
           setState(() {
             bookmarkStatus[store.id] = true;
-            bottomsheet = bottomSheetD(store, memberId);
+            bottomsheet = bottomSheetD(store, memberId!);
           });
         });
 
@@ -265,7 +283,8 @@ class _MyAppState extends State<BookmarkMapScreen> {
         print('할인매장 마크업');
       }
     }
-    if (bookmarkMap.restaurantMap != null && bookmarkMap.restaurantMap!.isNotEmpty){
+    if (bookmarkMap.restaurantMap != null &&
+        bookmarkMap.restaurantMap!.isNotEmpty) {
       for (var store in bookmarkMap.restaurantMap!) {
         var marker = NMarker(
           id: 'RESTAURANT${store.id.toString()}',
@@ -277,7 +296,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         marker.setOnTapListener((NMarker marker) {
           setState(() {
             bookmarkStatus[store.id] = true;
-            bottomsheet = bottomSheetR(store, memberId);
+            bottomsheet = bottomSheetR(store, memberId!);
           });
         });
 
@@ -285,7 +304,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
         print('식당 마크업');
       }
     }
-
   }
 
   @override
@@ -296,7 +314,14 @@ class _MyAppState extends State<BookmarkMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookmarkMapCubit, BookmarkMapCubitState>(
+    return BlocConsumer<BookmarkMapCubit, BookmarkMapCubitState>(
+      listener: (context, state) {
+        if (state is LoadedBookmarkMapCubitState &&
+            mapController != null) {
+          mapController!.clearOverlays();
+          MarkUp(state.bookmarkMapResult, context);
+        }
+      },
       builder: (context, state) {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
@@ -332,7 +357,22 @@ class _MyAppState extends State<BookmarkMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              firstLoadMapData();
+              setState(() {
+                for(int i = 0; i < filterTap.length; i++){
+                  filterTap[i] = false;
+                }
+              });
+            },
+            child: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            backgroundColor: GREEN_COLOR,
+          ),
+          bottomNavigationBar: AppNavigationBar(currentIndex: 2,),
         );
       },
     );

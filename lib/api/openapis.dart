@@ -167,4 +167,26 @@ class OpenApis {
       throw Exception('예상치 못한 오류가 발생했습니다.. \n ${e.toString()}');
     }
   }
+
+  Future<int> SafeAdd(String memberId, String name, double startLa, double startLo, double endLa, double endLo) async{
+    try{
+      final response = await _dio.post('$_baseUrl/SafeHome/add', queryParameters: {
+        'memberId': memberId,
+        'name': name,
+        'startLatitude': startLa,
+        'startLongitude': startLo,
+        'endLatitude': endLa,
+        'endLongitude': endLo,
+      });
+
+      print(response.statusCode);
+
+      if(response.statusCode == 200){
+        return response.statusCode as int;
+      } else throw Exception('안심귀가 추가 실패: ${response.toString()}');
+
+    } catch(e){
+      throw Exception('안심귀가 추가 실패: ${e.toString()}');
+    }
+  }
 }
