@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 class OpenApis {
   final Dio _dio = Dio();
@@ -168,25 +171,47 @@ class OpenApis {
     }
   }
 
-  Future<int> SafeAdd(String memberId, String name, double startLa, double startLo, double endLa, double endLo) async{
-    try{
-      final response = await _dio.post('$_baseUrl/SafeHome/add', queryParameters: {
-        'memberId': memberId,
-        'name': name,
-        'startLatitude': startLa,
-        'startLongitude': startLo,
-        'endLatitude': endLa,
-        'endLongitude': endLo,
-      });
 
-      print(response.statusCode);
 
-      if(response.statusCode == 200){
-        return response.statusCode as int;
-      } else throw Exception('안심귀가 추가 실패: ${response.toString()}');
+  Future<List<NLatLng>> fetchRoute(NLatLng start, NLatLng end) async {
+    const String appKey = 'qNOUGsj4NV1lip9vQeZ2ea3zik85BaI85FR0duOT'; // Replace with your Tmap API Key
+    var dio = Dio();
+    final response = await dio.post(
+      'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json',
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'appKey': appKey,
+        },
+      ),
+      data: jsonEncode({
+        'startX': start.longitude.toString(),
+        'startY': start.latitude.toString(),
+        'endX': end.longitude.toString(),
+        'endY': end.latitude.toString(),
+        'reqCoordType': 'WGS84GEO',
+        'resCoordType': 'WGS84GEO',
+        'startName': '출발지',
+        'endName': '도착지',
+      }),
+    );
 
-    } catch(e){
-      throw Exception('안심귀가 추가 실패: ${e.toString()}');
+    if (response.statusCode == 200) {
+      final data = response.data;
+      List<NLatLng> pathPoints = [];
+      for (var feature in data['features']) {
+        var geometry = feature['geometry'];
+        if (geometry['type'] == 'LineString') {
+          for (var coord in geometry['coordinates']) {
+            double lat = (coord[1] is int) ? (coord[1] as int).toDouble() : coord[1];
+            double lng = (coord[0] is int) ? (coord[0] as int).toDouble() : coord[0];
+            pathPoints.add(NLatLng(lat, lng));
+          }
+        }
+      }
+      return pathPoints;
+    } else {
+      throw Exception('Failed to load route');
     }
   }
 

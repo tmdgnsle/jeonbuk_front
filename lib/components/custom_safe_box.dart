@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 
-class CustomBookmarkBox extends StatelessWidget {
+class CustomSafeBox extends StatelessWidget {
   final String name;
   final NLatLng start;
   final NLatLng end;
   final GestureTapCallback onTap;
   final GestureTapCallback onLongPress;
 
-  const CustomBookmarkBox(
+  const CustomSafeBox(
       {super.key,
       required this.name,
       required this.start,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -8,6 +7,7 @@ import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
+import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
 
 class AddSafeScreen extends StatefulWidget {
   const AddSafeScreen({super.key});
@@ -22,7 +22,7 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
   final TextEditingController endController = TextEditingController();
   String? memberId;
 
-  void getMemberId(){
+  void getMemberId() {
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     memberId = bloc.state.idJwt.id!;
   }
@@ -38,7 +38,6 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
       return NLatLng(0, 0);
     }
   }
-
 
   // Future<NLatLng> getCoordinatesFromAddress(String address) async {
   //   final String clientId = 'nf68z75anv';
@@ -93,12 +92,13 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
         title: Text('안심귀가 추가'),
         actions: [
           TextButton(
-              onPressed: () async{
+              onPressed: () async {
+                NLatLng start =
+                    await getCoordinatesFromAddress(startController.text);
+                NLatLng end =
+                    await getCoordinatesFromAddress(endController.text);
 
-                NLatLng start = await getCoordinatesFromAddress(startController.text);
-                NLatLng end = await getCoordinatesFromAddress(endController.text);
-
-                if(start == NLatLng(0,0) || end == NLatLng(0,0)){
+                if (start == NLatLng(0, 0) || end == NLatLng(0, 0)) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -117,14 +117,18 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                     },
                   );
                 } else {
-                  final int response = await OpenApis().SafeAdd(memberId!, pathController.text, start.latitude, start.longitude, end.latitude, end.longitude);
-                  if(response == 200){
+                  final int response = await context.read<SafeHomeCubit>().SafeAdd(
+                      memberId!,
+                      pathController.text,
+                      start.latitude,
+                      start.longitude,
+                      end.latitude,
+                      end.longitude);
+                  if (response == 200) {
                     print('성공');
                     Navigator.of(context).pop();
                   }
                 }
-
-
               },
               child: Text(
                 '저장',
@@ -166,7 +170,9 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: AppNavigationBar(currentIndex: 1,),
+      bottomNavigationBar: AppNavigationBar(
+        currentIndex: 1,
+      ),
     );
   }
 }

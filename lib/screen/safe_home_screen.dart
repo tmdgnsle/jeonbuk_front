@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
-import 'package:jeonbuk_front/components/custom_bookmark_box.dart';
+import 'package:jeonbuk_front/components/custom_safe_box.dart';
 import 'package:jeonbuk_front/const/color.dart';
+import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
+import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
 import 'package:jeonbuk_front/screen/add_safe_screen.dart';
+import 'package:jeonbuk_front/screen/safe_home_detail_screen.dart';
 
 class SafeHomeScreen extends StatefulWidget {
   const SafeHomeScreen({super.key});
@@ -15,6 +18,8 @@ class SafeHomeScreen extends StatefulWidget {
 }
 
 class _SafeHomeScreenState extends State<SafeHomeScreen> {
+  late String memberId;
+
   Widget _error(String errMessage) {
     return Center(
       child: Text(errMessage),
@@ -25,7 +30,9 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<SafeHomeCubit>().loadSafeHomeList('abcd1234');
+    final bloc = BlocProvider.of<IdJwtCubit>(context);
+    memberId = bloc.state.idJwt.id!;
+    context.read<SafeHomeCubit>().loadSafeHomeList(memberId);
   }
 
   @override
@@ -36,8 +43,14 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddSafeScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider.value(
+                        value: SafeHomeCubit(),
+                        child: AddSafeScreen(),
+                      ),
+                    ));
               },
               icon: Icon(Icons.add))
         ],
@@ -57,8 +70,7 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                   Expanded(
                     child: ListView.separated(
                         itemBuilder: (context, index) {
-                          return
-                          CustomBookmarkBox(
+                          return CustomSafeBox(
                             name: state
                                 .safeHomeListResult.safehomeList[index].name,
                             start: NLatLng(
@@ -71,8 +83,56 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                                     .endLa,
                                 state.safeHomeListResult.safehomeList[index]
                                     .endLo),
-                            onTap: () {},
-                            onLongPress: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BlocProvider(
+                                      create: (context) => MySafeHomeMapCubit(),
+                                      child: SafeHomeDetailScreen(
+                                          start: NLatLng(
+                                              state.safeHomeListResult
+                                                  .safehomeList[index].startLa,
+                                              state.safeHomeListResult
+                                                  .safehomeList[index].startLo),
+                                          end: NLatLng(
+                                              state.safeHomeListResult
+                                                  .safehomeList[index].endLa,
+                                              state.safeHomeListResult
+                                                  .safehomeList[index].endLo),
+                                          title: state.safeHomeListResult
+                                              .safehomeList[index].name),
+                                    ),
+                                  ));
+                            },
+                            onLongPress: () {
+                              final safeCubit = context.read<SafeHomeCubit>();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('알림'),
+                                    content: Text('${state.safeHomeListResult.safehomeList[index].name}을 삭제하시겠습니까?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('확인'),
+                                        onPressed: () {
+                                          safeCubit.deleteSafeHomeList(memberId, state.safeHomeListResult.safehomeList[index].id);
+                                           Navigator.of(context).pop();
+                                          print("이전 화면으로 돌아가서 상태: ${safeCubit.state}");
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('취소'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(); // 알림창 닫기
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           );
                         },
                         separatorBuilder: (context, index) => const SizedBox(
@@ -81,8 +141,14 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                         itemCount:
                             state.safeHomeListResult.safehomeList.length),
                   ),
-                  Text('꾹 눌러서 삭제합니다.', textAlign: TextAlign.center, style: TextStyle(color: GREY_COLOR),),
-                  SizedBox(height: 10,),
+                  Text(
+                    '꾹 눌러서 삭제합니다.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: GREY_COLOR),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             );
@@ -91,7 +157,9 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
           }
         },
       ),
-      bottomNavigationBar: AppNavigationBar(currentIndex: 1,),
+      bottomNavigationBar: AppNavigationBar(
+        currentIndex: 1,
+      ),
     );
   }
 }

@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
 import 'package:jeonbuk_front/model/my_safe_home.dart';
 
-class MySafeHomeScreen extends StatefulWidget {
+class SafeHomeDetailScreen extends StatefulWidget {
+  final NLatLng start;
+  final NLatLng end;
+  final String title;
+
+  const SafeHomeDetailScreen(
+      {super.key, required this.start, required this.end, required this.title});
+
   @override
-  State<MySafeHomeScreen> createState() => _MyAppState();
+  State<SafeHomeDetailScreen> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MySafeHomeScreen> {
+class _MyAppState extends State<SafeHomeDetailScreen> {
   NaverMapController? mapController;
-
-  NLatLng? myLocation;
+  late double centerLa;
+  late double centerLo;
 
   void firstLoadMapData() async {
     try {
-      Position position = await determinePosition();
-      setState(() {
-        myLocation = NLatLng(position.latitude, position.longitude);
-      });
-
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
-          position.latitude, position.longitude, radius, 'all');
+      context
+          .read<MySafeHomeMapCubit>()
+          .loadMySafeHomeMapFilter(centerLa, centerLo, radius, 'all');
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -71,34 +74,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
     }
-  }
-
-  Future<Position> determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // 위치 서비스가 활성화되어 있는지 확인합니다.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('위치 서비스가 비활성화되어 있습니다.');
-    }
-
-    // 위치 권한을 확인합니다.
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('위치 권한이 거부되었습니다.');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // 권한이 영구적으로 거부된 경우
-      return Future.error('위치 권한이 영구적으로 거부되었습니다. 설정에서 권한을 변경해주세요.');
-    }
-
-    // 현재 위치를 가져옵니다.
-    return await Geolocator.getCurrentPosition();
   }
 
   Widget FilterView(BuildContext context) {
@@ -162,6 +137,19 @@ class _MyAppState extends State<MySafeHomeScreen> {
         }),
       ),
     );
+  }
+
+  void MarkupPath() async {
+    var startmarker = NMarker(id: 'start', position: widget.start);
+    var endmarker = NMarker(id: 'end', position: widget.end);
+
+    mapController!.addOverlay(startmarker);
+    mapController!.addOverlay(endmarker);
+
+    var path = await OpenApis().fetchRoute(widget.start, widget.end);
+    var pathOverlay =
+        NPathOverlay(id: 'test', coords: path, color: Colors.red, width: 10);
+    mapController!.addOverlay(pathOverlay);
   }
 
   // ignore: non_constant_identifier_names
@@ -230,6 +218,8 @@ class _MyAppState extends State<MySafeHomeScreen> {
   @override
   void initState() {
     super.initState();
+    centerLa = (widget.start.latitude + widget.end.latitude) / 2;
+    centerLo = (widget.start.longitude + widget.end.longitude) / 2;
     firstLoadMapData();
   }
 
@@ -238,7 +228,9 @@ class _MyAppState extends State<MySafeHomeScreen> {
     return BlocConsumer<MySafeHomeMapCubit, MySafeHomeMapCubitState>(
       listener: (context, state) {
         if (state is LoadedMySafeHomeMapCubitState && mapController != null) {
-          mapController!.clearOverlays();
+          mapController!.clearOverlays(
+            type: NOverlayType.marker,
+          );
           MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
         }
       },
@@ -247,39 +239,35 @@ class _MyAppState extends State<MySafeHomeScreen> {
           mapController = controller;
           if (state is LoadedMySafeHomeMapCubitState) {
             MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
+            MarkupPath();
           }
         }
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text(
-              '내 주변',
+            title: Text(
+              widget.title,
               textAlign: TextAlign.center,
             ),
           ),
           body: Stack(
             children: [
-              if (myLocation != null)
-                NaverMap(
-                  options: NaverMapViewOptions(
-                    initialCameraPosition: NCameraPosition(
-                      target: myLocation!,
-                      zoom: 18,
-                    ),
-                    locationButtonEnable: true,
+              NaverMap(
+                options: NaverMapViewOptions(
+                  initialCameraPosition: NCameraPosition(
+                    target: NLatLng(centerLa, centerLo),
+                    zoom: 18,
                   ),
-                  onMapReady: _onMapCreated,
+                  locationButtonEnable: true,
                 ),
+                onMapReady: _onMapCreated,
+              ),
               Positioned(top: 0, child: FilterView(context)),
-              if (myLocation == null)
-                const Center(child: CircularProgressIndicator()),
             ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final NLatLng centerCoordinate = await _CenterCoordinate();
-              print(
-                  '경도: ${centerCoordinate.latitude}, 위도: ${centerCoordinate.longitude}');
               if (state.mysafeHomeMapResult.category == 'all') {
                 loadMapDataAll(centerCoordinate);
               } else {
@@ -293,7 +281,9 @@ class _MyAppState extends State<MySafeHomeScreen> {
             ),
             backgroundColor: GREEN_COLOR,
           ),
-          bottomNavigationBar: AppNavigationBar(currentIndex: 1,),
+          bottomNavigationBar: AppNavigationBar(
+            currentIndex: 1,
+          ),
         );
       },
     );
