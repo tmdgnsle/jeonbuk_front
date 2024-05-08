@@ -295,7 +295,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
             ),
             backgroundColor: GREEN_COLOR,
           ),
-          bottomNavigationBar: AppNavigationBar(),
+          bottomNavigationBar: AppNavigationBar(currentIndex: 1,),
         );
       },
     );

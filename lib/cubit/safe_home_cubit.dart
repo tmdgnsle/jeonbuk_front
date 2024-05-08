@@ -21,13 +21,23 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
       var result = await _dio.get('/SafeHome/list', queryParameters: {
         'memberId': memberId,
       });
-      emit(LoadedSafeHomeCubitState(safeHomeListResult: result.data));
+      emit(LoadedSafeHomeCubitState(safeHomeListResult: SafeHomeListResult.fromJson(result.data)));
+
     } catch (e) {
       emit(ErrorSafeHomeCubitState(
           safeHomeListResult: state.safeHomeListResult,
           errorMessage: e.toString()));
     }
   }
+
+  // deleteSafeHomeList(int SafeId) async{
+  //   try {
+  //     if (state is LoadingSafeHomeCubitState || state is ErrorSafeHomeCubitState){
+  //       return;
+  //     }
+  //     emit(LoadingSafeHomeCubitState(safeHomeListResult: state.safeHomeListResult));
+  //   }
+  // }
 }
 
 abstract class SafeHomeCubitState extends Equatable {

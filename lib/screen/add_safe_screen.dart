@@ -166,7 +166,7 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: AppNavigationBar(),
+      bottomNavigationBar: AppNavigationBar(currentIndex: 1,),
     );
   }
 }
