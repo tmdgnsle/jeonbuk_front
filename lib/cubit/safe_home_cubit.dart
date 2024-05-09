@@ -73,6 +73,7 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
       if(response.statusCode == 200){
         //TODO response.body로 safeReturnId받으면 _safeHomeListResult에 추가하고 emit하기
         // _safeHomeListResult.safehomeList.add
+        loadSafeHomeList(memberId);
         return response.statusCode as int;
       } else throw Exception('안심귀가 추가 실패: ${response.toString()}');
 

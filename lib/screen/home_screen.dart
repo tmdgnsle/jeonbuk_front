@@ -117,7 +117,6 @@ class _MainScreenState extends State<HomeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '챗봇',
-                          titleIcon: const Icon(Icons.restaurant),
                           firstDescription: '짹짹이에게 물어',
                           secontDescription: '보세요',
                           onTap: () {},

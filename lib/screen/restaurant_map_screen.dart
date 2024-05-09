@@ -209,7 +209,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
               child: Container(
                 width: filterWidth,
                 decoration: BoxDecoration(
-                  color: filterColor[index], // 이 예제에서는 색상을 고정값으로 설정
+                  color: restaurantFilterColor[index], // 이 예제에서는 색상을 고정값으로 설정
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(

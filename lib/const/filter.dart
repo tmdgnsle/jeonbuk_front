@@ -12,17 +12,23 @@ const Map<String, String> discountStoreFilter = {
 };
 
 const Map<String, String> restaurantFilter = {
-  '착한가격업소': 'GOOD_PRICE',
-  '아이조아카드': 'CHILD_LIKE',
-  '아동급식카드': 'CHILD_MEAL',
   '모범음식점': 'MODEL',
-  '문화누리카드': 'CULTURE_NURI ',
+  '아이조아': 'CHILD_LIKE',
+  '아동급식': 'CHILD_MEAL',
+  '착한가격': 'GOOD_PRICE',
 };
 
+const List<Color> restaurantFilterColor = [
+  Color(0xFF007036),
+  Color(0xFFFF9D26),
+  Color(0xFF5A65BE),
+  Color(0xFF223C80),
+];
+
 const Map<String, String> mysafeHomeFilter = {
-  '비상벨': 'WarningBell',
+  '비상벨': 'WARNING_BELL',
   'CCTV': 'CCTV',
-  '가로등': 'StreetLamp'
+  '가로등': 'STREET_LAMP'
 };
 
 const Map<String, String> bookmarkFilter = {
@@ -47,4 +53,10 @@ const List<Color> filterColor = [
   Colors.indigo,
   Colors.purple,
   Colors.black
+];
+
+const List<Color> safeFilterColor = [
+  Color(0xFFFF0000),
+  Color(0xFF696969),
+  Color(0xFFFF9D26),
 ];

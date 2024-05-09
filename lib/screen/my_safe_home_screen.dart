@@ -131,7 +131,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
               child: Container(
                 width: filterWidth,
                 decoration: BoxDecoration(
-                  color: filterColor[index], // 이 예제에서는 색상을 고정값으로 설정
+                  color: safeFilterColor[index], // 이 예제에서는 색상을 고정값으로 설정
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
