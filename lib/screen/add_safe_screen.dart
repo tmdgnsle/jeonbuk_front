@@ -39,49 +39,10 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
     }
   }
 
-  // Future<NLatLng> getCoordinatesFromAddress(String address) async {
-  //   final String clientId = 'nf68z75anv';
-  //   final String clientSecret = '7E6AKAFUGzQtjiVTq2CSz9qKfOBJlM7mA1ZqdHyf';
-  //
-  //   final String apiUrl = 'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode';
-  //   final Map<String, String> queryParams = {
-  //     'query': address,
-  //   };
-  //
-  //   try {
-  //     final Dio dio = Dio();
-  //     final Response response = await dio.get(
-  //       apiUrl,
-  //       queryParameters: queryParams,
-  //       options: Options(
-  //         headers: {
-  //           'X-NCP-APIGW-API-KEY-ID': clientId,
-  //           'X-NCP-APIGW-API-KEY': clientSecret,
-  //         },
-  //       ),
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       print(response.data.toString());
-  //       final Map<String, dynamic> data = json.decode(response.data.toString());
-  //       print(data['addresses'][0]['y']);
-  //       final double latitude = data['addresses'][0]['y'];
-  //       final double longitude = data['addresses'][0]['x'];
-  //       print('위도: $latitude, 경도: $longitude');
-  //       return NLatLng(latitude, longitude);
-  //     } else {
-  //       print('에러: ${response.statusMessage}');
-  //       return NLatLng(0, 0);
-  //     }
-  //   } catch (e) {
-  //     print('에러: $e');
-  //     return NLatLng(0, 0);
-  //   }
-  // }
-
   @override
   void initState() {
     getMemberId();
+    context.read<SafeHomeCubit>().loadSafeHomeList(memberId!);
     super.initState();
   }
 
@@ -117,16 +78,13 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                     },
                   );
                 } else {
-                  final int response = await context.read<SafeHomeCubit>().SafeAdd(
-                      memberId!,
-                      pathController.text,
-                      start.latitude,
-                      start.longitude,
-                      end.latitude,
-                      end.longitude);
+                  final safeCubit = context.read<SafeHomeCubit>();
+                  final int response = await safeCubit
+                      .SafeAdd(memberId!, pathController.text, start.latitude,
+                          start.longitude, end.latitude, end.longitude);
                   if (response == 200) {
                     print('성공');
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(true);
                   }
                 }
               },

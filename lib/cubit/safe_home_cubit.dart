@@ -23,8 +23,9 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
       var result = await _dio.get('/SafeHome/list', queryParameters: {
         'memberId': memberId,
       });
-      emit(LoadedSafeHomeCubitState(safeHomeListResult: SafeHomeListResult.fromJson(result.data)));
-
+      _safeHomeListResult = SafeHomeListResult.fromJson(result.data);
+      emit(LoadedSafeHomeCubitState(
+          safeHomeListResult: SafeHomeListResult.fromJson(result.data)));
     } catch (e) {
       emit(ErrorSafeHomeCubitState(
           safeHomeListResult: state.safeHomeListResult,
@@ -33,33 +34,42 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
   }
 
   deleteSafeHomeList(String memberId, int safeHomeId) async {
-
     try {
-      if (state is LoadingSafeHomeCubitState || state is ErrorSafeHomeCubitState) {
+      if (state is LoadingSafeHomeCubitState ||
+          state is ErrorSafeHomeCubitState) {
         return;
       }
-      emit(LoadingSafeHomeCubitState(safeHomeListResult: state.safeHomeListResult));
-      _safeHomeListResult = state.safeHomeListResult;
+      emit(LoadingSafeHomeCubitState(
+          safeHomeListResult: state.safeHomeListResult));
+      // _safeHomeListResult = state.safeHomeListResult;
+      print('이전: ${_safeHomeListResult}');
       // Assuming the endpoint to delete an item is '/SafeHome/delete'
       await _dio.delete('/SafeHome/delete', queryParameters: {
         'safeReturnId': safeHomeId,
       });
-      _safeHomeListResult.safehomeList.removeWhere((element) => element.id == safeHomeId);
+      _safeHomeListResult.safehomeList
+          .removeWhere((element) => element.id == safeHomeId);
       // Reload the list to reflect changes or simply remove the item from state if appropriate
+      print('_safeHomeListResult: ${_safeHomeListResult}');
       emit(LoadedSafeHomeCubitState(safeHomeListResult: _safeHomeListResult));
     } catch (e) {
       emit(ErrorSafeHomeCubitState(
-          safeHomeListResult: state.safeHomeListResult, errorMessage: e.toString()));
+          safeHomeListResult: state.safeHomeListResult,
+          errorMessage: e.toString()));
     }
   }
 
-  Future<int> SafeAdd(String memberId, String name, double startLa, double startLo, double endLa, double endLo) async{
-    try{
-      if (state is LoadingSafeHomeCubitState || state is ErrorSafeHomeCubitState) {
+  Future<int> SafeAdd(String memberId, String name, double startLa,
+      double startLo, double endLa, double endLo) async {
+    try {
+
+      if (state is LoadingSafeHomeCubitState ||
+          state is ErrorSafeHomeCubitState) {
         return 0;
       }
-      emit(LoadingSafeHomeCubitState(safeHomeListResult: state.safeHomeListResult));
-      _safeHomeListResult = state.safeHomeListResult;
+      emit(LoadingSafeHomeCubitState(
+          safeHomeListResult: state.safeHomeListResult));
+      // _safeHomeListResult = state.safeHomeListResult;
       final response = await _dio.post('/SafeHome/add', queryParameters: {
         'memberId': memberId,
         'name': name,
@@ -69,20 +79,32 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
         'endLongitude': endLo,
       });
 
+      if (response.statusCode == 200) {
+        print('이전 _safeHomeListResult: ${_safeHomeListResult.safehomeList}');
+        _safeHomeListResult.safehomeList = [
+          ..._safeHomeListResult.safehomeList,
+          SafeHome(
+              id: response.data['safeReturnId'],
+              name: name,
+              startLa: startLa,
+              startLo: startLo,
+              endLa: endLa,
+              endLo: endLo)
+        ];
+        print('_safeHomeListResult: ${_safeHomeListResult.safehomeList}');
 
-      if(response.statusCode == 200){
-        //TODO response.body로 safeReturnId받으면 _safeHomeListResult에 추가하고 emit하기
-        // _safeHomeListResult.safehomeList.add
-        loadSafeHomeList(memberId);
+        emit(LoadedSafeHomeCubitState(safeHomeListResult: _safeHomeListResult));
         return response.statusCode as int;
-      } else throw Exception('안심귀가 추가 실패: ${response.toString()}');
-
-    } catch(e){
+      } else {
+        emit(ErrorSafeHomeCubitState(
+            safeHomeListResult: _safeHomeListResult,
+            errorMessage: 'Failed to add safe home: ${response.statusCode}'));
+        return response.statusCode as int;
+      }
+    } catch (e) {
       throw Exception('안심귀가 추가 실패: ${e.toString()}');
     }
   }
-
-
 }
 
 abstract class SafeHomeCubitState extends Equatable {
