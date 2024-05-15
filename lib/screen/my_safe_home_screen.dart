@@ -30,6 +30,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
       // 위치 정보와 반지름을 Cubit에 전달
       context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           position.latitude, position.longitude, radius, 'all');
+
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -282,6 +283,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
                   '경도: ${centerCoordinate.latitude}, 위도: ${centerCoordinate.longitude}');
               if (state.mysafeHomeMapResult.category == 'all') {
                 loadMapDataAll(centerCoordinate);
+                print(state);
               } else {
                 loadMapDataFilter(
                     centerCoordinate, state.mysafeHomeMapResult.category);

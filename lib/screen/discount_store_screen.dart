@@ -78,7 +78,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                 child: Container(
                   width: screenWidth / 5,
                   decoration: BoxDecoration(
-                    color: filterColor[index],
+                    color: discountStoreFilterColor[index],
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(

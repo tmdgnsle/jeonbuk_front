@@ -107,76 +107,105 @@ class _MyAppState extends State<RestaurantMapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
-  Future<void> toggleBookmark(String memberId, int storeId) async {
-    int? bookmarkId;
+  void toggleBookmark(String memberId, int storeId) async {
     setState(() {
       isBookmarkLoading = true; // 즐겨찾기 로딩 상태 시작
     });
 
+    final restaurant = BlocProvider.of<RestaurantMapCubit>(context);
+    int index = restaurant.state.restaurantMapResult.restaurantMap
+        .indexWhere((element) => element.id == storeId);
+
     try {
-      bookmarkId = await OpenApis().isBookmark(memberId, 'RESTAURANT', storeId);
-      if (bookmarkId != 0) {
-        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
+      if (restaurant
+          .state.restaurantMapResult.restaurantMap[index].isbookmark) {
+        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
+        restaurant.state.restaurantMapResult.restaurantMap[index].isbookmark =
+            false;
         await OpenApis().deleteBookmark(memberId, storeId, 'RESTAURANT');
-        setState(() {
-          bookmarkStatus[storeId] = false;
-        });
       } else {
         // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
-        bookmarkId =
-            await OpenApis().bookmarkStore(memberId, storeId, 'RESTAURANT');
-        setState(() {
-          bookmarkStatus[storeId] = true;
-        });
+        restaurant.state.restaurantMapResult.restaurantMap[index].isbookmark =
+            true;
+        await OpenApis().bookmarkStore(memberId, storeId, 'RESTAURANT');
       }
     } catch (e) {
       print("즐겨찾기 상태 변경 중 오류 발생: $e");
     } finally {
       setState(() {
-        bookmarkStatus[storeId] = bookmarkId != null && bookmarkId != 0;
         isBookmarkLoading = false; // 즐겨찾기 로딩 상태 종료
+        bottomsheet = bottomSheet(storeId, memberId);
       });
     }
   }
 
-  Widget bottomSheet(Restaurant store, String memberId) {
-    String modifiedEtc = store.etc.toString().replaceAll('<', '\n');
-    return Sheet(
-      initialExtent: 180,
-      maxExtent: 180,
-      minExtent: 60,
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        height: 250, // 원하는 높이 설정
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(store.storeName),
-                IconButton(
-                  icon: Icon(
-                    Icons.star,
-                    color: bookmarkStatus[store.id] ?? false
-                        ? Colors.yellow
-                        : Colors.grey,
+  void IsBookmark(List<Restaurant> restaurantList) async {
+    final idjwt = BlocProvider.of<IdJwtCubit>(context);
+    String memberId = idjwt.state.idJwt.id!;
+
+    final restaurant = BlocProvider.of<RestaurantMapCubit>(context);
+    try {
+      for (int i = 0; i < restaurantList.length; i++) {
+        var bookmarkId = await OpenApis()
+            .isBookmark(memberId, 'RESTAURANT', restaurantList[i].id);
+        if (bookmarkId != 0) {
+          restaurant.state.restaurantMapResult.restaurantMap[i].isbookmark =
+              true;
+        } else {
+          restaurant.state.restaurantMapResult.restaurantMap[i].isbookmark =
+              false;
+        }
+      }
+    } catch (e) {
+      print("즐겨찾기 상태 변경 중 오류 발생: $e");
+    }
+  }
+
+  Widget bottomSheet(int storeId, String memberId) {
+    return BlocBuilder<RestaurantMapCubit, RestaurantMapCubitState>(
+        builder: (context, state) {
+      int index = state.restaurantMapResult.restaurantMap
+          .indexWhere((element) => element.id == storeId);
+      String modifiedEtc = state.restaurantMapResult.restaurantMap[index].etc
+          .toString()
+          .replaceAll('<', '\n');
+      return Sheet(
+        initialExtent: 180,
+        maxExtent: 180,
+        minExtent: 60,
+        child: Container(
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(16)),
+          height: 250, // 원하는 높이 설정
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(state.restaurantMapResult.restaurantMap[index].storeName),
+                  IconButton(
+                    icon: Icon(
+                      Icons.star,
+                      color: state.restaurantMapResult.restaurantMap[index].isbookmark
+                          ? Colors.yellow
+                          : Colors.grey,
+                    ),
+                    onPressed: () {
+                      toggleBookmark(memberId, state.restaurantMapResult.restaurantMap[index].id);
+                    },
                   ),
-                  onPressed: () {
-                    toggleBookmark(memberId, store.id);
-                  },
-                ),
-              ],
-            ),
-            Text('주소: ${store.roadAddress}'),
-            Text(modifiedEtc),
-          ],
+                ],
+              ),
+              Text('주소: ${state.restaurantMapResult.restaurantMap[index].roadAddress}'),
+              Text(modifiedEtc),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget FilterView(BuildContext context) {
@@ -240,26 +269,21 @@ class _MyAppState extends State<RestaurantMapScreen> {
       final Color? markerColor;
 
       switch (store.promotion.toString()) {
-        case 'GOOD_PRICE':
-          markerColor = Colors.red;
+        case 'MODEL':
+          markerColor = restaurantFilterColor[0];
           break;
         case 'CHILD_LIKE':
-          markerColor = Colors.orange;
+          markerColor = restaurantFilterColor[1];
           break;
         case 'CHILD_MEAL':
-          markerColor = Colors.yellow;
+          markerColor = restaurantFilterColor[2];
           break;
-        case 'GOODS':
-          markerColor = Colors.green;
+        case 'GOOD_PRICE':
+          markerColor = restaurantFilterColor[3];
           break;
-        case 'MODEL':
-          markerColor = Colors.blue;
-          break;
-        case 'CULTURE_NURI':
-          markerColor = Colors.indigo;
-          break;
+
         default:
-          markerColor = Colors.black;
+          markerColor = Colors.green;
           break;
       }
       print('Store Promotion: ${store.promotion}, Marker Color: $markerColor');
@@ -275,28 +299,12 @@ class _MyAppState extends State<RestaurantMapScreen> {
 
       marker.setOnTapListener((NMarker marker) {
         setState(() {
-          bottomsheet = bottomSheet(store, memberId);
+          bottomsheet = bottomSheet(store.id, memberId);
         });
       });
 
       mapController!.addOverlay(marker);
 
-      //TODO store마다 bookmark되어있는지 안되어있는지 체크
-      try {
-        final bookmarkId =
-            await OpenApis().isBookmark(memberId, 'RESTAURANT', store.id);
-        if (bookmarkId != 0) {
-          setState(() {
-            bookmarkStatus[store.id] = true;
-          });
-        } else {
-          setState(() {
-            bookmarkStatus[store.id] = false;
-          });
-        }
-      } catch (e) {
-        print("북마크 아이디 찾던 중 오류 발생: $e");
-      }
     }
   }
 
@@ -324,6 +332,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
       listener: (context, state) {
         if (state is LoadedRestaurantMapCubitState && mapController != null) {
           mapController!.clearOverlays();
+          IsBookmark(state.restaurantMapResult.restaurantMap);
           MarkUp(state.restaurantMapResult.restaurantMap, context);
         }
       },
@@ -331,6 +340,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
           if (state is LoadedRestaurantMapCubitState) {
+            IsBookmark(state.restaurantMapResult.restaurantMap);
             MarkUp(state.restaurantMapResult.restaurantMap, context);
           }
         }

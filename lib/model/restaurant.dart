@@ -8,6 +8,7 @@ class Restaurant extends Equatable {
   double longitude;
   String? etc;
   String? promotion;
+  bool isbookmark;
 
   Restaurant(
       {required this.id,
@@ -16,7 +17,8 @@ class Restaurant extends Equatable {
         required this.latitude,
         required this.longitude,
         this.etc,
-        this.promotion});
+        this.promotion,
+      required this.isbookmark,});
 
   factory Restaurant.fromJson(Map<String, dynamic> json) {
     return Restaurant(
@@ -29,6 +31,7 @@ class Restaurant extends Equatable {
       // 동일하게 처리
       etc: json['etc'] as String?,
       promotion: json['promotion'] as String?,
+        isbookmark: false,
     );
   }
 
@@ -41,5 +44,6 @@ class Restaurant extends Equatable {
     longitude,
     etc,
     promotion,
+    isbookmark,
   ];
 }

@@ -8,6 +8,7 @@ class RestaurantMapResult extends Equatable {
   final List<Restaurant> restaurantMap;
   final String category;
 
+
   const RestaurantMapResult({
     required this.latitude,
     required this.longitude,

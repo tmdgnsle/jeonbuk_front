@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 
 const Map<String, String> discountStoreFilter = {
   '여가/레저': 'LEISURE',
-  '서비스업': 'SERVICES',
   '잡화': 'GOODS',
-  '식품/음료': 'FOOD_BEVERAGE',
-  '도소매/문구': 'RETAIL ',
-  '교육': 'EDUCATION',
   '생활': 'LIFE',
+  '교육': 'EDUCATION',
+  '서비스업': 'SERVICES',
   '기타': 'ETC',
 };
+
+const List<Color> discountStoreFilterColor = [
+  Color(0xFFEB4F3D),
+  Color(0xFF2BB673),
+  Color(0xFF3F7ACE),
+  Color(0xFF53C0D8),
+  Color(0xFFD971DB),
+  Color(0xFF848484),
+];
 
 const Map<String, String> restaurantFilter = {
   '모범음식점': 'MODEL',

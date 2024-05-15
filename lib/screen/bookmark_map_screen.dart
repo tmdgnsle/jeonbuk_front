@@ -7,10 +7,10 @@ import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/bookmark_map_cubit.dart';
+import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
+import 'package:jeonbuk_front/cubit/restaurant_map_cubit.dart';
 import 'package:jeonbuk_front/model/bookmark_map.dart';
-import 'package:jeonbuk_front/model/discount_store.dart';
-import 'package:jeonbuk_front/model/restaurant.dart';
 import 'package:sheet/sheet.dart';
 
 class BookmarkMapScreen extends StatefulWidget {
@@ -84,115 +84,227 @@ class _MyAppState extends State<BookmarkMapScreen> {
 
   Future<void> toggleBookmark(
       String memberId, int storeId, String category) async {
-    int? bookmarkId;
     setState(() {
       isBookmarkLoading = true; // 즐겨찾기 로딩 상태 시작
     });
 
+    final bookmarkCubit = BlocProvider.of<BookmarkMapCubit>(context);
+
     try {
-      bookmarkId = await OpenApis().isBookmark(memberId, category, storeId);
-      if (bookmarkId != 0) {
-        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
-        await OpenApis().deleteBookmark(memberId, storeId, category);
-        // setState(() {
-        //   bookmarkStatus[storeId] = false;
-        // });
-      } else {
-        // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
-        bookmarkId =
-            await OpenApis().bookmarkStore(memberId, storeId, category);
-        // setState(() {
-        //   bookmarkStatus[storeId] = true;
-        // });
+      switch (category) {
+        case 'DISCOUNT_STORE':
+
+          int index = bookmarkCubit.state.bookmarkMapResult.discountStoreMap
+              .indexWhere((element) => element.id == storeId);
+
+          if (bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
+              .isbookmark) {
+            // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
+            bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
+                .isbookmark = false;
+            await OpenApis()
+                .deleteBookmark(memberId, storeId, 'DISCOUNT_STORE');
+          } else {
+            // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
+
+            bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
+                .isbookmark = true;
+            await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
+          }
+          break;
+        case 'RESTAURANT':
+          int index = bookmarkCubit.state.bookmarkMapResult.restaurantMap
+              .indexWhere((element) => element.id == storeId);
+
+          if (bookmarkCubit
+              .state.bookmarkMapResult.restaurantMap[index].isbookmark) {
+            // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
+            bookmarkCubit.state.bookmarkMapResult.restaurantMap[index]
+                .isbookmark = false;
+            await OpenApis().deleteBookmark(memberId, storeId, 'RESTAURANT');
+          } else {
+            // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
+            bookmarkCubit.state.bookmarkMapResult.restaurantMap[index]
+                .isbookmark = true;
+            await OpenApis().bookmarkStore(memberId, storeId, 'RESTAURANT');
+          }
+          break;
+        case 'FESTIVAL':
+          break;
+        case 'TOWN_STROLL':
+          break;
       }
     } catch (e) {
       print("즐겨찾기 상태 변경 중 오류 발생: $e");
     } finally {
       setState(() {
-        bookmarkStatus[storeId] = bookmarkId != null && bookmarkId != 0;
         isBookmarkLoading = false; // 즐겨찾기 로딩 상태 종료
+        switch (category) {
+          case 'DISCOUNT_STORE':
+            bottomsheet = bottomSheetD(storeId, memberId);
+            break;
+          case 'RESTAURANT':
+            bottomsheet = bottomSheetR(storeId, memberId);
+            break;
+          case 'FESTIVAL':
+            break;
+          case 'TOWN_STROLL':
+            break;
+        }
       });
     }
   }
 
-  Widget bottomSheetD(DiscountStore store, String memberId) {
-    String modifiedEtc = store.etc.toString().replaceAll('<', '\n');
-    return Sheet(
-      initialExtent: 180,
-      maxExtent: 180,
-      minExtent: 60,
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        height: 250, // 원하는 높이 설정
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(store.storeName),
-                IconButton(
-                  icon: Icon(
-                    Icons.star,
-                    color:
-                        bookmarkStatus[store.id]! ? Colors.yellow : Colors.grey,
-                  ),
-                  onPressed: () {
-                    toggleBookmark(memberId, store.id, 'DISCOUNT_STORE');
-                  },
-                ),
-              ],
-            ),
-            Text('${store.storeType}'),
-            Text('주소: ${store.roadAddress}'),
-            Text(modifiedEtc),
-          ],
-        ),
-      ),
-    );
+  void IsBookmark(List<dynamic> storeList, String category) async {
+    final idjwt = BlocProvider.of<IdJwtCubit>(context);
+    String memberId = idjwt.state.idJwt.id!;
+
+    final bookmarkcubit = BlocProvider.of<BookmarkMapCubit>(context);
+
+    try {
+      switch (category) {
+        case 'DISCOUNT_STORE':
+          for (int i = 0; i < storeList.length; i++) {
+            var bookmarkId = await OpenApis()
+                .isBookmark(memberId, 'DISCOUNT_STORE', storeList[i].id);
+            if (bookmarkId != 0) {
+              bookmarkcubit.state.bookmarkMapResult.discountStoreMap[i]
+                  .isbookmark = true;
+            } else {
+              bookmarkcubit.state.bookmarkMapResult.discountStoreMap[i]
+                  .isbookmark = false;
+            }
+          }
+          break;
+        case 'RESTAURANT':
+          for (int i = 0; i < storeList.length; i++) {
+            var bookmarkId = await OpenApis()
+                .isBookmark(memberId, 'RESTAURANT', storeList[i].id);
+            if (bookmarkId != 0) {
+              bookmarkcubit
+                  .state.bookmarkMapResult.restaurantMap[i].isbookmark = true;
+            } else {
+              bookmarkcubit
+                  .state.bookmarkMapResult.restaurantMap[i].isbookmark = false;
+            }
+          }
+          break;
+        case 'FESTIVAL':
+          break;
+        case 'TOWN_STROLL':
+          break;
+      }
+    } catch (e) {
+      print("즐겨찾기 상태 변경 중 오류 발생: $e");
+    }
   }
 
-  Widget bottomSheetR(Restaurant store, String memberId) {
-    String modifiedEtc = store.etc.toString().replaceAll('<', '\n');
-    return Sheet(
-      initialExtent: 180,
-      maxExtent: 180,
-      minExtent: 60,
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        height: 250, // 원하는 높이 설정
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(store.storeName),
-                IconButton(
-                  icon: Icon(
-                    Icons.star,
-                    color: bookmarkStatus[store.id] ?? false
-                        ? Colors.yellow
-                        : Colors.grey,
+  Widget bottomSheetD(int storeId, String memberId) {
+    return BlocBuilder<BookmarkMapCubit, BookmarkMapCubitState>(
+        builder: (context, state) {
+      int index = state.bookmarkMapResult.discountStoreMap
+          .indexWhere((element) => element.id == storeId);
+      String modifiedEtc = state.bookmarkMapResult.discountStoreMap[index].etc
+          .toString()
+          .replaceAll('<', '\n');
+      return Sheet(
+        initialExtent: 180,
+        maxExtent: 180,
+        minExtent: 60,
+        child: Container(
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(16)),
+          height: 250, // 원하는 높이 설정
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(state
+                      .bookmarkMapResult.discountStoreMap[index].storeName),
+                  IconButton(
+                    icon: Icon(
+                      Icons.star,
+                      color: state.bookmarkMapResult.discountStoreMap[index]
+                              .isbookmark
+                          ? Colors.yellow
+                          : Colors.grey,
+                    ),
+                    onPressed: () {
+                      toggleBookmark(
+                          memberId,
+                          state.bookmarkMapResult.discountStoreMap[index].id,
+                          'DISCOUNT_STORE');
+                    },
                   ),
-                  onPressed: () {
-                    toggleBookmark(memberId, store.id, 'RESTAURANT');
-                  },
-                ),
-              ],
-            ),
-            Text('주소: ${store.roadAddress}'),
-            Text(modifiedEtc),
-          ],
+                ],
+              ),
+              Text(
+                  '${state.bookmarkMapResult.discountStoreMap[index].storeType}'),
+              Text(
+                  '주소: ${state.bookmarkMapResult.discountStoreMap[index].roadAddress}'),
+              Text(modifiedEtc),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
+  }
+
+  Widget bottomSheetR(int storeId, String memberId) {
+    return BlocBuilder<BookmarkMapCubit, BookmarkMapCubitState>(
+        builder: (context, state) {
+      int index = state.bookmarkMapResult.restaurantMap
+          .indexWhere((element) => element.id == storeId);
+      String modifiedEtc = state.bookmarkMapResult.restaurantMap[index].etc
+          .toString()
+          .replaceAll('<', '\n');
+      print('restaurant: ${state.bookmarkMapResult.restaurantMap[index].isbookmark}');
+      return Sheet(
+        initialExtent: 180,
+        maxExtent: 180,
+        minExtent: 60,
+        child: Container(
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(16)),
+          height: 250, // 원하는 높이 설정
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(state.bookmarkMapResult.restaurantMap[index].storeName),
+                  IconButton(
+                    icon: Icon(
+                      Icons.star,
+                      color: state
+                              .bookmarkMapResult.restaurantMap[index].isbookmark
+                          ? Colors.yellow
+                          : Colors.grey,
+                    ),
+                    onPressed: () {
+                      toggleBookmark(
+                          memberId,
+                          state.bookmarkMapResult.restaurantMap[index].id,
+                          'RESTAURANT');
+                    },
+                  ),
+                ],
+              ),
+              Text(
+                  '주소: ${state.bookmarkMapResult.restaurantMap[index].roadAddress}'),
+              Text(modifiedEtc),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget FilterView(BuildContext context) {
@@ -219,8 +331,8 @@ class _MyAppState extends State<BookmarkMapScreen> {
             child: InkWell(
               onTap: () {
                 setState(() {
-                  for(int i = 0; i < filterTap.length; i++){
-                    if (i == index){
+                  for (int i = 0; i < filterTap.length; i++) {
+                    if (i == index) {
                       filterTap[i] = true;
                     } else {
                       filterTap[i] = false;
@@ -228,14 +340,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
                   }
                 });
 
-
                 loadMapDataFilter(filterValue!);
-
               },
               child: Container(
                 width: filterWidth,
                 decoration: BoxDecoration(
-                  color: filterTap[index] ? GREEN_COLOR : BLUE_COLOR, // 이 예제에서는 색상을 고정값으로 설정
+                  color: filterTap[index] ? GREEN_COLOR : BLUE_COLOR,
+                  // 이 예제에서는 색상을 고정값으로 설정
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
@@ -260,8 +371,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
   }
 
   void MarkUp(BookmarkMap bookmarkMap, BuildContext context) async {
-
-
     if (bookmarkMap.discountStoreMap != null &&
         bookmarkMap.discountStoreMap!.isNotEmpty) {
       for (var store in bookmarkMap.discountStoreMap!) {
@@ -275,7 +384,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         marker.setOnTapListener((NMarker marker) {
           setState(() {
             bookmarkStatus[store.id] = true;
-            bottomsheet = bottomSheetD(store, memberId!);
+            bottomsheet = bottomSheetD(store.id, memberId!);
           });
         });
 
@@ -296,7 +405,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         marker.setOnTapListener((NMarker marker) {
           setState(() {
             bookmarkStatus[store.id] = true;
-            bottomsheet = bottomSheetR(store, memberId!);
+            bottomsheet = bottomSheetR(store.id, memberId!);
           });
         });
 
@@ -316,9 +425,10 @@ class _MyAppState extends State<BookmarkMapScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<BookmarkMapCubit, BookmarkMapCubitState>(
       listener: (context, state) {
-        if (state is LoadedBookmarkMapCubitState &&
-            mapController != null) {
+        if (state is LoadedBookmarkMapCubitState && mapController != null) {
           mapController!.clearOverlays();
+          IsBookmark(state.bookmarkMapResult.discountStoreMap, 'DISCOUNT_STORE');
+          IsBookmark(state.bookmarkMapResult.restaurantMap, 'RESTAURANT');
           MarkUp(state.bookmarkMapResult, context);
         }
       },
@@ -326,6 +436,8 @@ class _MyAppState extends State<BookmarkMapScreen> {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
           if (state is LoadedBookmarkMapCubitState) {
+            IsBookmark(state.bookmarkMapResult.discountStoreMap, 'DISCOUNT_STORE');
+            IsBookmark(state.bookmarkMapResult.restaurantMap, 'RESTAURANT');
             MarkUp(state.bookmarkMapResult, context);
             print('마크업 완료');
           }
@@ -361,7 +473,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
             onPressed: () async {
               firstLoadMapData();
               setState(() {
-                for(int i = 0; i < filterTap.length; i++){
+                for (int i = 0; i < filterTap.length; i++) {
                   filterTap[i] = false;
                 }
               });
@@ -372,7 +484,9 @@ class _MyAppState extends State<BookmarkMapScreen> {
             ),
             backgroundColor: GREEN_COLOR,
           ),
-          bottomNavigationBar: AppNavigationBar(currentIndex: 2,),
+          bottomNavigationBar: AppNavigationBar(
+            currentIndex: 2,
+          ),
         );
       },
     );

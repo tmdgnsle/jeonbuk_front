@@ -10,6 +10,7 @@ class DiscountStore extends Equatable {
   final String category;
   final String? etc;
   final String? promotion;
+  bool isbookmark;
 
   DiscountStore(
       {required this.id,
@@ -21,6 +22,7 @@ class DiscountStore extends Equatable {
         required this.category,
         this.etc,
         this.promotion,
+        required this.isbookmark,
       });
 
   factory DiscountStore.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,7 @@ class DiscountStore extends Equatable {
       category: json['category'] as String,
       etc: json['etc'] as String?,
       promotion: json['promotion'] as String?,
+      isbookmark: false,
     );
   }
 
@@ -50,5 +53,6 @@ class DiscountStore extends Equatable {
     category,
     etc,
     promotion,
+    isbookmark,
   ];
 }

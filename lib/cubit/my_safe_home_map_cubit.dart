@@ -15,14 +15,23 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
   Future<void> loadMySafeHomeMapFilter(
       double latitude, double longitude, double radius, String category) async {
     try {
+      var result;
       emit(LoadingMySafeHomeMapCubitState(
           mysafeHomeMapResult: state.mysafeHomeMapResult));
-
-      var result = await _dio.get('/mySafeHome/', queryParameters: {
-        'latitude': latitude,
-        'longitude': longitude,
-        'radius': radius,
-      });
+      if (category == 'all') {
+        result = await _dio.get('/mySafeHome/', queryParameters: {
+          'latitude': latitude,
+          'longitude': longitude,
+          'radius': radius,
+        });
+      } else {
+        result = await _dio.get('mySafeHome/filter', queryParameters: {
+          'latitude': latitude,
+          'longitude': longitude,
+          'radius': radius,
+          'type': category
+        });
+      }
 
       emit(LoadedMySafeHomeMapCubitState(
           mysafeHomeMapResult: MySafeHomeMapResult.fromJson(
