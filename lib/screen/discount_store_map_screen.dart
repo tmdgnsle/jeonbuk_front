@@ -24,6 +24,13 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   bool isBookmarkLoading = false;
   Map<int, bool> bookmarkStatus = {};
 
+
+  @override
+  void dispose() {
+    mapController?.dispose();
+    super.dispose();
+  }
+
   void firstLoadMapData() async {
     try {
       Position position = await determinePosition();
@@ -143,6 +150,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   void IsBookmark(List<DiscountStore> discountStoreList) async {
     final idjwt = BlocProvider.of<IdJwtCubit>(context);
     String memberId = idjwt.state.idJwt.id!;
+
 
     final discount = BlocProvider.of<DiscountStoreMapCubit>(context);
     try {
@@ -277,6 +285,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   void MarkUp(List<DiscountStore> storeList, BuildContext context) async {
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     String memberId = bloc.state.idJwt.id!;
+
     for (var store in storeList) {
       final Color? markerColor;
 

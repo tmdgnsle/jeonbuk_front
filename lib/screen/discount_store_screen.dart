@@ -24,13 +24,19 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
+  String category = 'all';
+
   @override
   void initState() {
     super.initState();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent - 200 <=
           scrollController.offset) {
-        context.read<DiscountStoreListCubit>().loadDiscountStoreList('all');
+        if(category == 'all'){
+          context.read<DiscountStoreListCubit>().loadDiscountStoreList();
+        } else {
+          context.read<DiscountStoreListCubit>().loadDiscountStoreListFilter(category);
+        }
       }
     });
   }
@@ -70,9 +76,13 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: InkWell(
                 onTap: () {
+                  category = filterValue;
                   context
                       .read<DiscountStoreListCubit>()
-                      .loadDiscountStoreList(filterValue);
+                      .loadDiscountStoreListFilter(filterValue);
+                  if (scrollController.hasClients) {
+                    scrollController.jumpTo(0);
+                  }
                   // Implement filter application logic or context.read<DiscountStoreListCubit>().applyFilter(filterName);
                 },
                 child: Container(
@@ -178,8 +188,10 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DiscountStoreDetailScreen(
-                                  discountStore: stores[index]),
+                              builder: (context) => BlocProvider(
+                                create: (context) => DiscountStoreMapCubit(),
+                                child: DiscountStoreDetailScreen(discountStore: stores[index]),
+                              ),
                             ),
                           );
                         },

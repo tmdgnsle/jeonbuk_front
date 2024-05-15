@@ -5,11 +5,11 @@ class DiscountStoreMapResult extends Equatable {
   final double latitude;
   final double longitude;
   final double radius;
-  final List<DiscountStore> discountStoreMap;
+  List<DiscountStore> discountStoreMap;
   final String category;
 
   // 기본 생성자에 현재 위치 정보를 받을 수 있는 매개변수 추가
-  const DiscountStoreMapResult({
+  DiscountStoreMapResult({
     required this.latitude,
     required this.longitude,
     required this.radius,

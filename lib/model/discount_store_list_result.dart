@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
 
 class DiscountStoreListResult extends Equatable {
-  final int currentPage;
+  int currentPage;
   List<DiscountStore> discountStoreList;
   final String category;
   List<DiscountStore> searchStoreList;
