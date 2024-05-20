@@ -20,18 +20,15 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
       print(state.discountStoreListResult.currentPage);
       emit(LoadingDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult));
-      var result =
-          await _dio.get('/discountStore/list/all', queryParameters: {
+      var result = await _dio.get('/discountStore/list/all', queryParameters: {
         'page': state.discountStoreListResult.currentPage,
       });
       emit(LoadedDiscountStoreListCubitState(
-          discountStoreListResult:
-              state.discountStoreListResult.copywithFromJson(result.data, 'all')
-              ));
+          discountStoreListResult: state.discountStoreListResult
+              .copywithFromJson(result.data, 'all')));
       print('DiscountStoreList:');
-      state.discountStoreListResult.discountStoreList.forEach(
-              (store) => print('${store.toString()}')
-      );
+      state.discountStoreListResult.discountStoreList
+          .forEach((store) => print('${store.toString()}'));
     } catch (e) {
       emit(ErrorDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult,
@@ -49,20 +46,19 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
       emit(LoadingDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult));
       var result =
-      await _dio.get('/discountStore/list/${category}', queryParameters: {
+          await _dio.get('/discountStore/list/${category}', queryParameters: {
         'page': state.discountStoreListResult.currentPage,
       });
       emit(LoadedDiscountStoreListCubitState(
           discountStoreListResult:
-          category != state.discountStoreListResult.category
-              ? state.discountStoreListResult
-              .copywithFromJsonFilter(result.data, category)
-              : state.discountStoreListResult
-              .copywithFromJson(result.data, category)));
+              category != state.discountStoreListResult.category
+                  ? state.discountStoreListResult
+                      .copywithFromJsonFilter(result.data, category)
+                  : state.discountStoreListResult
+                      .copywithFromJson(result.data, category)));
       print('DiscountStoreList:');
-      state.discountStoreListResult.discountStoreList.forEach(
-              (store) => print('${store.toString()}')
-      );
+      state.discountStoreListResult.discountStoreList
+          .forEach((store) => print('${store.toString()}'));
     } catch (e) {
       emit(ErrorDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult,

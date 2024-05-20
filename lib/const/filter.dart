@@ -33,9 +33,9 @@ const List<Color> restaurantFilterColor = [
 ];
 
 const Map<String, String> mysafeHomeFilter = {
-  '비상벨': 'WARNING_BELL',
+  '비상벨': 'WarningBell',
   'CCTV': 'CCTV',
-  '가로등': 'STREET_LAMP'
+  '가로등': 'StreetLamp'
 };
 
 const Map<String, String> bookmarkFilter = {

@@ -6,10 +6,10 @@ class MySafeHomeMapResult extends Equatable {
   final double longitude;
   final double radius;
   final List<MySafeHome> mySafeHomeMap;
-  final String category;
+  String category;
 
   // 기본 생성자에 현재 위치 정보를 받을 수 있는 매개변수 추가
-  const MySafeHomeMapResult({
+  MySafeHomeMapResult({
     required this.latitude,
     required this.longitude,
     required this.radius,
@@ -37,7 +37,8 @@ class MySafeHomeMapResult extends Equatable {
       longitude: longitude,
       radius: radius,
       mySafeHomeMap: List<MySafeHome>.from(
-          json['content'].map((item) => MySafeHome.fromJson(item))),
+          json[category != 'all' ? category : 'content']
+              .map((item) => MySafeHome.fromJson(item))),
       category: category,
     );
   }

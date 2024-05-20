@@ -132,7 +132,8 @@ class OpenApis {
     }
   }
 
-  Future<void> deleteBookmark(String memberId, int storeId, String bookmarkType) async {
+  Future<void> deleteBookmark(
+      String memberId, int storeId, String bookmarkType) async {
     try {
       await _dio.delete('$_baseUrl/bookmark/delete', data: {
         'memberId': memberId,
@@ -170,10 +171,9 @@ class OpenApis {
     }
   }
 
-
-
   Future<List<NLatLng>> fetchRoute(NLatLng start, NLatLng end) async {
-    const String appKey = 'qNOUGsj4NV1lip9vQeZ2ea3zik85BaI85FR0duOT'; // Replace with your Tmap API Key
+    const String appKey =
+        'qNOUGsj4NV1lip9vQeZ2ea3zik85BaI85FR0duOT'; // Replace with your Tmap API Key
     var dio = Dio();
     final response = await dio.post(
       'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json',
@@ -202,8 +202,10 @@ class OpenApis {
         var geometry = feature['geometry'];
         if (geometry['type'] == 'LineString') {
           for (var coord in geometry['coordinates']) {
-            double lat = (coord[1] is int) ? (coord[1] as int).toDouble() : coord[1];
-            double lng = (coord[0] is int) ? (coord[0] as int).toDouble() : coord[0];
+            double lat =
+                (coord[1] is int) ? (coord[1] as int).toDouble() : coord[1];
+            double lng =
+                (coord[0] is int) ? (coord[0] as int).toDouble() : coord[0];
             pathPoints.add(NLatLng(lat, lng));
           }
         }
@@ -213,5 +215,4 @@ class OpenApis {
       throw Exception('Failed to load route');
     }
   }
-
 }

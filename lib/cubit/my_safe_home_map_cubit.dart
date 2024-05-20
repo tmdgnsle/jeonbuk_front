@@ -25,7 +25,7 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
           'radius': radius,
         });
       } else {
-        result = await _dio.get('mySafeHome/filter', queryParameters: {
+        result = await _dio.get('/mySafeHome/filter', queryParameters: {
           'latitude': latitude,
           'longitude': longitude,
           'radius': radius,
@@ -33,14 +33,22 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
         });
       }
 
-      emit(LoadedMySafeHomeMapCubitState(
-          mysafeHomeMapResult: MySafeHomeMapResult.fromJson(
-        result.data,
-        latitude,
-        longitude,
-        radius,
-        category,
-      )));
+      print('Response received: ${result.data}');
+
+      emit(
+        LoadedMySafeHomeMapCubitState(
+            mysafeHomeMapResult: MySafeHomeMapResult.fromJson(
+          result.data,
+          latitude,
+          longitude,
+          radius,
+          category,
+        )),
+      );
+      print('loadSafeHomeFilter 실행');
+      print('MySafeHomeList:');
+      state.mysafeHomeMapResult.mySafeHomeMap
+          .forEach((store) => print('${store.toString()}'));
     } catch (e) {
       emit(ErrorMySafeHomeMapCubitState(
           mysafeHomeMapResult: state.mysafeHomeMapResult,

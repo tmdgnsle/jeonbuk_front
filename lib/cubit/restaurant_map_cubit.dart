@@ -8,7 +8,7 @@ class RestaurantMapCubit extends Cubit<RestaurantMapCubitState> {
 
   RestaurantMapCubit()
       : super(InitRestaurantMapCubitState(
-      restaurantMapResult: RestaurantMapResult.init())) {
+            restaurantMapResult: RestaurantMapResult.init())) {
     _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
   }
 
@@ -19,7 +19,7 @@ class RestaurantMapCubit extends Cubit<RestaurantMapCubitState> {
           restaurantMapResult: state.restaurantMapResult));
 
       var result =
-      await _dio.get('/restaurant/map/$category', queryParameters: {
+          await _dio.get('/restaurant/map/$category', queryParameters: {
         'latitude': latitude,
         'longitude': longitude,
         'radius': radius,
@@ -27,12 +27,12 @@ class RestaurantMapCubit extends Cubit<RestaurantMapCubitState> {
 
       emit(LoadedRestaurantMapCubitState(
           restaurantMapResult: RestaurantMapResult.fromJson(
-            result.data,
-            latitude,
-            longitude,
-            radius,
-            category,
-          )));
+        result.data,
+        latitude,
+        longitude,
+        radius,
+        category,
+      )));
     } catch (e) {
       emit(ErrorRestaurantMapCubitState(
           restaurantMapResult: state.restaurantMapResult,
@@ -57,16 +57,14 @@ class InitRestaurantMapCubitState extends RestaurantMapCubitState {
 }
 
 class LoadingRestaurantMapCubitState extends RestaurantMapCubitState {
-  const LoadingRestaurantMapCubitState(
-      {required super.restaurantMapResult});
+  const LoadingRestaurantMapCubitState({required super.restaurantMapResult});
 
   @override
   List<Object?> get props => [restaurantMapResult];
 }
 
 class LoadedRestaurantMapCubitState extends RestaurantMapCubitState {
-  const LoadedRestaurantMapCubitState(
-      {required super.restaurantMapResult});
+  const LoadedRestaurantMapCubitState({required super.restaurantMapResult});
 
   @override
   List<Object?> get props => [restaurantMapResult];

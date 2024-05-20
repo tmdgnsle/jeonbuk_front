@@ -62,7 +62,6 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
   Future<int> SafeAdd(String memberId, String name, double startLa,
       double startLo, double endLa, double endLo) async {
     try {
-
       if (state is LoadingSafeHomeCubitState ||
           state is ErrorSafeHomeCubitState) {
         return 0;

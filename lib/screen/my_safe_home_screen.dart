@@ -30,7 +30,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
       // 위치 정보와 반지름을 Cubit에 전달
       context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           position.latitude, position.longitude, radius, 'all');
-
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -57,17 +56,18 @@ class _MyAppState extends State<MySafeHomeScreen> {
 
   void loadMapDataFilter(NLatLng centerLocation, String filter) async {
     try {
+      final bloc = BlocProvider.of<MySafeHomeMapCubit>(context);
       double? zoomlevel = await _CurrentZoomLevel();
       final width = MediaQuery.of(context).size.width / 2;
       final meterPerDp = mapController!.getMeterPerDpAtLatitude(
           latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
       final radius = width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
+
+      print('Calling loadMySafeHomeMapFilter...');
       context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
-          centerLocation.latitude,
-          centerLocation.longitude,
-          radius,
-          filter.toString());
+          centerLocation.latitude, centerLocation.longitude, radius, filter);
+      print('State after calling loadMySafeHomeMapFilter: ${bloc.state}');
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -127,7 +127,8 @@ class _MyAppState extends State<MySafeHomeScreen> {
             child: InkWell(
               onTap: () async {
                 final NLatLng centerLocation = await _CenterCoordinate();
-                loadMapDataFilter(centerLocation, filterValue.toString());
+                loadMapDataFilter(centerLocation, filterValue!);
+                print('filterValue: $filterValue');
               },
               child: Container(
                 width: filterWidth,
@@ -295,7 +296,9 @@ class _MyAppState extends State<MySafeHomeScreen> {
             ),
             backgroundColor: GREEN_COLOR,
           ),
-          bottomNavigationBar: AppNavigationBar(currentIndex: 1,),
+          bottomNavigationBar: AppNavigationBar(
+            currentIndex: 1,
+          ),
         );
       },
     );

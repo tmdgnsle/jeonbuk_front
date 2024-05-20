@@ -18,7 +18,8 @@ class MySafeHome extends Equatable {
     return MySafeHome(
         latitude: (json['latitude'] as num).toDouble(),
         longitude: (json['longitude'] as num).toDouble(),
-        roadAddress: json['roadAddress'] as String,
+        roadAddress:
+            json['roadAddress'] != null ? json['roadAddress'] as String : '',
         type: json['type'] as String,
         id: json['id'] as int);
   }
