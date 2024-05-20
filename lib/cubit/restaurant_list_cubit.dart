@@ -8,10 +8,35 @@ class RestaurantListCubit extends Cubit<RestaurantListCubitState> {
 
   RestaurantListCubit() : super(InitRestaurantListCubitState()) {
     _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
-    loadRestaurantList('all');
+    loadRestaurantList();
   }
 
-  loadRestaurantList(String category) async {
+  loadRestaurantList() async {
+    try {
+      if (state is LoadingRestaurantListCubitState ||
+          state is ErrorRestaurantListCubitState) {
+        return;
+      }
+      print(state.restaurantListResult.currentPage);
+      emit(LoadingRestaurantListCubitState(
+          restaurantListResult: state.restaurantListResult));
+      var result = await _dio.get('/restaurant/list/all', queryParameters: {
+        'page': state.restaurantListResult.currentPage,
+      });
+      emit(LoadedRestaurantListCubitState(
+          restaurantListResult:
+              state.restaurantListResult.copywithFromJson(result.data, 'all')));
+      print('RestaurantList:');
+      state.restaurantListResult.restaurantList
+          .forEach((store) => print('${store.toString()}'));
+    } catch (e) {
+      emit(ErrorRestaurantListCubitState(
+          restaurantListResult: state.restaurantListResult,
+          errorMessage: e.toString()));
+    }
+  }
+
+  loadRestaurantListFilter(String category) async {
     try {
       if (state is LoadingRestaurantListCubitState ||
           state is ErrorRestaurantListCubitState) {
@@ -30,7 +55,9 @@ class RestaurantListCubit extends Cubit<RestaurantListCubitState> {
                   .copywithFromJsonFilter(result.data, category)
               : state.restaurantListResult
                   .copywithFromJson(result.data, category)));
-      print('RestaurantList: ${state.restaurantListResult.restaurantList}');
+      print('RestaurantList:');
+      state.restaurantListResult.restaurantList
+          .forEach((store) => print('${store.toString()}'));
     } catch (e) {
       emit(ErrorRestaurantListCubitState(
           restaurantListResult: state.restaurantListResult,

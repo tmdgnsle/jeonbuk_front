@@ -24,6 +24,12 @@ class _MyAppState extends State<RestaurantMapScreen> {
   bool isBookmarkLoading = false;
   Map<int, bool> bookmarkStatus = {};
 
+  @override
+  void dispose() {
+    mapController?.dispose();
+    super.dispose();
+  }
+
   void firstLoadMapData() async {
     try {
       Position position = await determinePosition();
@@ -185,21 +191,25 @@ class _MyAppState extends State<RestaurantMapScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(state.restaurantMapResult.restaurantMap[index].storeName),
+                  Text(
+                      state.restaurantMapResult.restaurantMap[index].storeName),
                   IconButton(
                     icon: Icon(
                       Icons.star,
-                      color: state.restaurantMapResult.restaurantMap[index].isbookmark
+                      color: state.restaurantMapResult.restaurantMap[index]
+                              .isbookmark
                           ? Colors.yellow
                           : Colors.grey,
                     ),
                     onPressed: () {
-                      toggleBookmark(memberId, state.restaurantMapResult.restaurantMap[index].id);
+                      toggleBookmark(memberId,
+                          state.restaurantMapResult.restaurantMap[index].id);
                     },
                   ),
                 ],
               ),
-              Text('주소: ${state.restaurantMapResult.restaurantMap[index].roadAddress}'),
+              Text(
+                  '주소: ${state.restaurantMapResult.restaurantMap[index].roadAddress}'),
               Text(modifiedEtc),
             ],
           ),
@@ -304,7 +314,6 @@ class _MyAppState extends State<RestaurantMapScreen> {
       });
 
       mapController!.addOverlay(marker);
-
     }
   }
 

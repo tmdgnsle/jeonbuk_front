@@ -22,26 +22,39 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
   int? bookmarkId;
   bool isBookmarkLoading = false;
   late String memberId;
+  Widget? bottomsheet;
 
-  findBookmarkId(int storeId) async {
-    final bloc = BlocProvider.of<IdJwtCubit>(context);
-    memberId = bloc.state.idJwt.id!;
-    bookmarkId = await OpenApis().isBookmark(memberId, 'RESTAURANT', storeId);
-    setState(() {});
+  void IsBookmark(Restaurant restaurant) async {
+    final idjwt = BlocProvider.of<IdJwtCubit>(context);
+    setState(() {
+      memberId = idjwt.state.idJwt.id!;
+    });
+
+    final bloc = BlocProvider.of<RestaurantMapCubit>(context);
+    bloc.state.restaurantMapResult.restaurantMap = [restaurant];
+    try {
+      var bookmarkId =
+          await OpenApis().isBookmark(memberId, 'RESTAURANT', restaurant.id);
+      if (bookmarkId != 0) {
+        bloc.state.restaurantMapResult.restaurantMap[0].isbookmark = true;
+      } else {
+        bloc.state.restaurantMapResult.restaurantMap[0].isbookmark = false;
+      }
+    } catch (e) {
+      print('즐겨찾기 상태 변경 중 오류 발생: $e');
+    }
   }
 
   @override
   void initState() {
-    findBookmarkId(widget.restaurant.id);
+    IsBookmark(widget.restaurant);
     super.initState();
   }
 
   Widget bottomSheet(int storeId, String memberId) {
     return BlocBuilder<RestaurantMapCubit, RestaurantMapCubitState>(
         builder: (context, state) {
-      int index = state.restaurantMapResult.restaurantMap
-          .indexWhere((element) => element.id == storeId);
-      String modifiedEtc = state.restaurantMapResult.restaurantMap[index].etc
+      String modifiedEtc = state.restaurantMapResult.restaurantMap[0].etc
           .toString()
           .replaceAll('<', '\n');
       return Sheet(
@@ -60,25 +73,24 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                      state.restaurantMapResult.restaurantMap[index].storeName),
+                  Text(state.restaurantMapResult.restaurantMap[0].storeName),
                   IconButton(
                     icon: Icon(
                       Icons.star,
-                      color: state.restaurantMapResult.restaurantMap[index]
-                              .isbookmark
-                          ? Colors.yellow
-                          : Colors.grey,
+                      color:
+                          state.restaurantMapResult.restaurantMap[0].isbookmark
+                              ? Colors.yellow
+                              : Colors.grey,
                     ),
                     onPressed: () {
                       toggleBookmark(memberId,
-                          state.restaurantMapResult.restaurantMap[index].id);
+                          state.restaurantMapResult.restaurantMap[0].id);
                     },
                   ),
                 ],
               ),
               Text(
-                  '주소: ${state.restaurantMapResult.restaurantMap[index].roadAddress}'),
+                  '주소: ${state.restaurantMapResult.restaurantMap[0].roadAddress}'),
               Text(modifiedEtc),
             ],
           ),
@@ -93,20 +105,16 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
     });
 
     final restaurant = BlocProvider.of<RestaurantMapCubit>(context);
-    int index = restaurant.state.restaurantMapResult.restaurantMap
-        .indexWhere((element) => element.id == storeId);
 
     try {
-      if (restaurant
-          .state.restaurantMapResult.restaurantMap[index].isbookmark) {
+      if (restaurant.state.restaurantMapResult.restaurantMap[0].isbookmark) {
         // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
-        restaurant.state.restaurantMapResult.restaurantMap[index].isbookmark =
+        restaurant.state.restaurantMapResult.restaurantMap[0].isbookmark =
             false;
         await OpenApis().deleteBookmark(memberId, storeId, 'RESTAURANT');
       } else {
         // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
-        restaurant.state.restaurantMapResult.restaurantMap[index].isbookmark =
-            true;
+        restaurant.state.restaurantMapResult.restaurantMap[0].isbookmark = true;
         await OpenApis().bookmarkStore(memberId, storeId, 'RESTAURANT');
       }
     } catch (e) {
@@ -114,6 +122,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
     } finally {
       setState(() {
         isBookmarkLoading = false; // 즐겨찾기 로딩 상태 종료
+        bottomsheet = bottomSheet(storeId, memberId);
       });
     }
   }
@@ -130,6 +139,11 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
         size: Size(20, 30),
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
+      marker.setOnTapListener((NMarker marker) {
+        setState(() {
+          bottomsheet = bottomSheet(widget.restaurant.id, memberId);
+        });
+      });
       mapController!.addOverlay(marker);
     }
 
@@ -147,7 +161,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             ),
             onMapReady: _onMapCreated,
           ),
-          bottomSheet(widget.restaurant.id, memberId),
+          bottomsheet ?? Container(),
         ],
       ),
       bottomNavigationBar: AppNavigationBar(),

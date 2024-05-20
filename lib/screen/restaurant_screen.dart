@@ -23,13 +23,21 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
+  String category = 'all';
+
   @override
   void initState() {
     super.initState();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent - 200 <=
           scrollController.offset) {
-        context.read<RestaurantListCubit>().loadRestaurantList('all');
+        if (category == 'all') {
+          context.read<RestaurantListCubit>().loadRestaurantList();
+        } else {
+          context
+              .read<RestaurantListCubit>()
+              .loadRestaurantListFilter(category);
+        }
       }
     });
   }
@@ -69,9 +77,13 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: InkWell(
                 onTap: () {
+                  category = filterValue;
                   context
                       .read<RestaurantListCubit>()
-                      .loadRestaurantList(filterValue);
+                      .loadRestaurantListFilter(filterValue);
+                  if (scrollController.hasClients) {
+                    scrollController.jumpTo(0);
+                  }
                   // Implement filter application logic or context.read<RestaurantListCubit>().applyFilter(filterName);
                 },
                 child: Container(
@@ -176,9 +188,11 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RestaurantDetailScreen(
-                                  restaurant: stores[index]),
-                            ),
+                                builder: (context) => BlocProvider(
+                                      create: (context) => RestaurantMapCubit(),
+                                      child: RestaurantDetailScreen(
+                                          restaurant: stores[index]),
+                                    )),
                           );
                         },
                       ),

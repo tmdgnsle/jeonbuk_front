@@ -5,11 +5,10 @@ class RestaurantMapResult extends Equatable {
   final double latitude;
   final double longitude;
   final double radius;
-  final List<Restaurant> restaurantMap;
+  List<Restaurant> restaurantMap;
   final String category;
 
-
-  const RestaurantMapResult({
+  RestaurantMapResult({
     required this.latitude,
     required this.longitude,
     required this.radius,
