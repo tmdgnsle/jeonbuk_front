@@ -24,7 +24,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   bool isBookmarkLoading = false;
   Map<int, bool> bookmarkStatus = {};
 
-
   @override
   void dispose() {
     mapController?.dispose();
@@ -124,18 +123,20 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
         .indexWhere((element) => element.id == storeId);
 
     try {
-      if (discount
-          .state.discountStoreMapResult.discountStoreMap[index].isbookmark) {
-        // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
-        discount.state.discountStoreMapResult.discountStoreMap[index]
-            .isbookmark = false;
-        await OpenApis().deleteBookmark(memberId, storeId, 'DISCOUNT_STORE');
-      } else {
-        // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
+      if (index != -1) {
+        if (discount
+            .state.discountStoreMapResult.discountStoreMap[index].isbookmark) {
+          // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
+          discount.state.discountStoreMapResult.discountStoreMap[index]
+              .isbookmark = false;
+          await OpenApis().deleteBookmark(memberId, storeId, 'DISCOUNT_STORE');
+        } else {
+          // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
 
-        discount.state.discountStoreMapResult.discountStoreMap[index]
-            .isbookmark = true;
-        await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
+          discount.state.discountStoreMapResult.discountStoreMap[index]
+              .isbookmark = true;
+          await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
+        }
       }
     } catch (e) {
       print("즐겨찾기 상태 변경 중 오류 발생: $e");
@@ -150,7 +151,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   void IsBookmark(List<DiscountStore> discountStoreList) async {
     final idjwt = BlocProvider.of<IdJwtCubit>(context);
     String memberId = idjwt.state.idJwt.id!;
-
 
     final discount = BlocProvider.of<DiscountStoreMapCubit>(context);
     try {
@@ -175,54 +175,58 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
         builder: (context, state) {
       int index = state.discountStoreMapResult.discountStoreMap
           .indexWhere((element) => element.id == storeId);
-      String modifiedEtc = state
-          .discountStoreMapResult.discountStoreMap[index].etc
-          .toString()
-          .replaceAll('<', '\n');
-      return Sheet(
-        initialExtent: 180,
-        maxExtent: 180,
-        minExtent: 60,
-        child: Container(
-          padding: const EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(16)),
-          height: 250, // 원하는 높이 설정
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(state.discountStoreMapResult.discountStoreMap[index]
-                      .storeName),
-                  IconButton(
-                    icon: Icon(
-                      Icons.star,
-                      color: state.discountStoreMapResult
-                              .discountStoreMap[index].isbookmark
-                          ? Colors.yellow
-                          : Colors.grey,
+      if (index != -1) {
+        String modifiedEtc = state
+            .discountStoreMapResult.discountStoreMap[index].etc
+            .toString()
+            .replaceAll('<', '\n');
+        return Sheet(
+          initialExtent: 180,
+          maxExtent: 180,
+          minExtent: 60,
+          child: Container(
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            height: 250, // 원하는 높이 설정
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(state.discountStoreMapResult.discountStoreMap[index]
+                        .storeName),
+                    IconButton(
+                      icon: Icon(
+                        Icons.star,
+                        color: state.discountStoreMapResult
+                                .discountStoreMap[index].isbookmark
+                            ? Colors.yellow
+                            : Colors.grey,
+                      ),
+                      onPressed: () {
+                        toggleBookmark(
+                            memberId,
+                            state.discountStoreMapResult.discountStoreMap[index]
+                                .id);
+                      },
                     ),
-                    onPressed: () {
-                      toggleBookmark(
-                          memberId,
-                          state.discountStoreMapResult.discountStoreMap[index]
-                              .id);
-                    },
-                  ),
-                ],
-              ),
-              Text(
-                  '${state.discountStoreMapResult.discountStoreMap[index].storeType}'),
-              Text(
-                  '주소: ${state.discountStoreMapResult.discountStoreMap[index].roadAddress}'),
-              Text(modifiedEtc),
-            ],
+                  ],
+                ),
+                Text(
+                    '${state.discountStoreMapResult.discountStoreMap[index].storeType}'),
+                Text(
+                    '주소: ${state.discountStoreMapResult.discountStoreMap[index].roadAddress}'),
+                Text(modifiedEtc),
+              ],
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        return Container();
+      }
     });
   }
 
@@ -328,7 +332,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       });
 
       mapController!.addOverlay(marker);
-
     }
   }
 

@@ -38,18 +38,6 @@ class RestaurantMapResult extends Equatable {
     );
   }
 
-  RestaurantMapResult copyWithFromJson(Map<String, dynamic> json,
-      double latitude, double longitude, double radius, category) {
-    return RestaurantMapResult(
-      latitude: latitude,
-      longitude: longitude,
-      radius: radius,
-      restaurantMap: List<Restaurant>.from(
-          json['content'].map((item) => Restaurant.fromJson(item))),
-      category: category,
-    );
-  }
-
   @override
   List<Object?> get props =>
       [latitude, longitude, radius, restaurantMap, category];

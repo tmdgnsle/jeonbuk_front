@@ -5,18 +5,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/const/color.dart';
-import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
-import 'package:jeonbuk_front/cubit/restaurant_map_cubit.dart';
-import 'package:jeonbuk_front/model/restaurant.dart';
+import 'package:jeonbuk_front/cubit/town_stroll_map_cubit.dart';
+import 'package:jeonbuk_front/model/town_stroll.dart';
 import 'package:sheet/sheet.dart';
 
-class RestaurantMapScreen extends StatefulWidget {
+class TownStrollMapScreen extends StatefulWidget {
   @override
-  State<RestaurantMapScreen> createState() => _MyAppState();
+  State<TownStrollMapScreen> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<RestaurantMapScreen> {
+class _MyAppState extends State<TownStrollMapScreen> {
   NaverMapController? mapController;
   Widget? bottomsheet;
 
@@ -40,8 +39,9 @@ class _MyAppState extends State<RestaurantMapScreen> {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<RestaurantMapCubit>().loadRestaurantMapFilter(
-          position.latitude, position.longitude, radius, 'all');
+      context
+          .read<TownStrollMapCubit>()
+          .loadTownStrollMap(position.latitude, position.longitude, radius);
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -58,27 +58,9 @@ class _MyAppState extends State<RestaurantMapScreen> {
       final radius = width * meterPerDp;
       print('radius: $radius');
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<RestaurantMapCubit>().loadRestaurantMapFilter(
-          centerLocation.latitude, centerLocation.longitude, radius, 'all');
-    } catch (e) {
-      print('에러: ${e.toString()}');
-      // 오류 처리, 예: 사용자에게 오류 메시지 표시
-    }
-  }
-
-  void loadMapDataFilter(NLatLng centerLocation, String filter) async {
-    try {
-      double? zoomlevel = await _CurrentZoomLevel();
-      final width = MediaQuery.of(context).size.width / 2;
-      final meterPerDp = mapController!.getMeterPerDpAtLatitude(
-          latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
-      final radius = width * meterPerDp;
-      // 위치 정보와 반지름을 Cubit에 전달
-      context.read<RestaurantMapCubit>().loadRestaurantMapFilter(
-          centerLocation.latitude,
-          centerLocation.longitude,
-          radius,
-          filter.toString());
+      context.read<TownStrollMapCubit>().loadTownStrollMap(
+          centerLocation.latitude, centerLocation.longitude, radius);
+      print('현재 상태: ${context.read<TownStrollMapCubit>().state}');
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -118,23 +100,23 @@ class _MyAppState extends State<RestaurantMapScreen> {
       isBookmarkLoading = true; // 즐겨찾기 로딩 상태 시작
     });
 
-    final restaurant = BlocProvider.of<RestaurantMapCubit>(context);
-    int index = restaurant.state.restaurantMapResult.restaurantMap
+    final townStroll = BlocProvider.of<TownStrollMapCubit>(context);
+    int index = townStroll.state.townStrollMapResult.townStrollMap
         .indexWhere((element) => element.id == storeId);
 
     try {
       if (index != -1) {
-        if (restaurant
-            .state.restaurantMapResult.restaurantMap[index].isbookmark) {
+        if (townStroll
+            .state.townStrollMapResult.townStrollMap[index].isbookmark) {
           // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
-          restaurant.state.restaurantMapResult.restaurantMap[index].isbookmark =
+          townStroll.state.townStrollMapResult.townStrollMap[index].isbookmark =
               false;
-          await OpenApis().deleteBookmark(memberId, storeId, 'RESTAURANT');
+          await OpenApis().deleteBookmark(memberId, storeId, 'TOWN_STROLL');
         } else {
           // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
-          restaurant.state.restaurantMapResult.restaurantMap[index].isbookmark =
+          townStroll.state.townStrollMapResult.townStrollMap[index].isbookmark =
               true;
-          await OpenApis().bookmarkStore(memberId, storeId, 'RESTAURANT');
+          await OpenApis().bookmarkStore(memberId, storeId, 'TOWN_STROLL');
         }
       }
     } catch (e) {
@@ -147,20 +129,20 @@ class _MyAppState extends State<RestaurantMapScreen> {
     }
   }
 
-  void IsBookmark(List<Restaurant> restaurantList) async {
+  void IsBookmark(List<TownStroll> townStrollList) async {
     final idjwt = BlocProvider.of<IdJwtCubit>(context);
     String memberId = idjwt.state.idJwt.id!;
 
-    final restaurant = BlocProvider.of<RestaurantMapCubit>(context);
+    final townStroll = BlocProvider.of<TownStrollMapCubit>(context);
     try {
-      for (int i = 0; i < restaurantList.length; i++) {
+      for (int i = 0; i < townStrollList.length; i++) {
         var bookmarkId = await OpenApis()
-            .isBookmark(memberId, 'RESTAURANT', restaurantList[i].id);
+            .isBookmark(memberId, 'TOWN_STROLL', townStrollList[i].id);
         if (bookmarkId != 0) {
-          restaurant.state.restaurantMapResult.restaurantMap[i].isbookmark =
+          townStroll.state.townStrollMapResult.townStrollMap[i].isbookmark =
               true;
         } else {
-          restaurant.state.restaurantMapResult.restaurantMap[i].isbookmark =
+          townStroll.state.townStrollMapResult.townStrollMap[i].isbookmark =
               false;
         }
       }
@@ -170,14 +152,11 @@ class _MyAppState extends State<RestaurantMapScreen> {
   }
 
   Widget bottomSheet(int storeId, String memberId) {
-    return BlocBuilder<RestaurantMapCubit, RestaurantMapCubitState>(
+    return BlocBuilder<TownStrollMapCubit, TownStrollMapCubitState>(
         builder: (context, state) {
-      int index = state.restaurantMapResult.restaurantMap
+      int index = state.townStrollMapResult.townStrollMap
           .indexWhere((element) => element.id == storeId);
       if (index != -1) {
-        String modifiedEtc = state.restaurantMapResult.restaurantMap[index].etc
-            .toString()
-            .replaceAll('<', '\n');
         return Sheet(
           initialExtent: 180,
           maxExtent: 180,
@@ -194,26 +173,28 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(state
-                        .restaurantMapResult.restaurantMap[index].storeName),
+                    Text(state.townStrollMapResult.townStrollMap[index].name),
                     IconButton(
                       icon: Icon(
                         Icons.star,
-                        color: state.restaurantMapResult.restaurantMap[index]
+                        color: state.townStrollMapResult.townStrollMap[index]
                                 .isbookmark
                             ? Colors.yellow
                             : Colors.grey,
                       ),
                       onPressed: () {
                         toggleBookmark(memberId,
-                            state.restaurantMapResult.restaurantMap[index].id);
+                            state.townStrollMapResult.townStrollMap[index].id);
                       },
                     ),
                   ],
                 ),
                 Text(
-                    '주소: ${state.restaurantMapResult.restaurantMap[index].roadAddress}'),
-                Text(modifiedEtc),
+                    '주소: ${state.townStrollMapResult.townStrollMap[index].address}'),
+                Text(state
+                    .townStrollMapResult.townStrollMap[index].middleCategory),
+                Text(state
+                    .townStrollMapResult.townStrollMap[index].smallCategory),
               ],
             ),
           ),
@@ -224,94 +205,16 @@ class _MyAppState extends State<RestaurantMapScreen> {
     });
   }
 
-  Widget FilterView(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    const filterHeight = 30.0;
-    return Positioned(
-      top: 10,
-      left: 0,
-      width: screenWidth,
-      // 스크린의 전체 너비를 사용
-      height: filterHeight,
-      // 높이 지정
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: restaurantFilter.keys.length, // Map의 키 개수를 itemCount로 사용
-        itemBuilder: (context, index) {
-          final filterKeys = restaurantFilter.keys.toList(); // Map의 키를 리스트로 변환
-          final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
-          final filterValue =
-              restaurantFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
-          final filterWidth = MediaQuery.of(context).size.width / 5;
-
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: InkWell(
-              onTap: () async {
-                final NLatLng centerLocation = await _CenterCoordinate();
-                loadMapDataFilter(centerLocation, filterValue.toString());
-              },
-              child: Container(
-                width: filterWidth,
-                decoration: BoxDecoration(
-                  color: restaurantFilterColor[index], // 이 예제에서는 색상을 고정값으로 설정
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  filterName, // Map의 키를 텍스트로 사용
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void MarkUp(List<Restaurant> storeList, BuildContext context) async {
+  void MarkUp(List<TownStroll> storeList, BuildContext context) async {
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     String memberId = bloc.state.idJwt.id!;
     for (var store in storeList) {
-      final Color? markerColor;
-
-      switch (store.promotion.toString()) {
-        case 'MODEL':
-          markerColor = restaurantFilterColor[0];
-          break;
-        case 'CHILD_LIKE':
-          markerColor = restaurantFilterColor[1];
-          break;
-        case 'CHILD_MEAL':
-          markerColor = restaurantFilterColor[2];
-          break;
-        case 'GOOD_PRICE':
-          markerColor = restaurantFilterColor[3];
-          break;
-
-        default:
-          markerColor = Colors.green;
-          break;
-      }
-      print('Store Promotion: ${store.promotion}, Marker Color: $markerColor');
-
       var marker = NMarker(
         id: store.id.toString(),
         position: NLatLng(store.latitude, store.longitude),
-        iconTintColor: markerColor,
         size: Size(20, 30),
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
-      print('marker.iconTintColor: ${marker.iconTintColor}');
 
       marker.setOnTapListener((NMarker marker) {
         setState(() {
@@ -343,20 +246,20 @@ class _MyAppState extends State<RestaurantMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RestaurantMapCubit, RestaurantMapCubitState>(
+    return BlocConsumer<TownStrollMapCubit, TownStrollMapCubitState>(
       listener: (context, state) {
-        if (state is LoadedRestaurantMapCubitState && mapController != null) {
+        if (state is LoadedTownStrollMapCubitState && mapController != null) {
           mapController!.clearOverlays();
-          IsBookmark(state.restaurantMapResult.restaurantMap);
-          MarkUp(state.restaurantMapResult.restaurantMap, context);
+          IsBookmark(state.townStrollMapResult.townStrollMap);
+          MarkUp(state.townStrollMapResult.townStrollMap, context);
         }
       },
       builder: (context, state) {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
-          if (state is LoadedRestaurantMapCubitState) {
-            IsBookmark(state.restaurantMapResult.restaurantMap);
-            MarkUp(state.restaurantMapResult.restaurantMap, context);
+          if (state is LoadedTownStrollMapCubitState) {
+            IsBookmark(state.townStrollMapResult.townStrollMap);
+            MarkUp(state.townStrollMapResult.townStrollMap, context);
           }
         }
 
@@ -380,7 +283,6 @@ class _MyAppState extends State<RestaurantMapScreen> {
                   ),
                   onMapReady: _onMapCreated,
                 ),
-              Positioned(top: 0, child: FilterView(context)),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),
@@ -389,12 +291,8 @@ class _MyAppState extends State<RestaurantMapScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final NLatLng centerCoordinate = await _CenterCoordinate();
-              if (state.restaurantMapResult.category == 'all') {
-                loadMapDataAll(centerCoordinate);
-              } else {
-                loadMapDataFilter(
-                    centerCoordinate, state.restaurantMapResult.category);
-              }
+
+              loadMapDataAll(centerCoordinate);
             },
             child: Icon(
               Icons.refresh,

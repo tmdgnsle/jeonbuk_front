@@ -113,8 +113,22 @@ class OpenApis {
 
   Future<void> bookmarkStore(
       String memberId, int storeId, String bookmarkType) async {
-    final String store =
-        (bookmarkType == 'RESTAURANT') ? 'restaurant' : 'discountStore';
+    String? store;
+
+    switch (bookmarkType) {
+      case 'DISCOUNT_STORE':
+        store = 'discountStore';
+        break;
+      case 'RESTAURANT':
+        store = 'restaurant';
+        break;
+      case 'TOWN_STROLL':
+        store = 'townStroll';
+        break;
+      case 'FESTIVAL':
+        store = 'festival';
+        break;
+    }
 
     print('store: $store');
 

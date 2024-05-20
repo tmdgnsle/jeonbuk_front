@@ -4,10 +4,14 @@ import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_box.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/festival_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/town_stroll_map_cubit.dart';
+import 'package:jeonbuk_front/screen/festival_screen.dart';
 import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
 import 'package:jeonbuk_front/screen/safe_home_screen.dart';
+import 'package:jeonbuk_front/screen/town_stroll_map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -94,7 +98,16 @@ class _MainScreenState extends State<HomeScreen> {
                           title: '축제',
                           firstDescription: '전북의 모든 축제정보를',
                           secontDescription: '만나보세요~',
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) => FestivalListCubit(),
+                                    child: FestivalScreen(),
+                                  ),
+                                ));
+                          },
                         ),
                         const SizedBox(
                           width: 12,
@@ -105,7 +118,16 @@ class _MainScreenState extends State<HomeScreen> {
                           titleIcon: const Icon(Icons.directions_walk),
                           firstDescription: '우리 집앞에',
                           secontDescription: '이런곳이~~!',
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) => TownStrollMapCubit(),
+                                    child: TownStrollMapScreen(),
+                                  ),
+                                ));
+                          },
                         ),
                       ],
                     ),

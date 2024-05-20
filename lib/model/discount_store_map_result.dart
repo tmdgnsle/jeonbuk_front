@@ -30,27 +30,19 @@ class DiscountStoreMapResult extends Equatable {
   }
 
   // JSON 데이터와 위치 정보를 바탕으로 객체를 생성하는 팩토리 생성자
-  factory DiscountStoreMapResult.fromJson(Map<String, dynamic> json, double latitude, double longitude, double radius, String category) {
+  factory DiscountStoreMapResult.fromJson(Map<String, dynamic> json,
+      double latitude, double longitude, double radius, String category) {
     return DiscountStoreMapResult(
       latitude: latitude,
       longitude: longitude,
       radius: radius,
-      discountStoreMap: List<DiscountStore>.from(json['content'].map((item) => DiscountStore.fromJson(item))),
-      category: category,
-    );
-  }
-
-  // JSON 데이터와 위치 정보를 바탕으로 객체의 상태를 업데이트하는 메서드
-  DiscountStoreMapResult copyWithFromJson(Map<String, dynamic> json, double latitude, double longitude, double radius, category) {
-    return DiscountStoreMapResult(
-      latitude: latitude,
-      longitude: longitude,
-      radius: radius,
-      discountStoreMap: List<DiscountStore>.from(json['content'].map((item) => DiscountStore.fromJson(item))),
+      discountStoreMap: List<DiscountStore>.from(
+          json['content'].map((item) => DiscountStore.fromJson(item))),
       category: category,
     );
   }
 
   @override
-  List<Object?> get props => [latitude, longitude, radius, discountStoreMap, category];
+  List<Object?> get props =>
+      [latitude, longitude, radius, discountStoreMap, category];
 }
