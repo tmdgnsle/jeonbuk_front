@@ -6,12 +6,11 @@ import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/screen/login_screen.dart';
 
 class RegisterInfoScreen extends StatefulWidget {
-  final String? id;
+  final String id;
+  final String password;
 
-  const RegisterInfoScreen({
-    super.key,
-    this.id,
-  });
+  const RegisterInfoScreen(
+      {super.key, required this.id, required this.password});
 
   @override
   State<RegisterInfoScreen> createState() => _RegisterInfoScreenState();
@@ -69,8 +68,12 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                await OpenApis().registerInfo(widget.id!, _nameController.text,
-                    _phoneController.text, _emergencyController.text);
+                await OpenApis().register(
+                    widget.id,
+                    widget.password,
+                    _nameController.text,
+                    _phoneController.text,
+                    _emergencyController.text);
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
                   (Route<dynamic> route) => false,

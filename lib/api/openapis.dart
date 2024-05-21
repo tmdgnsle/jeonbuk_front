@@ -14,11 +14,15 @@ class OpenApis {
   }
 
   // 회원가입 기능을 수행합니다. 사용자 아이디와 비밀번호를 서버로 전송합니다.
-  Future<String> register(String id, String password) async {
+  Future<String> register(String id, String password, String name,
+      String phoneNumber, String emergencyNumber) async {
     try {
       final response = await _dio.post('$_baseUrl/account/register', data: {
         'id': id,
         'password': password,
+        'name': name,
+        'phoneNumber': phoneNumber,
+        'emergencyNumber': emergencyNumber,
       });
       // 회원가입 성공 시, 서버로부터 받은 회원 ID를 문자열로 반환합니다.
       return response.data['memberId'].toString();

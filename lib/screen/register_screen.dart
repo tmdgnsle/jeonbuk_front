@@ -115,13 +115,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (_passwordController.text ==
                       _passwordconfirmController.text) {
                     if (check == true) {
-                      final memberId = await OpenApis().register(
-                          _idController.text, _passwordController.text);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => RegisterInfoScreen(
-                                    id: memberId,
+                                    id: _idController.text,
+                                    password: _passwordController.text,
                                   )));
                     } else {
                       showDialog(
