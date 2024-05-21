@@ -34,20 +34,18 @@ class AppNavigationBar extends StatelessWidget {
       backgroundColor: Colors.white,
       currentIndex: currentIndex ?? 0,
       onTap: (index) {
-        if (index != currentIndex) {
-          if (index == 2) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => BookmarkMapCubit(),
-                    child: _screens[index],
-                  ),
-                ));
-          } else {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => _screens[index]));
-          }
+        if (index == 2) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => BookmarkMapCubit(),
+                  child: _screens[index],
+                ),
+              ));
+        } else {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => _screens[index]));
         }
       },
       items: [

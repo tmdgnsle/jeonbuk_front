@@ -24,34 +24,80 @@ class FestivalCustomListBox extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              festival.title,
-              style: const TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              festival.address,
-              style: const TextStyle(
-                height: 2.0,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    festival.title,
+                    style: const TextStyle(fontSize: 20),
+                    softWrap: true,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    festival.address,
+                    style: const TextStyle(
+                      height: 2.0,
+                    ),
+                    softWrap: true,
+                  ),
+                  Text(
+                    festival.schedule,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      height: 2.0,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Text(
-              festival.schedule,
-              style: const TextStyle(
-                fontSize: 12,
-                height: 2.0,
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              height: 100,
+              width: 70,
+              child: Image.network(
+                festival.image,
+                fit: BoxFit.fill,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                (loadingProgress.expectedTotalBytes ?? 1)
+                            : null,
+                      ),
+                    );
+                  }
+                },
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error, color: Colors.red),
+                        SizedBox(height: 8),
+                        Text('Failed to load image'),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
     );
-    ;
   }
 }

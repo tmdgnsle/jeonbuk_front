@@ -5,6 +5,7 @@ import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:get/get.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
+import 'package:jeonbuk_front/screen/find_password_screen.dart';
 import 'package:jeonbuk_front/screen/home_screen.dart';
 import 'package:jeonbuk_front/screen/register_screen.dart';
 
@@ -144,7 +145,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 20,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const FindPasswordScreen()));
+                    },
                     child: const Text(
                       '비밀번호 찾기',
                       style: TextStyle(

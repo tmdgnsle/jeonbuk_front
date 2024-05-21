@@ -111,6 +111,45 @@ class OpenApis {
     }
   }
 
+  Future<int> deleteInformation(String memberId, String password) async {
+    try {
+      final response = await _dio.delete('$_baseUrl/account/delete',
+          data: {'id': memberId, 'password': password});
+      print('StatusCode: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        return response.statusCode!.toInt();
+      } else if (response.statusCode == 400) {
+        return response.statusCode!.toInt();
+      } else
+        throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
+    } catch (e) {
+      throw Exception('회원탈퇴에 실패하였습니다.\n ${e.toString()}');
+    }
+  }
+
+  Future<int> findPassword(String memberId, String newPassword, String name,
+      String phoneNumber, String emergencyNumber) async {
+    try {
+      final response =
+          await _dio.post('$_baseUrl/account/password/find', data: {
+        'id': memberId,
+        'password': newPassword,
+        'name': name,
+        'phoneNumber': phoneNumber,
+        'emergencyNumber': emergencyNumber,
+      });
+      print('StatusCode: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        return response.statusCode!.toInt();
+      } else if (response.statusCode == 400) {
+        return response.statusCode!.toInt();
+      } else
+        throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
+    } catch (e) {
+      throw Exception('회원탈퇴에 실패하였습니다.\n ${e.toString()}');
+    }
+  }
+
   Future<void> bookmarkStore(
       String memberId, int storeId, String bookmarkType) async {
     String? store;

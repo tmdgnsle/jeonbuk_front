@@ -4,6 +4,7 @@ import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/festival_custom_list_box.dart';
 import 'package:jeonbuk_front/cubit/festival_list_cubit.dart';
 import 'package:jeonbuk_front/model/festival.dart';
+import 'package:jeonbuk_front/screen/festival_detail_screen.dart';
 
 class FestivalScreen extends StatefulWidget {
   FestivalScreen({Key? key}) : super(key: key);
@@ -13,7 +14,6 @@ class FestivalScreen extends StatefulWidget {
 }
 
 class _FestivalScreenState extends State<FestivalScreen> {
-  final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -29,7 +29,6 @@ class _FestivalScreenState extends State<FestivalScreen> {
 
   @override
   void dispose() {
-    textEditingController.dispose();
     scrollController.dispose();
     super.dispose();
   }
@@ -71,7 +70,18 @@ class _FestivalScreenState extends State<FestivalScreen> {
                       controller: scrollController,
                       itemBuilder: (context, index) => FestivalCustomListBox(
                         festival: stores[index],
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) => FestivalListCubit(),
+                                  child: FestivalDetailScreen(
+                                    festival: stores[index],
+                                  ),
+                                ),
+                              ));
+                        },
                       ),
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 10),

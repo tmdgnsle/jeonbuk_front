@@ -8,8 +8,8 @@ class Festival extends Equatable {
   String content;
   String image;
   String address;
-  String latitude;
-  String longitude;
+  double latitude;
+  double longitude;
   bool isbookmark;
 
   Festival({
@@ -34,10 +34,8 @@ class Festival extends Equatable {
       content: json['content'] as String,
       image: json['image'] as String,
       address: json['address'] as String,
-      latitude: json['latitude'] as String,
-      // (json['latitude'] as num).toDouble(),
-      longitude: json['longitude'] as String,
-      // (json['longitude'] as num).toDouble(),
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
       isbookmark: false,
     );
   }

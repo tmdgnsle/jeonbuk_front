@@ -221,10 +221,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  (Route<dynamic> route) => false,
+                );
               },
               child: const Text(
                 '로그인',

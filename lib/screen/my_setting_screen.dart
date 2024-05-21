@@ -27,6 +27,89 @@ class _MySettingScreenState extends State<MySettingScreen> {
     nameController.text = bloc.state.idJwt.name!;
     phoneController.text = bloc.state.idJwt.phoneNum!;
     emergencyController.text = bloc.state.idJwt.emergencyNum!;
+
+    Widget Dialog() {
+      TextEditingController idController = TextEditingController();
+      TextEditingController passwordController = TextEditingController();
+
+      return AlertDialog(
+        title: Text('회원 탈퇴'),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: idController,
+              hintText: '아이디(jeonbuk1234)',
+              obscure: false,
+              prefixIcons: const Icon(Icons.email_outlined),
+              height: 50.0,
+            ),
+            const SizedBox(height: 8),
+            CustomTextField(
+              controller: passwordController,
+              hintText: '비밀번호',
+              obscure: true,
+              prefixIcons: const Icon(Icons.lock_outline),
+              height: 50.0,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('취소')),
+          TextButton(
+              onPressed: () async {
+                final int statusCode = await OpenApis().deleteInformation(
+                    idController.text, passwordController.text);
+                if (statusCode == 200) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('알림'),
+                          content: Text('회원탈퇴 완료!'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen()),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                },
+                                child: Text('확인'))
+                          ],
+                        );
+                      });
+                } else if (statusCode == 400) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('알림'),
+                          content: Text('입력하신 정보가 올바르지 않습니다.'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('확인'))
+                          ],
+                        );
+                      });
+                }
+              },
+              child: Text('탈퇴')),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('MY 설정'),
@@ -125,7 +208,15 @@ class _MySettingScreenState extends State<MySettingScreen> {
                         );
                       },
                       child: Text('로그아웃')),
-                  TextButton(onPressed: () {}, child: Text('탈퇴하기')),
+                  TextButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog();
+                            });
+                      },
+                      child: Text('탈퇴하기')),
                 ],
               ),
             ],
