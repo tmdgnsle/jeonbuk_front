@@ -93,45 +93,77 @@ class _MyAppState extends State<BookmarkMapScreen> {
     try {
       switch (category) {
         case 'DISCOUNT_STORE':
-
           int index = bookmarkCubit.state.bookmarkMapResult.discountStoreMap
               .indexWhere((element) => element.id == storeId);
 
-          if (bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
-              .isbookmark) {
-            // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
-            bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
-                .isbookmark = false;
-            await OpenApis()
-                .deleteBookmark(memberId, storeId, 'DISCOUNT_STORE');
-          } else {
-            // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
+          if (index != -1) {
+            if (bookmarkCubit
+                .state.bookmarkMapResult.discountStoreMap[index].isbookmark) {
+              // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제f
+              bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
+                  .isbookmark = false;
+              await OpenApis().deleteBookmark(memberId, storeId, category);
+            } else {
+              // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
 
-            bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
-                .isbookmark = true;
-            await OpenApis().bookmarkStore(memberId, storeId, 'DISCOUNT_STORE');
+              bookmarkCubit.state.bookmarkMapResult.discountStoreMap[index]
+                  .isbookmark = true;
+              await OpenApis().bookmarkStore(memberId, storeId, category);
+            }
           }
           break;
         case 'RESTAURANT':
           int index = bookmarkCubit.state.bookmarkMapResult.restaurantMap
               .indexWhere((element) => element.id == storeId);
 
-          if (bookmarkCubit
-              .state.bookmarkMapResult.restaurantMap[index].isbookmark) {
-            // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
-            bookmarkCubit.state.bookmarkMapResult.restaurantMap[index]
-                .isbookmark = false;
-            await OpenApis().deleteBookmark(memberId, storeId, 'RESTAURANT');
-          } else {
-            // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
-            bookmarkCubit.state.bookmarkMapResult.restaurantMap[index]
-                .isbookmark = true;
-            await OpenApis().bookmarkStore(memberId, storeId, 'RESTAURANT');
+          if (index != -1) {
+            if (bookmarkCubit
+                .state.bookmarkMapResult.restaurantMap[index].isbookmark) {
+              // 이미 즐겨찾기에 등록된 경우, 즐겨찾기 삭제
+              bookmarkCubit.state.bookmarkMapResult.restaurantMap[index]
+                  .isbookmark = false;
+              await OpenApis().deleteBookmark(memberId, storeId, category);
+            } else {
+              // 즐겨찾기에 등록되지 않은 경우, 즐겨찾기 추가
+              bookmarkCubit.state.bookmarkMapResult.restaurantMap[index]
+                  .isbookmark = true;
+              await OpenApis().bookmarkStore(memberId, storeId, category);
+            }
           }
           break;
         case 'FESTIVAL':
+          int index = bookmarkCubit.state.bookmarkMapResult.festivalMap
+              .indexWhere((element) => element.id == storeId);
+
+          if (index != -1) {
+            if (bookmarkCubit
+                .state.bookmarkMapResult.festivalMap[index].isbookmark) {
+              bookmarkCubit.state.bookmarkMapResult.festivalMap[index]
+                  .isbookmark = false;
+              await OpenApis().deleteBookmark(memberId, storeId, category);
+            } else {
+              bookmarkCubit
+                  .state.bookmarkMapResult.festivalMap[index].isbookmark = true;
+              await OpenApis().bookmarkStore(memberId, storeId, category);
+            }
+          }
           break;
         case 'TOWN_STROLL':
+          int index = bookmarkCubit.state.bookmarkMapResult.townStrollMap
+              .indexWhere((element) => element.id == storeId);
+
+          if (index != -1) {
+            if (bookmarkCubit
+                .state.bookmarkMapResult.townStrollMap[index].isbookmark) {
+              bookmarkCubit.state.bookmarkMapResult.townStrollMap[index]
+                  .isbookmark = false;
+              await OpenApis().deleteBookmark(memberId, storeId, category);
+            } else {
+              bookmarkCubit.state.bookmarkMapResult.townStrollMap[index]
+                  .isbookmark = true;
+              await OpenApis().bookmarkStore(memberId, storeId, category);
+            }
+          }
           break;
       }
     } catch (e) {
@@ -166,7 +198,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         case 'DISCOUNT_STORE':
           for (int i = 0; i < storeList.length; i++) {
             var bookmarkId = await OpenApis()
-                .isBookmark(memberId, 'DISCOUNT_STORE', storeList[i].id);
+                .isBookmark(memberId, category, storeList[i].id);
             if (bookmarkId != 0) {
               bookmarkcubit.state.bookmarkMapResult.discountStoreMap[i]
                   .isbookmark = true;
@@ -179,7 +211,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         case 'RESTAURANT':
           for (int i = 0; i < storeList.length; i++) {
             var bookmarkId = await OpenApis()
-                .isBookmark(memberId, 'RESTAURANT', storeList[i].id);
+                .isBookmark(memberId, category, storeList[i].id);
             if (bookmarkId != 0) {
               bookmarkcubit
                   .state.bookmarkMapResult.restaurantMap[i].isbookmark = true;
@@ -190,8 +222,30 @@ class _MyAppState extends State<BookmarkMapScreen> {
           }
           break;
         case 'FESTIVAL':
+          for (int i = 0; i < storeList.length; i++) {
+            var bookmarkId = await OpenApis()
+                .isBookmark(memberId, category, storeList[i].id);
+            if (bookmarkId != 0) {
+              bookmarkcubit.state.bookmarkMapResult.festivalMap[i].isbookmark =
+                  true;
+            } else {
+              bookmarkcubit.state.bookmarkMapResult.festivalMap[i].isbookmark =
+                  false;
+            }
+          }
           break;
         case 'TOWN_STROLL':
+          for (int i = 0; i < storeList.length; i++) {
+            var bookmarkId = await OpenApis()
+                .isBookmark(memberId, category, storeList[i].id);
+            if (bookmarkId != 0) {
+              bookmarkcubit
+                  .state.bookmarkMapResult.townStrollMap[i].isbookmark = true;
+            } else {
+              bookmarkcubit
+                  .state.bookmarkMapResult.townStrollMap[i].isbookmark = false;
+            }
+          }
           break;
       }
     } catch (e) {
@@ -262,7 +316,8 @@ class _MyAppState extends State<BookmarkMapScreen> {
       String modifiedEtc = state.bookmarkMapResult.restaurantMap[index].etc
           .toString()
           .replaceAll('<', '\n');
-      print('restaurant: ${state.bookmarkMapResult.restaurantMap[index].isbookmark}');
+      print(
+          'restaurant: ${state.bookmarkMapResult.restaurantMap[index].isbookmark}');
       return Sheet(
         initialExtent: 180,
         maxExtent: 180,
@@ -373,7 +428,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
   void MarkUp(BookmarkMap bookmarkMap, BuildContext context) async {
     if (bookmarkMap.discountStoreMap != null &&
         bookmarkMap.discountStoreMap!.isNotEmpty) {
-      for (var store in bookmarkMap.discountStoreMap!) {
+      for (var store in bookmarkMap.discountStoreMap) {
         var marker = NMarker(
           id: 'DISCOUNT_STORE${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
@@ -391,12 +446,51 @@ class _MyAppState extends State<BookmarkMapScreen> {
         mapController!.addOverlay(marker);
         print('할인매장 마크업');
       }
-    }
-    if (bookmarkMap.restaurantMap != null &&
+    } else if (bookmarkMap.restaurantMap != null &&
         bookmarkMap.restaurantMap!.isNotEmpty) {
       for (var store in bookmarkMap.restaurantMap!) {
         var marker = NMarker(
           id: 'RESTAURANT${store.id.toString()}',
+          position: NLatLng(store.latitude, store.longitude),
+          size: Size(20, 30),
+          // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
+        );
+
+        marker.setOnTapListener((NMarker marker) {
+          setState(() {
+            bookmarkStatus[store.id] = true;
+            bottomsheet = bottomSheetR(store.id, memberId!);
+          });
+        });
+
+        mapController!.addOverlay(marker);
+        print('식당 마크업');
+      }
+    } else if (bookmarkMap.festivalMap != null &&
+        bookmarkMap.festivalMap!.isNotEmpty) {
+      for (var store in bookmarkMap.festivalMap!) {
+        var marker = NMarker(
+          id: 'FESTIVAL${store.id.toString()}',
+          position: NLatLng(store.latitude, store.longitude),
+          size: Size(20, 30),
+          // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
+        );
+
+        marker.setOnTapListener((NMarker marker) {
+          setState(() {
+            bookmarkStatus[store.id] = true;
+            bottomsheet = bottomSheetR(store.id, memberId!);
+          });
+        });
+
+        mapController!.addOverlay(marker);
+        print('식당 마크업');
+      }
+    } else if (bookmarkMap.townStrollMap != null &&
+        bookmarkMap.townStrollMap!.isNotEmpty) {
+      for (var store in bookmarkMap.townStrollMap!) {
+        var marker = NMarker(
+          id: 'TOWN_STROLL${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
           size: Size(20, 30),
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
@@ -427,8 +521,11 @@ class _MyAppState extends State<BookmarkMapScreen> {
       listener: (context, state) {
         if (state is LoadedBookmarkMapCubitState && mapController != null) {
           mapController!.clearOverlays();
-          IsBookmark(state.bookmarkMapResult.discountStoreMap, 'DISCOUNT_STORE');
+          IsBookmark(
+              state.bookmarkMapResult.discountStoreMap, 'DISCOUNT_STORE');
           IsBookmark(state.bookmarkMapResult.restaurantMap, 'RESTAURANT');
+          IsBookmark(state.bookmarkMapResult.festivalMap, 'FESTIVAL');
+          IsBookmark(state.bookmarkMapResult.townStrollMap, 'TOWN_STROLL');
           MarkUp(state.bookmarkMapResult, context);
         }
       },
@@ -436,8 +533,11 @@ class _MyAppState extends State<BookmarkMapScreen> {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
           if (state is LoadedBookmarkMapCubitState) {
-            IsBookmark(state.bookmarkMapResult.discountStoreMap, 'DISCOUNT_STORE');
+            IsBookmark(
+                state.bookmarkMapResult.discountStoreMap, 'DISCOUNT_STORE');
             IsBookmark(state.bookmarkMapResult.restaurantMap, 'RESTAURANT');
+            IsBookmark(state.bookmarkMapResult.festivalMap, 'FESTIVAL');
+            IsBookmark(state.bookmarkMapResult.townStrollMap, 'TOWN_STROLL');
             MarkUp(state.bookmarkMapResult, context);
             print('마크업 완료');
           }
