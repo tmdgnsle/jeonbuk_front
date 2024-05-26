@@ -282,33 +282,51 @@ class _MyAppState extends State<RestaurantMapScreen> {
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     String memberId = bloc.state.idJwt.id!;
     for (var store in storeList) {
-      final Color? markerColor;
+      var markerIcon;
 
       switch (store.promotion.toString()) {
         case 'MODEL':
-          markerColor = restaurantFilterColor[0];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                restaurantFilterIcon[0],
+                color: restaurantFilterColor[0],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'CHILD_LIKE':
-          markerColor = restaurantFilterColor[1];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                restaurantFilterIcon[1],
+                color: restaurantFilterColor[1],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'CHILD_MEAL':
-          markerColor = restaurantFilterColor[2];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                restaurantFilterIcon[2],
+                color: restaurantFilterColor[2],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'GOOD_PRICE':
-          markerColor = restaurantFilterColor[3];
-          break;
-
-        default:
-          markerColor = Colors.green;
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                restaurantFilterIcon[3],
+                color: restaurantFilterColor[3],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
       }
-      print('Store Promotion: ${store.promotion}, Marker Color: $markerColor');
 
       var marker = NMarker(
         id: store.id.toString(),
         position: NLatLng(store.latitude, store.longitude),
-        iconTintColor: markerColor,
-        size: Size(20, 30),
+        icon: markerIcon,
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
       print('marker.iconTintColor: ${marker.iconTintColor}');
@@ -387,26 +405,32 @@ class _MyAppState extends State<RestaurantMapScreen> {
                     onMapReady: _onMapCreated,
                   ),
               Positioned(top: 0, child: FilterView(context)),
+              Positioned(
+                top: 50,
+                right: 10,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    final NLatLng centerCoordinate = await _CenterCoordinate();
+                    if (state.restaurantMapResult.category == 'all') {
+                      loadMapDataAll(centerCoordinate);
+                    } else {
+                      loadMapDataFilter(
+                          centerCoordinate, state.restaurantMapResult.category);
+                    }
+                  },
+                  child: Icon(
+                    Icons.autorenew,
+                    color: Colors.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28.0)),
+                  backgroundColor: GREEN_COLOR,
+                ),
+              ),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final NLatLng centerCoordinate = await _CenterCoordinate();
-              if (state.restaurantMapResult.category == 'all') {
-                loadMapDataAll(centerCoordinate);
-              } else {
-                loadMapDataFilter(
-                    centerCoordinate, state.restaurantMapResult.category);
-              }
-            },
-            child: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            backgroundColor: GREEN_COLOR,
           ),
           bottomNavigationBar: AppNavigationBar(),
         );

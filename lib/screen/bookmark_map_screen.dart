@@ -22,7 +22,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
 
   NLatLng? myLocation;
   bool isBookmarkLoading = false;
-  List<bool> filterTap = [false, false, false, false];
   String? memberId;
 
   @override
@@ -508,7 +507,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
               child: Container(
                 width: filterWidth,
                 decoration: BoxDecoration(
-                  color: filterTap[index] ? GREEN_COLOR : BLUE_COLOR,
+                  color: bookmarkFilterColor[index],
                   // 이 예제에서는 색상을 고정값으로 설정
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
@@ -534,13 +533,24 @@ class _MyAppState extends State<BookmarkMapScreen> {
   }
 
   void MarkUp(BookmarkMap bookmarkMap, BuildContext context) async {
+    var markerIcon;
+
     if (bookmarkMap.discountStoreMap != null &&
         bookmarkMap.discountStoreMap!.isNotEmpty) {
       for (var store in bookmarkMap.discountStoreMap) {
+        markerIcon = await NOverlayImage.fromWidget(
+            widget: Icon(
+              bookmarkFilterIcon[1],
+              color: bookmarkFilterColor[1],
+            ),
+            size: Size(20, 30),
+            context: context);
+
         var marker = NMarker(
           id: 'DISCOUNT_STORE${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
           size: Size(20, 30),
+          icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
 
@@ -557,10 +567,19 @@ class _MyAppState extends State<BookmarkMapScreen> {
     if (bookmarkMap.restaurantMap != null &&
         bookmarkMap.restaurantMap!.isNotEmpty) {
       for (var store in bookmarkMap.restaurantMap!) {
+        markerIcon = await NOverlayImage.fromWidget(
+            widget: Icon(
+              bookmarkFilterIcon[0],
+              color: bookmarkFilterColor[0],
+            ),
+            size: Size(20, 30),
+            context: context);
+
         var marker = NMarker(
           id: 'RESTAURANT${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
           size: Size(20, 30),
+          icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
 
@@ -577,10 +596,19 @@ class _MyAppState extends State<BookmarkMapScreen> {
     if (bookmarkMap.festivalMap != null &&
         bookmarkMap.festivalMap!.isNotEmpty) {
       for (var store in bookmarkMap.festivalMap!) {
+        markerIcon = await NOverlayImage.fromWidget(
+            widget: Icon(
+              bookmarkFilterIcon[2],
+              color: bookmarkFilterColor[2],
+            ),
+            size: Size(20, 30),
+            context: context);
+
         var marker = NMarker(
           id: 'FESTIVAL${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
           size: Size(20, 30),
+          icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
 
@@ -597,10 +625,19 @@ class _MyAppState extends State<BookmarkMapScreen> {
     if (bookmarkMap.townStrollMap != null &&
         bookmarkMap.townStrollMap!.isNotEmpty) {
       for (var store in bookmarkMap.townStrollMap!) {
+        markerIcon = await NOverlayImage.fromWidget(
+            widget: Icon(
+              bookmarkFilterIcon[3],
+              color: bookmarkFilterColor[3],
+            ),
+            size: Size(20, 30),
+            context: context);
+
         var marker = NMarker(
           id: 'TOWN_STROLL${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
           size: Size(20, 30),
+          icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
 
@@ -681,25 +718,26 @@ class _MyAppState extends State<BookmarkMapScreen> {
                     onMapReady: _onMapCreated,
                   ),
               Positioned(top: 0, child: FilterView(context)),
+              Positioned(
+                top: 50,
+                right: 10,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    loadMapDataFilter('ALL');
+                  },
+                  child: Icon(
+                    Icons.autorenew,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: GREEN_COLOR,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28.0)),
+                ),
+              ),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              firstLoadMapData();
-              setState(() {
-                for (int i = 0; i < filterTap.length; i++) {
-                  filterTap[i] = false;
-                }
-              });
-            },
-            child: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            backgroundColor: GREEN_COLOR,
           ),
           bottomNavigationBar: AppNavigationBar(
             currentIndex: 2,

@@ -291,36 +291,69 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
     String memberId = bloc.state.idJwt.id!;
 
     for (var store in storeList) {
-      final Color? markerColor;
+      var markerIcon;
 
       switch (store.category.toString()) {
         case 'LEISURE':
-          markerColor = discountStoreFilterColor[0];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                discountStoreFilterIcon[0],
+                color: discountStoreFilterColor[0],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'GOODS':
-          markerColor = discountStoreFilterColor[1];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                discountStoreFilterIcon[1],
+                color: discountStoreFilterColor[1],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'LIFE':
-          markerColor = discountStoreFilterColor[2];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                discountStoreFilterIcon[2],
+                color: discountStoreFilterColor[2],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'EDUCATION':
-          markerColor = discountStoreFilterColor[3];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                discountStoreFilterIcon[3],
+                color: discountStoreFilterColor[3],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
         case 'SERVICES':
-          markerColor = discountStoreFilterColor[4];
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                discountStoreFilterIcon[4],
+                color: discountStoreFilterColor[4],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
-
-        default:
-          markerColor = discountStoreFilterColor[5];
+        case 'ETC':
+          markerIcon = await NOverlayImage.fromWidget(
+              widget: Icon(
+                discountStoreFilterIcon[5],
+                color: discountStoreFilterColor[5],
+              ),
+              size: Size(20, 30),
+              context: context);
           break;
       }
-      print('Store Category: ${store.category}, Marker Color: $markerColor');
 
       var marker = NMarker(
         id: store.id.toString(),
         position: NLatLng(store.latitude, store.longitude),
-        iconTintColor: markerColor,
-        size: Size(20, 30),
+        icon: markerIcon,
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
       print('marker.iconTintColor: ${marker.iconTintColor}');
@@ -400,26 +433,32 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                     onMapReady: _onMapCreated,
                   ),
               Positioned(top: 0, child: FilterView(context)),
+              Positioned(
+                top: 50,
+                right: 10,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    final NLatLng centerCoordinate = await _CenterCoordinate();
+                    if (state.discountStoreMapResult.category == 'all') {
+                      loadMapDataAll(centerCoordinate);
+                    } else {
+                      loadMapDataFilter(centerCoordinate,
+                          state.discountStoreMapResult.category);
+                    }
+                  },
+                  child: Icon(
+                    Icons.autorenew,
+                    color: Colors.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28.0)),
+                  backgroundColor: GREEN_COLOR,
+                ),
+              ),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final NLatLng centerCoordinate = await _CenterCoordinate();
-              if (state.discountStoreMapResult.category == 'all') {
-                loadMapDataAll(centerCoordinate);
-              } else {
-                loadMapDataFilter(
-                    centerCoordinate, state.discountStoreMapResult.category);
-              }
-            },
-            child: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            backgroundColor: GREEN_COLOR,
           ),
           bottomNavigationBar: AppNavigationBar(),
         );

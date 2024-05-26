@@ -96,6 +96,7 @@ class _MainScreenState extends State<HomeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '축제',
+                          titleIcon: Icon(Icons.festival),
                           firstDescription: '전북의 모든 축제정보를',
                           secontDescription: '만나보세요~',
                           onTap: () {

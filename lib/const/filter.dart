@@ -18,6 +18,15 @@ const List<Color> discountStoreFilterColor = [
   Color(0xFF848484),
 ];
 
+const List<IconData> discountStoreFilterIcon = [
+  Icons.weekend,
+  Icons.home_repair_service,
+  Icons.movie_creation,
+  Icons.school,
+  Icons.face,
+  Icons.workspaces,
+];
+
 const Map<String, String> restaurantFilter = {
   '모범음식점': 'MODEL',
   '아이조아': 'CHILD_LIKE',
@@ -32,11 +41,30 @@ const List<Color> restaurantFilterColor = [
   Color(0xFF223C80),
 ];
 
+const List<IconData> restaurantFilterIcon = [
+  Icons.local_dining,
+  Icons.child_care,
+  Icons.credit_card,
+  Icons.thumb_up_alt,
+];
+
 const Map<String, String> mysafeHomeFilter = {
   '비상벨': 'WarningBell',
   'CCTV': 'CCTV',
   '가로등': 'StreetLamp'
 };
+
+const List<Color> safeFilterColor = [
+  Color(0xFFFF0000),
+  Color(0xFF696969),
+  Color(0xFFFF9D26),
+];
+
+const List<IconData> mysafeHomeIcon = [
+  Icons.notification_important,
+  Icons.videocam,
+  Icons.wb_incandescent,
+];
 
 const Map<String, String> bookmarkFilter = {
   '음식점': 'RESTAURANT',
@@ -45,25 +73,18 @@ const Map<String, String> bookmarkFilter = {
   '동네 마실': 'TOWN_STROLL'
 };
 
-const List<IconData> mysafeHomeIcon = [
-  Icons.notification_important,
-  Icons.videocam,
-  Icons.wb_incandescent,
+const List<Color> bookmarkFilterColor = [
+  Color(0xFFEB4F3D),
+  Color(0xFFFFB21E),
+  Color(0xFF014594),
+  Color(0xFF63AA42),
 ];
 
-const List<Color> filterColor = [
-  Colors.red,
-  Colors.orange,
-  Colors.yellow,
-  Colors.green,
-  Colors.blue,
-  Colors.indigo,
-  Colors.purple,
-  Colors.black
+const List<IconData> bookmarkFilterIcon = [
+  Icons.restaurant,
+  Icons.shopping_bag,
+  Icons.festival,
+  Icons.directions_walk
 ];
 
-const List<Color> safeFilterColor = [
-  Color(0xFFFF0000),
-  Color(0xFF696969),
-  Color(0xFFFF9D26),
-];
+

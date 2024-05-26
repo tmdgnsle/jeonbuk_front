@@ -177,8 +177,8 @@ class _MyAppState extends State<MySafeHomeScreen> {
         case 'WARNING_BELL':
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
-                Icons.notification_important,
-                color: Colors.red,
+                mysafeHomeIcon[0],
+                color: safeFilterColor[0],
               ),
               size: Size(20, 30),
               context: context);
@@ -186,15 +186,16 @@ class _MyAppState extends State<MySafeHomeScreen> {
         case 'CCTV':
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
-                Icons.videocam,
-                color: Colors.grey,
+                mysafeHomeIcon[1],
+                color: safeFilterColor[1],
               ),
               size: Size(20, 30),
               context: context);
           break;
         case 'STREET_LAMP':
           markerIcon = await NOverlayImage.fromWidget(
-              widget: Icon(Icons.wb_incandescent, color: Colors.yellowAccent),
+              widget: Icon(mysafeHomeIcon[2],
+                color: safeFilterColor[2],),
               size: Size(20, 30),
               context: context);
           break;
@@ -203,10 +204,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
       var marker = NMarker(
         id: mySafeHome.id.toString(),
         position: NLatLng(mySafeHome.latitude, mySafeHome.longitude),
-        // iconTintColor: markerColor!,
         icon: markerIcon,
-        // NOverlayImage.fromAssetImage('assets/images/${markerIcon}'),
-        // size: Size(15, 20),
 
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
@@ -273,28 +271,34 @@ class _MyAppState extends State<MySafeHomeScreen> {
                   onMapReady: _onMapCreated,
                 ),
               Positioned(top: 0, child: FilterView(context)),
+              Positioned(
+                top: 50,
+                right: 10,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    final NLatLng centerCoordinate = await _CenterCoordinate();
+                    print(
+                        '경도: ${centerCoordinate.latitude}, 위도: ${centerCoordinate.longitude}');
+                    if (state.mysafeHomeMapResult.category == 'all') {
+                      loadMapDataAll(centerCoordinate);
+                      print(state);
+                    } else {
+                      loadMapDataFilter(
+                          centerCoordinate, state.mysafeHomeMapResult.category);
+                    }
+                  },
+                  child: Icon(
+                    Icons.autorenew,
+                    color: Colors.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28.0)),
+                  backgroundColor: GREEN_COLOR,
+                ),
+              ),
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final NLatLng centerCoordinate = await _CenterCoordinate();
-              print(
-                  '경도: ${centerCoordinate.latitude}, 위도: ${centerCoordinate.longitude}');
-              if (state.mysafeHomeMapResult.category == 'all') {
-                loadMapDataAll(centerCoordinate);
-                print(state);
-              } else {
-                loadMapDataFilter(
-                    centerCoordinate, state.mysafeHomeMapResult.category);
-              }
-            },
-            child: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            backgroundColor: GREEN_COLOR,
           ),
           bottomNavigationBar: AppNavigationBar(
             currentIndex: 1,

@@ -92,6 +92,7 @@ class _MainScreenState extends State<SafeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '내 안심귀가',
+                          titleIcon: Icon(Icons.radar),
                           firstDescription: '현재 내 주변의',
                           secontDescription: '안전정보 확인',
                           onTap: () {
@@ -115,6 +116,7 @@ class _MainScreenState extends State<SafeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '비상전화',
+                          titleIcon: Icon(Icons.phone, color: Colors.red,),
                           firstDescription: '연락처에 저장된',
                           secontDescription: '사람에게 전화',
                           onTap: () {

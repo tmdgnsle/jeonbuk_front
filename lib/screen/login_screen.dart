@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 8,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextButton(
                     onPressed: () {

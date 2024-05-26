@@ -148,7 +148,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
 
     var path = await OpenApis().fetchRoute(widget.start, widget.end);
     var pathOverlay =
-        NPathOverlay(id: 'test', coords: path, color: Colors.red, width: 10);
+        NPathOverlay(id: 'road', coords: path, color: Color(0xFF014594), width: 5);
     mapController!.addOverlay(pathOverlay);
     print('MarkupPath 완료');
   }
@@ -164,8 +164,8 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
         case 'WARNING_BELL':
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
-                Icons.notification_important,
-                color: Colors.red,
+                mysafeHomeIcon[0],
+                color: safeFilterColor[0],
               ),
               size: Size(20, 30),
               context: context);
@@ -173,15 +173,16 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
         case 'CCTV':
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
-                Icons.videocam,
-                color: Colors.grey,
+                mysafeHomeIcon[1],
+                color: safeFilterColor[1],
               ),
               size: Size(20, 30),
               context: context);
           break;
         case 'STREET_LAMP':
           markerIcon = await NOverlayImage.fromWidget(
-              widget: Icon(Icons.wb_incandescent, color: Colors.yellowAccent),
+              widget: Icon(mysafeHomeIcon[2],
+                color: safeFilterColor[2],),
               size: Size(20, 30),
               context: context);
           break;
@@ -275,23 +276,30 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                   onMapReady: _onMapCreated,
                 ),
                 Positioned(top: 0, child: FilterView(context)),
+                Positioned(
+                  top: 50,
+                  right: 10,
+                  child: FloatingActionButton(
+                    onPressed: () async {
+                      final NLatLng centerCoordinate =
+                          await _CenterCoordinate();
+                      if (state.mysafeHomeMapResult.category == 'all') {
+                        loadMapDataAll(centerCoordinate);
+                      } else {
+                        loadMapDataFilter(centerCoordinate,
+                            state.mysafeHomeMapResult.category);
+                      }
+                    },
+                    child:Icon(
+                      Icons.autorenew,
+                      color: Colors.white,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(28.0)),
+                    backgroundColor: GREEN_COLOR,
+                  ),
+                ),
               ],
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                final NLatLng centerCoordinate = await _CenterCoordinate();
-                if (state.mysafeHomeMapResult.category == 'all') {
-                  loadMapDataAll(centerCoordinate);
-                } else {
-                  loadMapDataFilter(
-                      centerCoordinate, state.mysafeHomeMapResult.category);
-                }
-              },
-              child: Icon(
-                Icons.refresh,
-                color: Colors.white,
-              ),
-              backgroundColor: GREEN_COLOR,
             ),
             bottomNavigationBar: AppNavigationBar(
               currentIndex: 1,

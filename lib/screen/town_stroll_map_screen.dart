@@ -292,22 +292,28 @@ class _MyAppState extends State<TownStrollMapScreen> {
                     ),
                     onMapReady: _onMapCreated,
                   ),
+              Positioned(
+                top: 50,
+                right: 10,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    final NLatLng centerCoordinate = await _CenterCoordinate();
+
+                    loadMapDataAll(centerCoordinate);
+                  },
+                  child: Icon(
+                    Icons.autorenew,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: GREEN_COLOR,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28.0)),
+                ),
+              ),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),
             ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final NLatLng centerCoordinate = await _CenterCoordinate();
-
-              loadMapDataAll(centerCoordinate);
-            },
-            child: Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
-            backgroundColor: GREEN_COLOR,
           ),
           bottomNavigationBar: AppNavigationBar(),
         );
