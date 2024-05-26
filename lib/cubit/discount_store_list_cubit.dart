@@ -7,7 +7,12 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
   late Dio _dio;
 
   DiscountStoreListCubit() : super(InitDiscountStoreListCubitState()) {
-    _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
+    _dio = Dio(BaseOptions(
+      baseUrl: 'http://34.64.170.83:8080',
+      connectTimeout: Duration(seconds: 30),
+      // 연결 타임아웃
+      receiveTimeout: Duration(seconds: 30),
+    ));
     loadDiscountStoreList();
   }
 

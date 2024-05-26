@@ -122,11 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 8,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  SizedBox(
-                    width: 105,
-                  ),
                   TextButton(
                     onPressed: () {
                       Navigator.push(

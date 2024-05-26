@@ -9,7 +9,28 @@ class BookmarkMapCubit extends Cubit<BookmarkMapCubitState> {
   BookmarkMapCubit()
       : super(
             InitBookmarkMapCubitState(bookmarkMapResult: BookmarkMap.init())) {
-    _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
+    _dio = Dio(BaseOptions(
+      baseUrl: 'http://34.64.170.83:8080',
+      connectTimeout: Duration(seconds: 30),
+      // 연결 타임아웃
+      receiveTimeout: Duration(seconds: 30),
+    ));
+  }
+
+  Future<void> firstLoadBookmarkMap(String memberId) async {
+    try {
+      emit(FirstLoadingBookmarkMapCubitState(
+          bookmarkMapResult: state.bookmarkMapResult));
+
+      var result = await _dio.get('/bookmark/$memberId');
+
+      emit(LoadedBookmarkMapCubitState(
+          bookmarkMapResult: BookmarkMap.fromJson(result.data, 'ALL')));
+    } catch (e) {
+      emit(ErrorBookmarkMapCubitState(
+          bookmarkMapResult: state.bookmarkMapResult,
+          errorMessage: e.toString()));
+    }
   }
 
   Future<void> loadBookmarkMap(String memberId, String category) async {
@@ -38,6 +59,13 @@ abstract class BookmarkMapCubitState extends Equatable {
 class InitBookmarkMapCubitState extends BookmarkMapCubitState {
   InitBookmarkMapCubitState({required BookmarkMap bookmarkMapResult})
       : super(bookmarkMapResult: bookmarkMapResult);
+
+  @override
+  List<Object?> get props => [bookmarkMapResult];
+}
+
+class FirstLoadingBookmarkMapCubitState extends BookmarkMapCubitState {
+  const FirstLoadingBookmarkMapCubitState({required super.bookmarkMapResult});
 
   @override
   List<Object?> get props => [bookmarkMapResult];

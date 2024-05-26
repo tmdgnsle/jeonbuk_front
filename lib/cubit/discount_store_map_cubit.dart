@@ -9,7 +9,39 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
   DiscountStoreMapCubit()
       : super(InitDiscountStoreMapCubitState(
             discountStoreMapResult: DiscountStoreMapResult.init())) {
-    _dio = Dio(BaseOptions(baseUrl: 'http://10.0.2.2:8080'));
+    _dio = Dio(BaseOptions(
+      baseUrl: 'http://34.64.170.83:8080',
+      connectTimeout: Duration(seconds: 30),
+      // 연결 타임아웃
+      receiveTimeout: Duration(seconds: 30),
+    ));
+  }
+
+  Future<void> firstLoadDiscountStoreMap(double latitude, double longitude, double radius) async{
+    try {
+      emit(FirstLoadingDiscountStoreMapCubitState(
+          discountStoreMapResult: state.discountStoreMapResult));
+
+      var result =
+      await _dio.get('/discountStore/map/all', queryParameters: {
+        'latitude': latitude,
+        'longitude': longitude,
+        'radius': radius,
+      });
+
+      emit(LoadedDiscountStoreMapCubitState(
+          discountStoreMapResult: DiscountStoreMapResult.fromJson(
+            result.data,
+            latitude,
+            longitude,
+            radius,
+            'all',
+          )));
+    } catch (e) {
+      emit(ErrorDiscountStoreMapCubitState(
+          discountStoreMapResult: state.discountStoreMapResult,
+          errorMessage: e.toString()));
+    }
   }
 
   Future<void> loadDiscountStoreMapFilter(
@@ -51,6 +83,14 @@ class InitDiscountStoreMapCubitState extends DiscountStoreMapCubitState {
   InitDiscountStoreMapCubitState(
       {required DiscountStoreMapResult discountStoreMapResult})
       : super(discountStoreMapResult: discountStoreMapResult);
+
+  @override
+  List<Object?> get props => [discountStoreMapResult];
+}
+
+class FirstLoadingDiscountStoreMapCubitState extends DiscountStoreMapCubitState {
+  const FirstLoadingDiscountStoreMapCubitState(
+      {required super.discountStoreMapResult});
 
   @override
   List<Object?> get props => [discountStoreMapResult];

@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 class OpenApis {
-  final Dio _dio = Dio();
-  final String _baseUrl = 'http://10.0.2.2:8080';
+  final Dio _dio = Dio(BaseOptions(connectTimeout: Duration(seconds: 30), receiveTimeout: Duration(seconds: 30)));
+  final String _baseUrl = 'http://34.64.170.83:8080';
+
+
 
   OpenApis() {
     _dio.options.validateStatus = (status) {

@@ -40,8 +40,8 @@ class _MyAppState extends State<RestaurantMapScreen> {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<RestaurantMapCubit>().loadRestaurantMapFilter(
-          position.latitude, position.longitude, radius, 'all');
+      context.read<RestaurantMapCubit>().firstLoadRestaurantMap(
+          position.latitude, position.longitude, radius);
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -369,17 +369,23 @@ class _MyAppState extends State<RestaurantMapScreen> {
           ),
           body: Stack(
             children: [
-              if (myLocation != null)
-                NaverMap(
-                  options: NaverMapViewOptions(
-                    initialCameraPosition: NCameraPosition(
-                      target: myLocation!,
-                      zoom: 18,
+              if (state is ErrorRestaurantMapCubitState)
+                Center(child: Text(state.errorMessage))
+              else if (state is FirstLoadingRestaurantMapCubitState)
+                Center(child: CircularProgressIndicator())
+              else if (state is LoadedRestaurantMapCubitState ||
+                  state is LoadingRestaurantMapCubitState)
+                if (myLocation != null)
+                  NaverMap(
+                    options: NaverMapViewOptions(
+                      initialCameraPosition: NCameraPosition(
+                        target: myLocation!,
+                        zoom: 18,
+                      ),
+                      locationButtonEnable: true,
                     ),
-                    locationButtonEnable: true,
+                    onMapReady: _onMapCreated,
                   ),
-                  onMapReady: _onMapCreated,
-                ),
               Positioned(top: 0, child: FilterView(context)),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)

@@ -39,9 +39,8 @@ class _MyAppState extends State<TownStrollMapScreen> {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context
-          .read<TownStrollMapCubit>()
-          .loadTownStrollMap(position.latitude, position.longitude, radius);
+      context.read<TownStrollMapCubit>().firstLoadTownStrollMap(
+          position.latitude, position.longitude, radius);
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -272,17 +271,27 @@ class _MyAppState extends State<TownStrollMapScreen> {
           ),
           body: Stack(
             children: [
-              if (myLocation != null)
-                NaverMap(
-                  options: NaverMapViewOptions(
-                    initialCameraPosition: NCameraPosition(
-                      target: myLocation!,
-                      zoom: 18,
+              if (state is ErrorTownStrollMapCubitState)
+                Center(
+                  child: Text(state.errorMessage),
+                )
+              else if (state is FirstLoadingTownStrollMapCubitState)
+                Center(
+                  child: CircularProgressIndicator(),
+                )
+              else if (state is LoadedTownStrollMapCubitState ||
+                  state is LoadingTownStrollMapCubitState)
+                if (myLocation != null)
+                  NaverMap(
+                    options: NaverMapViewOptions(
+                      initialCameraPosition: NCameraPosition(
+                        target: myLocation!,
+                        zoom: 18,
+                      ),
+                      locationButtonEnable: true,
                     ),
-                    locationButtonEnable: true,
+                    onMapReady: _onMapCreated,
                   ),
-                  onMapReady: _onMapCreated,
-                ),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
                 const Center(child: CircularProgressIndicator()),

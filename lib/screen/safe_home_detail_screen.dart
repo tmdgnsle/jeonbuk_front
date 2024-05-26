@@ -22,17 +22,17 @@ class SafeHomeDetailScreen extends StatefulWidget {
 
 class _MyAppState extends State<SafeHomeDetailScreen> {
   NaverMapController? mapController;
-  late double centerLa;
-  late double centerLo;
 
   void firstLoadMapData() async {
     try {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context
-          .read<MySafeHomeMapCubit>()
-          .loadMySafeHomeMapFilter(centerLa, centerLo, radius, 'all');
+      await context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
+          (widget.start.latitude + widget.end.latitude) / 2,
+          (widget.start.longitude + widget.end.longitude) / 2,
+          radius,
+          'all');
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -150,6 +150,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
     var pathOverlay =
         NPathOverlay(id: 'test', coords: path, color: Colors.red, width: 10);
     mapController!.addOverlay(pathOverlay);
+    print('MarkupPath 완료');
   }
 
   // ignore: non_constant_identifier_names
@@ -200,6 +201,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
       print('marker.iconTintColor: ${marker.iconTintColor}');
 
       mapController!.addOverlay(marker);
+      print('Markup 완료');
     }
   }
 
@@ -218,8 +220,6 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
   @override
   void initState() {
     super.initState();
-    centerLa = (widget.start.latitude + widget.end.latitude) / 2;
-    centerLo = (widget.start.longitude + widget.end.longitude) / 2;
     firstLoadMapData();
   }
 
@@ -237,54 +237,69 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
       builder: (context, state) {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
+          print('state: $state');
           if (state is LoadedMySafeHomeMapCubitState) {
-            MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
+            print('state: $state');
             MarkupPath();
+            MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
           }
         }
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              widget.title,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          body: Stack(
-            children: [
-              NaverMap(
-                options: NaverMapViewOptions(
-                  initialCameraPosition: NCameraPosition(
-                    target: NLatLng(centerLa, centerLo),
-                    zoom: 18,
-                  ),
-                  locationButtonEnable: true,
-                ),
-                onMapReady: _onMapCreated,
+        if (state is LoadingMySafeHomeMapCubitState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is ErrorMySafeHomeMapCubitState) {
+          return Center(
+            child: Text(state.errorMessage),
+          );
+        } else if (state is LoadedMySafeHomeMapCubitState) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                widget.title,
+                textAlign: TextAlign.center,
               ),
-              Positioned(top: 0, child: FilterView(context)),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final NLatLng centerCoordinate = await _CenterCoordinate();
-              if (state.mysafeHomeMapResult.category == 'all') {
-                loadMapDataAll(centerCoordinate);
-              } else {
-                loadMapDataFilter(
-                    centerCoordinate, state.mysafeHomeMapResult.category);
-              }
-            },
-            child: Icon(
-              Icons.refresh,
-              color: Colors.white,
             ),
-            backgroundColor: GREEN_COLOR,
-          ),
-          bottomNavigationBar: AppNavigationBar(
-            currentIndex: 1,
-          ),
-        );
+            body: Stack(
+              children: [
+                NaverMap(
+                  options: NaverMapViewOptions(
+                    initialCameraPosition: NCameraPosition(
+                      target: NLatLng(
+                          widget.start.latitude, widget.start.longitude),
+                      zoom: 18,
+                    ),
+                    locationButtonEnable: true,
+                  ),
+                  onMapReady: _onMapCreated,
+                ),
+                Positioned(top: 0, child: FilterView(context)),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                final NLatLng centerCoordinate = await _CenterCoordinate();
+                if (state.mysafeHomeMapResult.category == 'all') {
+                  loadMapDataAll(centerCoordinate);
+                } else {
+                  loadMapDataFilter(
+                      centerCoordinate, state.mysafeHomeMapResult.category);
+                }
+              },
+              child: Icon(
+                Icons.refresh,
+                color: Colors.white,
+              ),
+              backgroundColor: GREEN_COLOR,
+            ),
+            bottomNavigationBar: AppNavigationBar(
+              currentIndex: 1,
+            ),
+          );
+        } else {
+          return Container();
+        }
       },
     );
   }

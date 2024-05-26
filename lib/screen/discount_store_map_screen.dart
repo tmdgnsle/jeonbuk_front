@@ -40,8 +40,8 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<DiscountStoreMapCubit>().loadDiscountStoreMapFilter(
-          position.latitude, position.longitude, radius, 'all');
+      context.read<DiscountStoreMapCubit>().firstLoadDiscountStoreMap(
+          position.latitude, position.longitude, radius);
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -382,17 +382,23 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           ),
           body: Stack(
             children: [
-              if (myLocation != null)
-                NaverMap(
-                  options: NaverMapViewOptions(
-                    initialCameraPosition: NCameraPosition(
-                      target: myLocation!,
-                      zoom: 18,
+              if (state is ErrorDiscountStoreMapCubitState)
+                Center(child: Text(state.errorMessage))
+              else if (state is FirstLoadingDiscountStoreMapCubitState)
+                Center(child: CircularProgressIndicator())
+              else if (state is LoadedDiscountStoreMapCubitState ||
+                  state is LoadingDiscountStoreMapCubitState)
+                if (myLocation != null)
+                  NaverMap(
+                    options: NaverMapViewOptions(
+                      initialCameraPosition: NCameraPosition(
+                        target: myLocation!,
+                        zoom: 18,
+                      ),
+                      locationButtonEnable: true,
                     ),
-                    locationButtonEnable: true,
+                    onMapReady: _onMapCreated,
                   ),
-                  onMapReady: _onMapCreated,
-                ),
               Positioned(top: 0, child: FilterView(context)),
               if (myLocation != null && bottomsheet != null) bottomsheet!,
               if (myLocation == null)
