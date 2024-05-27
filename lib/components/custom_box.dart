@@ -67,8 +67,8 @@ class CustomBox extends StatelessWidget {
           ),
         ),
         const Positioned(
-          bottom: 0,
-          right: 0,
+          bottom: 16,
+          right: 16,
           child: Icon(
             Icons.arrow_forward,
             size: 35,

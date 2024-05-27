@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/model/restaurant_map_result.dart';
 
 class RestaurantMapCubit extends Cubit<RestaurantMapCubitState> {
@@ -14,16 +15,19 @@ class RestaurantMapCubit extends Cubit<RestaurantMapCubitState> {
       connectTimeout: Duration(seconds: 30),
       // 연결 타임아웃
       receiveTimeout: Duration(seconds: 30),
+      headers: {
+        'Authorization': jwt,
+      },
     ));
   }
 
-  Future<void> firstLoadRestaurantMap(double latitude, double longitude, double radius) async {
+  Future<void> firstLoadRestaurantMap(
+      double latitude, double longitude, double radius) async {
     try {
       emit(FirstLoadingRestaurantMapCubitState(
           restaurantMapResult: state.restaurantMapResult));
 
-      var result =
-      await _dio.get('/restaurant/map/all', queryParameters: {
+      var result = await _dio.get('/restaurant/map/all', queryParameters: {
         'latitude': latitude,
         'longitude': longitude,
         'radius': radius,
@@ -31,12 +35,12 @@ class RestaurantMapCubit extends Cubit<RestaurantMapCubitState> {
 
       emit(LoadedRestaurantMapCubitState(
           restaurantMapResult: RestaurantMapResult.fromJson(
-            result.data,
-            latitude,
-            longitude,
-            radius,
-            'all',
-          )));
+        result.data,
+        latitude,
+        longitude,
+        radius,
+        'all',
+      )));
     } catch (e) {
       emit(ErrorRestaurantMapCubitState(
           restaurantMapResult: state.restaurantMapResult,
@@ -89,7 +93,8 @@ class InitRestaurantMapCubitState extends RestaurantMapCubitState {
 }
 
 class FirstLoadingRestaurantMapCubitState extends RestaurantMapCubitState {
-  const FirstLoadingRestaurantMapCubitState({required super.restaurantMapResult});
+  const FirstLoadingRestaurantMapCubitState(
+      {required super.restaurantMapResult});
 
   @override
   List<Object?> get props => [restaurantMapResult];

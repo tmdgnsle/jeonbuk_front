@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/model/discount_store_list_result.dart';
 
 class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
@@ -12,6 +13,9 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
       connectTimeout: Duration(seconds: 30),
       // 연결 타임아웃
       receiveTimeout: Duration(seconds: 30),
+      headers: {
+        'Authorization': jwt,
+      },
     ));
     loadDiscountStoreList();
   }

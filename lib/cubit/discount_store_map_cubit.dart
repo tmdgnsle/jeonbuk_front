@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/model/discount_store_map_result.dart';
 
 class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
@@ -14,16 +15,19 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
       connectTimeout: Duration(seconds: 30),
       // 연결 타임아웃
       receiveTimeout: Duration(seconds: 30),
+      headers: {
+        'Authorization': jwt,
+      },
     ));
   }
 
-  Future<void> firstLoadDiscountStoreMap(double latitude, double longitude, double radius) async{
+  Future<void> firstLoadDiscountStoreMap(
+      double latitude, double longitude, double radius) async {
     try {
       emit(FirstLoadingDiscountStoreMapCubitState(
           discountStoreMapResult: state.discountStoreMapResult));
 
-      var result =
-      await _dio.get('/discountStore/map/all', queryParameters: {
+      var result = await _dio.get('/discountStore/map/all', queryParameters: {
         'latitude': latitude,
         'longitude': longitude,
         'radius': radius,
@@ -31,12 +35,12 @@ class DiscountStoreMapCubit extends Cubit<DiscountStoreMapCubitState> {
 
       emit(LoadedDiscountStoreMapCubitState(
           discountStoreMapResult: DiscountStoreMapResult.fromJson(
-            result.data,
-            latitude,
-            longitude,
-            radius,
-            'all',
-          )));
+        result.data,
+        latitude,
+        longitude,
+        radius,
+        'all',
+      )));
     } catch (e) {
       emit(ErrorDiscountStoreMapCubitState(
           discountStoreMapResult: state.discountStoreMapResult,
@@ -88,7 +92,8 @@ class InitDiscountStoreMapCubitState extends DiscountStoreMapCubitState {
   List<Object?> get props => [discountStoreMapResult];
 }
 
-class FirstLoadingDiscountStoreMapCubitState extends DiscountStoreMapCubitState {
+class FirstLoadingDiscountStoreMapCubitState
+    extends DiscountStoreMapCubitState {
   const FirstLoadingDiscountStoreMapCubitState(
       {required super.discountStoreMapResult});
 

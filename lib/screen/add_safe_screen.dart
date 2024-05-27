@@ -21,10 +21,12 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
   final TextEditingController startController = TextEditingController();
   final TextEditingController endController = TextEditingController();
   String? memberId;
+  String? jwt;
 
   void getMemberId() {
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     memberId = bloc.state.idJwt.id!;
+    jwt = bloc.state.idJwt.jwt!;
   }
 
   Future<NLatLng> getCoordinatesFromAddress(String address) async {
@@ -79,9 +81,13 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                   );
                 } else {
                   final safeCubit = context.read<SafeHomeCubit>();
-                  final int response = await safeCubit
-                      .SafeAdd(memberId!, pathController.text, start.latitude,
-                          start.longitude, end.latitude, end.longitude);
+                  final int response = await safeCubit.SafeAdd(
+                      memberId!,
+                      pathController.text,
+                      start.latitude,
+                      start.longitude,
+                      end.latitude,
+                      end.longitude);
                   if (response == 200) {
                     print('성공');
                     Navigator.of(context).pop(true);

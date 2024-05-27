@@ -130,13 +130,21 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
   @override
   Widget build(BuildContext context) {
     void _onMapCreated(NaverMapController controller) async {
+      var markerIcon = await NOverlayImage.fromWidget(
+          widget: Icon(
+            Icons.place,
+            color: Color(0xFF014594),
+          ),
+          size: Size(24, 24),
+          context: context);
+
       mapController = controller;
       var marker = NMarker(
         id: widget.restaurant.id.toString(),
         position:
             NLatLng(widget.restaurant.latitude, widget.restaurant.longitude),
-        iconTintColor: Colors.green,
-        size: Size(20, 30),
+        icon: markerIcon,
+
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
       marker.setOnTapListener((NMarker marker) {

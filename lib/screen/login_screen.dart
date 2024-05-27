@@ -138,9 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 20,
-                  ),
                   TextButton(
                     onPressed: () {
                       Navigator.push(

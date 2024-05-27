@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/model/bookmark_map.dart';
 
 class BookmarkMapCubit extends Cubit<BookmarkMapCubitState> {
@@ -14,10 +15,14 @@ class BookmarkMapCubit extends Cubit<BookmarkMapCubitState> {
       connectTimeout: Duration(seconds: 30),
       // 연결 타임아웃
       receiveTimeout: Duration(seconds: 30),
+      headers: {
+        'Authorization': jwt,
+      },
     ));
   }
 
   Future<void> firstLoadBookmarkMap(String memberId) async {
+    print('jwt bookmark: $jwt');
     try {
       emit(FirstLoadingBookmarkMapCubitState(
           bookmarkMapResult: state.bookmarkMapResult));

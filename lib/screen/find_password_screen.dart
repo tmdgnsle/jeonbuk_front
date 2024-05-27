@@ -150,11 +150,8 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
               height: 8,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(
-                  width: 105,
-                ),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -168,9 +165,6 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
                       color: GREEN_COLOR,
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 20,
                 ),
                 TextButton(
                   onPressed: () {

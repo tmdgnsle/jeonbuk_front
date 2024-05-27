@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/model/my_safe_home_map_result.dart';
 
 class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
@@ -14,6 +15,9 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
       connectTimeout: Duration(seconds: 30),
       // 연결 타임아웃
       receiveTimeout: Duration(seconds: 30),
+      headers: {
+        'Authorization': jwt,
+      },
     ));
   }
 

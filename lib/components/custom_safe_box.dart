@@ -8,22 +8,32 @@ class CustomSafeBox extends StatelessWidget {
   final GestureTapCallback onTap;
   final GestureTapCallback onLongPress;
 
-  const CustomSafeBox(
-      {super.key,
-      required this.name,
-      required this.start,
-      required this.end,
-      required this.onTap,
-      required this.onLongPress});
+  const CustomSafeBox({
+    super.key,
+    required this.name,
+    required this.start,
+    required this.end,
+    required this.onTap,
+    required this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
     NaverMapController? mapController;
 
-    void _onMapCreated(NaverMapController controller) {
+    void _onMapCreated(NaverMapController controller) async {
+      NOverlayImage markerIcon = await NOverlayImage.fromWidget(
+          widget: Icon(
+            Icons.place,
+            color: Color(0xFF014594),
+          ),
+          size: Size(24, 24),
+          context: context);
+
       mapController = controller;
-      final startmarker = NMarker(id: 'start', position: start);
-      final endmarker = NMarker(id: 'end', position: end);
+      final startmarker =
+          NMarker(id: 'start', position: start, icon: markerIcon);
+      final endmarker = NMarker(id: 'end', position: end, icon: markerIcon);
 
       mapController!.addOverlay(startmarker);
       mapController!.addOverlay(endmarker);
@@ -51,23 +61,24 @@ class CustomSafeBox extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(name, style: TextStyle(fontSize: 20),),
+              Text(
+                name,
+                style: TextStyle(fontSize: 20),
+              ),
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  border: Border.all(color: Color(0xFFBDBDBD), width: 0.5),
                 ),
                 height: 150,
                 child: Expanded(
                   child: NaverMap(
-
                     onMapReady: _onMapCreated,
                     options: NaverMapViewOptions(
                       initialCameraPosition: NCameraPosition(
                           target: NLatLng((start.latitude + end.latitude) / 2,
                               (start.longitude + end.longitude) / 2),
                           zoom: 12),
-                        rotationGesturesEnable: false,
+                      rotationGesturesEnable: false,
                       scrollGesturesEnable: false,
                       tiltGesturesEnable: false,
                       stopGesturesEnable: false,

@@ -180,7 +180,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
                 mysafeHomeIcon[0],
                 color: safeFilterColor[0],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'CCTV':
@@ -189,14 +189,16 @@ class _MyAppState extends State<MySafeHomeScreen> {
                 mysafeHomeIcon[1],
                 color: safeFilterColor[1],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'STREET_LAMP':
           markerIcon = await NOverlayImage.fromWidget(
-              widget: Icon(mysafeHomeIcon[2],
-                color: safeFilterColor[2],),
-              size: Size(20, 30),
+              widget: Icon(
+                mysafeHomeIcon[2],
+                color: safeFilterColor[2],
+              ),
+              size: Size(24, 24),
               context: context);
           break;
       }

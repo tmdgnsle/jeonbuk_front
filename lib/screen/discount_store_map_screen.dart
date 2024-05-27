@@ -300,7 +300,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[0],
                 color: discountStoreFilterColor[0],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'GOODS':
@@ -309,7 +309,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[1],
                 color: discountStoreFilterColor[1],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'LIFE':
@@ -318,7 +318,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[2],
                 color: discountStoreFilterColor[2],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'EDUCATION':
@@ -327,7 +327,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[3],
                 color: discountStoreFilterColor[3],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'SERVICES':
@@ -336,7 +336,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[4],
                 color: discountStoreFilterColor[4],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'ETC':
@@ -345,7 +345,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[5],
                 color: discountStoreFilterColor[5],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
       }

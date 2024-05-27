@@ -291,7 +291,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[0],
                 color: restaurantFilterColor[0],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'CHILD_LIKE':
@@ -300,7 +300,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[1],
                 color: restaurantFilterColor[1],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'CHILD_MEAL':
@@ -309,7 +309,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[2],
                 color: restaurantFilterColor[2],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'GOOD_PRICE':
@@ -318,7 +318,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[3],
                 color: restaurantFilterColor[3],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
       }

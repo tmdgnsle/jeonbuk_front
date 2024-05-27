@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
@@ -7,6 +9,7 @@ import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/festival_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/town_stroll_map_cubit.dart';
+import 'package:jeonbuk_front/screen/chat_screen.dart';
 import 'package:jeonbuk_front/screen/festival_screen.dart';
 import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
@@ -21,6 +24,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<HomeScreen> {
+  Timer? timer;
+  PageController controller = PageController(
+    initialPage: 0,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      int currentPage = controller.page!.toInt();
+      int nextPage = currentPage + 1;
+
+      if (nextPage > 4) {
+        nextPage = 0;
+      }
+
+      controller.animateToPage(
+        nextPage,
+        duration: Duration(milliseconds: 400),
+        curve: Curves.linear,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    if (timer != null) {
+      timer!.cancel();
+    }
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double boxSize = (MediaQuery.of(context).size.width - 48) / 2;
@@ -32,7 +70,20 @@ class _MainScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/images/image.png'),
+            Container(
+              height: 120,
+              child: PageView(
+                controller: controller,
+                children: [1, 2, 3, 4, 5]
+                    .map(
+                      (e) => Image.asset(
+                        'assets/images/jeonbuk_banner$e.jpg',
+                        fit: BoxFit.fill,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
             const SizedBox(
               height: 12,
             ),
@@ -142,7 +193,12 @@ class _MainScreenState extends State<HomeScreen> {
                           title: '챗봇',
                           firstDescription: '짹짹이에게 물어',
                           secontDescription: '보세요',
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatScreen()));
+                          },
                         ),
                       ],
                     ),

@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="jeonbuk_front"
+        android:label="전북알리미 짹짹"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

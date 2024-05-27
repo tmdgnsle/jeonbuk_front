@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/model/town_stroll_map_result.dart';
 
 class TownStrollMapCubit extends Cubit<TownStrollMapCubitState> {
@@ -14,10 +15,14 @@ class TownStrollMapCubit extends Cubit<TownStrollMapCubitState> {
       connectTimeout: Duration(seconds: 30),
       // 연결 타임아웃
       receiveTimeout: Duration(seconds: 30),
+      headers: {
+        'Authorization': jwt,
+      },
     ));
   }
 
-  Future<void> firstLoadTownStrollMap(double latitude, double longitude, double radius) async {
+  Future<void> firstLoadTownStrollMap(
+      double latitude, double longitude, double radius) async {
     try {
       emit(FirstLoadingTownStrollMapCubitState(
           townStrollMapResult: state.townStrollMapResult));
@@ -30,12 +35,11 @@ class TownStrollMapCubit extends Cubit<TownStrollMapCubitState> {
 
       emit(LoadedTownStrollMapCubitState(
           townStrollMapResult: TownStrollMapResult.fromJson(
-            result.data,
-            latitude,
-            longitude,
-            radius,
-          )));
-
+        result.data,
+        latitude,
+        longitude,
+        radius,
+      )));
     } catch (e) {
       emit(ErrorTownStrollMapCubitState(
           townStrollMapResult: state.townStrollMapResult,
@@ -89,7 +93,8 @@ class InitTownStrollMapCubitState extends TownStrollMapCubitState {
 }
 
 class FirstLoadingTownStrollMapCubitState extends TownStrollMapCubitState {
-  const FirstLoadingTownStrollMapCubitState({required super.townStrollMapResult});
+  const FirstLoadingTownStrollMapCubitState(
+      {required super.townStrollMapResult});
 
   @override
   List<Object?> get props => [townStrollMapResult];

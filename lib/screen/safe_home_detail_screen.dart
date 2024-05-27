@@ -23,16 +23,20 @@ class SafeHomeDetailScreen extends StatefulWidget {
 class _MyAppState extends State<SafeHomeDetailScreen> {
   NaverMapController? mapController;
 
+  var startmarker;
+  var endmarker;
+  var markerIcon;
+
   void firstLoadMapData() async {
     try {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      await context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
-          (widget.start.latitude + widget.end.latitude) / 2,
-          (widget.start.longitude + widget.end.longitude) / 2,
-          radius,
-          'all');
+      await context.read<MySafeHomeMapCubit>().firstLoadMySafeHomeMapFilter(
+            (widget.start.latitude + widget.end.latitude) / 2,
+            (widget.start.longitude + widget.end.longitude) / 2,
+            radius,
+          );
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -140,15 +144,28 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
   }
 
   void MarkupPath() async {
-    var startmarker = NMarker(id: 'start', position: widget.start);
-    var endmarker = NMarker(id: 'end', position: widget.end);
+    markerIcon = await NOverlayImage.fromWidget(
+        widget: Icon(
+          Icons.place,
+          color: Color(0xFF014594),
+        ),
+        size: Size(24, 24),
+        context: context);
+
+    startmarker =
+        NMarker(id: 'start', position: widget.start, icon: markerIcon);
+    endmarker = NMarker(id: 'end', position: widget.end, icon: markerIcon);
 
     mapController!.addOverlay(startmarker);
     mapController!.addOverlay(endmarker);
 
     var path = await OpenApis().fetchRoute(widget.start, widget.end);
-    var pathOverlay =
-        NPathOverlay(id: 'road', coords: path, color: Color(0xFF014594), width: 5);
+    var pathOverlay = NPathOverlay(
+      id: 'road',
+      coords: path,
+      color: Color(0xFF014594),
+      width: 5,
+    );
     mapController!.addOverlay(pathOverlay);
     print('MarkupPath 완료');
   }
@@ -167,7 +184,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                 mysafeHomeIcon[0],
                 color: safeFilterColor[0],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'CCTV':
@@ -176,14 +193,16 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                 mysafeHomeIcon[1],
                 color: safeFilterColor[1],
               ),
-              size: Size(20, 30),
+              size: Size(24, 24),
               context: context);
           break;
         case 'STREET_LAMP':
           markerIcon = await NOverlayImage.fromWidget(
-              widget: Icon(mysafeHomeIcon[2],
-                color: safeFilterColor[2],),
-              size: Size(20, 30),
+              widget: Icon(
+                mysafeHomeIcon[2],
+                color: safeFilterColor[2],
+              ),
+              size: Size(24, 24),
               context: context);
           break;
       }
@@ -232,6 +251,8 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
           mapController!.clearOverlays(
             type: NOverlayType.marker,
           );
+          mapController!.addOverlay(startmarker);
+          mapController!.addOverlay(endmarker);
           MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
         }
       },
@@ -246,7 +267,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
           }
         }
 
-        if (state is LoadingMySafeHomeMapCubitState) {
+        if (state is FirstLoadingMySafeHomeMapCubitState) {
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -254,7 +275,8 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
           return Center(
             child: Text(state.errorMessage),
           );
-        } else if (state is LoadedMySafeHomeMapCubitState) {
+        } else if (state is LoadedMySafeHomeMapCubitState ||
+            state is LoadingMySafeHomeMapCubitState) {
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -290,7 +312,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                             state.mysafeHomeMapResult.category);
                       }
                     },
-                    child:Icon(
+                    child: Icon(
                       Icons.autorenew,
                       color: Colors.white,
                     ),

@@ -543,13 +543,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[1],
               color: bookmarkFilterColor[1],
             ),
-            size: Size(20, 30),
+            size: Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'DISCOUNT_STORE${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(20, 30),
+          size: Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
@@ -572,13 +572,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[0],
               color: bookmarkFilterColor[0],
             ),
-            size: Size(20, 30),
+            size: Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'RESTAURANT${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(20, 30),
+          size: Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
@@ -601,13 +601,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[2],
               color: bookmarkFilterColor[2],
             ),
-            size: Size(20, 30),
+            size: Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'FESTIVAL${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(20, 30),
+          size: Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
@@ -630,13 +630,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[3],
               color: bookmarkFilterColor[3],
             ),
-            size: Size(20, 30),
+            size: Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'TOWN_STROLL${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(20, 30),
+          size: Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );

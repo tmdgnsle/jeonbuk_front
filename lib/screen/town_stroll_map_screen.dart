@@ -207,11 +207,20 @@ class _MyAppState extends State<TownStrollMapScreen> {
   void MarkUp(List<TownStroll> storeList, BuildContext context) async {
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     String memberId = bloc.state.idJwt.id!;
+
+    var markerIcon = await NOverlayImage.fromWidget(
+        widget: Icon(
+          Icons.place,
+          color: Color(0xFF014594),
+        ),
+        size: Size(24, 24),
+        context: context);
+
     for (var store in storeList) {
       var marker = NMarker(
         id: store.id.toString(),
         position: NLatLng(store.latitude, store.longitude),
-        size: Size(20, 30),
+        icon: markerIcon,
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
 

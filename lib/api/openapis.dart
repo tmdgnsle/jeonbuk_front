@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 
+late String jwt;
+
 class OpenApis {
-  final Dio _dio = Dio(BaseOptions(connectTimeout: Duration(seconds: 30), receiveTimeout: Duration(seconds: 30)));
+  final Dio _dio = Dio(BaseOptions(
+      connectTimeout: Duration(seconds: 30),
+      receiveTimeout: Duration(seconds: 30)));
   final String _baseUrl = 'http://34.64.170.83:8080';
-
-
 
   OpenApis() {
     _dio.options.validateStatus = (status) {
@@ -58,15 +60,20 @@ class OpenApis {
         'id': id,
         'password': password,
       });
-      print('response ${response.headers['authorization'].toString()}');
       if (response.statusCode == 200) {
-        final String jwt = response.headers['authoriztion'].toString();
+        jwt = response.headers['authorization']
+            .toString()
+            .replaceAll(RegExp(r'[\[\]]'), '');
+        print('jwt: $jwt');
         final String name = response.data['name'].toString();
         final String phoneNum = response.data['phoneNumber'].toString();
         final String emergencyNum = response.data['emergencyNumber'].toString();
 
+        print('login successd: $jwt, $name, $phoneNum, $emergencyNum');
+
         return [jwt, name, phoneNum, emergencyNum];
       } else if (response.statusCode == 401) {
+        print('login failed');
         return ['login failed'];
       } else
         throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
@@ -99,12 +106,20 @@ class OpenApis {
   Future<int> modifyInformation(
       String id, String name, String phoneNum, String emergencyNum) async {
     try {
-      final response = await _dio.post('$_baseUrl/account/modify', data: {
-        'id': id,
-        'name': name,
-        'phoneNumber': phoneNum,
-        'emergencyNumber': emergencyNum
-      });
+      final response = await _dio.post(
+        '$_baseUrl/account/modify',
+        data: {
+          'id': id,
+          'name': name,
+          'phoneNumber': phoneNum,
+          'emergencyNumber': emergencyNum
+        },
+        options: Options(
+          headers: {
+            'Authorization': jwt,
+          },
+        ),
+      );
       if (response.statusCode == 200) {
         return response.statusCode!.toInt();
       } else if (response.statusCode == 401) {
@@ -120,7 +135,12 @@ class OpenApis {
   Future<int> deleteInformation(String memberId, String password) async {
     try {
       final response = await _dio.delete('$_baseUrl/account/delete',
-          data: {'id': memberId, 'password': password});
+          data: {'id': memberId, 'password': password},
+          options: Options(
+            headers: {
+              'Authorization': jwt,
+            },
+          ));
       print('StatusCode: ${response.statusCode}');
       if (response.statusCode == 200) {
         return response.statusCode!.toInt();
@@ -178,11 +198,17 @@ class OpenApis {
     print('store: $store');
 
     try {
-      final response = await _dio.post('$_baseUrl/$store/bookmark', data: {
-        'memberId': memberId,
-        'typeId': storeId,
-        'bookmarkType': bookmarkType,
-      });
+      final response = await _dio.post('$_baseUrl/$store/bookmark',
+          data: {
+            'memberId': memberId,
+            'typeId': storeId,
+            'bookmarkType': bookmarkType,
+          },
+          options: Options(
+            headers: {
+              'Authorization': jwt,
+            },
+          ));
 
       //TODO 에러메세지일때 반환
       print('response.data: ${response.data}');
@@ -194,11 +220,17 @@ class OpenApis {
   Future<void> deleteBookmark(
       String memberId, int storeId, String bookmarkType) async {
     try {
-      await _dio.delete('$_baseUrl/bookmark/delete', data: {
-        'memberId': memberId,
-        'typeId': storeId,
-        'bookmarkType': bookmarkType,
-      });
+      await _dio.delete('$_baseUrl/bookmark/delete',
+          data: {
+            'memberId': memberId,
+            'typeId': storeId,
+            'bookmarkType': bookmarkType,
+          },
+          options: Options(
+            headers: {
+              'Authorization': jwt,
+            },
+          ));
     } catch (e) {
       throw Exception('즐겨찾기 삭제에 실패하였습니다. \n ${e.toString()}');
     }
@@ -208,12 +240,17 @@ class OpenApis {
   Future<int> isBookmark(
       String memberId, String bookmarkType, int storeId) async {
     try {
-      final response =
-          await _dio.get('$_baseUrl/bookmark/check', queryParameters: {
-        'memberId': memberId,
-        'bookmarkType': bookmarkType,
-        'typeId': storeId,
-      });
+      final response = await _dio.get('$_baseUrl/bookmark/check',
+          queryParameters: {
+            'memberId': memberId,
+            'bookmarkType': bookmarkType,
+            'typeId': storeId,
+          },
+          options: Options(
+            headers: {
+              'Authorization': jwt,
+            },
+          ));
       print('response: $response');
 
       if (response.statusCode == 200) {
@@ -223,7 +260,7 @@ class OpenApis {
         return 0; // 북마크 안되어있음
       } else {
         // 다른 HTTP 상태 코드를 처리합니다.
-        throw Exception('예상치 못한 오류가 발생했습니다.\n 오류: ${response.toString()}');
+        throw Exception('예상치 못한 오류가 발생했습니다.\n 오류: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('예상치 못한 오류가 발생했습니다.. \n ${e.toString()}');
