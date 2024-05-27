@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -23,8 +25,40 @@ class SafeScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<SafeScreen> {
+  Timer? timer;
+  PageController controller = PageController(
+    initialPage: 0,
+  );
 
+  @override
+  void initState() {
+    super.initState();
 
+    timer = Timer.periodic(Duration(seconds: 4), (timer) {
+      int currentPage = controller.page!.toInt();
+      int nextPage = currentPage + 1;
+
+      if (nextPage > 4) {
+        nextPage = 0;
+      }
+
+      controller.animateToPage(
+        nextPage,
+        duration: Duration(milliseconds: 400),
+        curve: Curves.linear,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    if (timer != null) {
+      timer!.cancel();
+    }
+
+    super.dispose();
+  }
 
   Future<void> makePhoneCall(String phoneNumber) async {
     String number = phoneNumber.replaceAll(RegExp(r'\s+'), ''); // 공백 제거
@@ -52,7 +86,20 @@ class _MainScreenState extends State<SafeScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/images/image.png'),
+            Container(
+              height: 120,
+              child: PageView(
+                controller: controller,
+                children: [1, 2, 3, 4, 5]
+                    .map(
+                      (e) => Image.asset(
+                        'assets/images/jeonbuk_banner$e.jpg',
+                        fit: BoxFit.fill,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
             const SizedBox(
               height: 12,
             ),
@@ -116,7 +163,10 @@ class _MainScreenState extends State<SafeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '비상전화',
-                          titleIcon: Icon(Icons.phone, color: Colors.red,),
+                          titleIcon: Icon(
+                            Icons.phone,
+                            color: Colors.red,
+                          ),
                           firstDescription: '연락처에 저장된',
                           secontDescription: '사람에게 전화',
                           onTap: () {
