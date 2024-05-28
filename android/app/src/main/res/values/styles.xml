@@ -5,6 +5,8 @@
         <!-- Show a splash screen on the activity. Automatically removed when
              the Flutter engine draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
+        <!-- 변경: 전체화면 -->
+        <!-- 변경: 시스템 바 배경 표시 -->
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>

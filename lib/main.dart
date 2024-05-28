@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => IdJwtCubit(),
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'JeonbukState_SB'),
+        theme: ThemeData(
+            fontFamily: 'JeonbukState_SB',
+            scaffoldBackgroundColor: Colors.white),
         debugShowCheckedModeBanner: false,
         title: 'JeonBuk',
         home: const LoginScreen(),
