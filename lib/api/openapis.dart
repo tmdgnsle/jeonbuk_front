@@ -18,7 +18,7 @@ class OpenApis {
   }
 
   // 회원가입 기능을 수행합니다. 사용자 아이디와 비밀번호를 서버로 전송합니다.
-  Future<String> register(String id, String password, String name,
+  Future<int> register(String id, String password, String name,
       String phoneNumber, String emergencyNumber) async {
     try {
       final response = await _dio.post('$_baseUrl/account/register', data: {
@@ -29,7 +29,7 @@ class OpenApis {
         'emergencyNumber': emergencyNumber,
       });
       // 회원가입 성공 시, 서버로부터 받은 회원 ID를 문자열로 반환합니다.
-      return response.data['memberId'].toString();
+      return response.statusCode!.toInt();
     } catch (e) {
       // 회원가입 실패 시, 예외를 발생시킵니다.
       throw Exception('회원가입에 실패하였습니다.\n ${e.toString()}');

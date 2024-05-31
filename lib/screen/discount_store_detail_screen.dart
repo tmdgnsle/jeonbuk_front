@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
+import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/model/discount_store.dart';
@@ -63,7 +64,7 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
           .replaceAll('<', '\n');
       return Sheet(
         initialExtent: 180,
-        maxExtent: 180,
+        maxExtent: 250,
         minExtent: 60,
         child: Container(
           padding: const EdgeInsets.all(12.0),
@@ -142,8 +143,8 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
     void _onMapCreated(NaverMapController controller) async {
       var markerIcon = await NOverlayImage.fromWidget(
           widget: Icon(
-            Icons.place,
-            color: Color(0xFF014594),
+            bookmarkFilterIcon[1],
+            color: bookmarkFilterColor[2],
           ),
           size: Size(24, 24),
           context: context);

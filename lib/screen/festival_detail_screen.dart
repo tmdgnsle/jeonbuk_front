@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
+import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/festival_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/model/festival.dart';
@@ -92,8 +93,8 @@ class _FestivalDetailScreenState extends State<FestivalDetailScreen> {
     void _onMapCreated(NaverMapController controller) async {
       var markerIcon = await NOverlayImage.fromWidget(
           widget: Icon(
-            Icons.place,
-            color: Color(0xFF014594),
+            bookmarkFilterIcon[2],
+            color: bookmarkFilterColor[3],
           ),
           size: Size(24, 24),
           context: context);

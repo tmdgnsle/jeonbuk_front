@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
             fontFamily: 'JeonbukState_SB',
-            scaffoldBackgroundColor: Colors.white),
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(backgroundColor: Colors.white)),
         debugShowCheckedModeBanner: false,
         title: 'JeonBuk',
         home: const LoginScreen(),

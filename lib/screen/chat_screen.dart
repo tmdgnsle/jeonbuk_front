@@ -79,7 +79,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height / 3;
-    final width = MediaQuery.of(context).size.width / 3;
     return Scaffold(
       appBar: AppBar(
         title: Text('챗봇'),

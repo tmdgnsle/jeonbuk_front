@@ -126,6 +126,9 @@ class _MySettingScreenState extends State<MySettingScreen> {
                 height: 10,
               ),
               Text('이름'),
+              SizedBox(
+                height: 5,
+              ),
               CustomTextField(
                 controller: nameController,
                 obscure: false,
@@ -136,6 +139,9 @@ class _MySettingScreenState extends State<MySettingScreen> {
                 height: 10,
               ),
               Text('전화번호'),
+              SizedBox(
+                height: 5,
+              ),
               CustomTextField(
                 controller: phoneController,
                 obscure: false,
@@ -146,6 +152,9 @@ class _MySettingScreenState extends State<MySettingScreen> {
                 height: 10,
               ),
               Text('긴급연락망'),
+              SizedBox(
+                height: 5,
+              ),
               CustomTextField(
                 controller: emergencyController,
                 obscure: false,

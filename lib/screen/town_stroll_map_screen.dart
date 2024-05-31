@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/const/color.dart';
+import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/cubit/town_stroll_map_cubit.dart';
 import 'package:jeonbuk_front/model/town_stroll.dart';
@@ -158,7 +159,7 @@ class _MyAppState extends State<TownStrollMapScreen> {
       if (index != -1) {
         return Sheet(
           initialExtent: 180,
-          maxExtent: 180,
+          maxExtent: 250,
           minExtent: 60,
           child: Container(
             padding: const EdgeInsets.all(12.0),
@@ -210,8 +211,8 @@ class _MyAppState extends State<TownStrollMapScreen> {
 
     var markerIcon = await NOverlayImage.fromWidget(
         widget: Icon(
-          Icons.place,
-          color: Color(0xFF014594),
+          bookmarkFilterIcon[3],
+          color: bookmarkFilterColor[4],
         ),
         size: Size(24, 24),
         context: context);

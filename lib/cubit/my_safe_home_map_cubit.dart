@@ -21,7 +21,7 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
     ));
   }
 
-  Future<void> firstLoadMySafeHomeMapFilter(
+  Future<void> firstLoadMySafeHomeMap(
       double latitude, double longitude, double radius) async {
     try {
       var result;

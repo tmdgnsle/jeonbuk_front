@@ -268,7 +268,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
             .replaceAll('<', '\n');
         return Sheet(
           initialExtent: 180,
-          maxExtent: 180,
+          maxExtent: 250,
           minExtent: 60,
           child: Container(
             padding: const EdgeInsets.all(12.0),
@@ -329,7 +329,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
             'restaurant: ${state.bookmarkMapResult.restaurantMap[index].isbookmark}');
         return Sheet(
           initialExtent: 180,
-          maxExtent: 180,
+          maxExtent: 250,
           minExtent: 60,
           child: Container(
             padding: const EdgeInsets.all(12.0),
@@ -383,7 +383,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
       if (index != -1) {
         return Sheet(
           initialExtent: 180,
-          maxExtent: 180,
+          maxExtent: 250,
           minExtent: 60,
           child: Container(
             padding: const EdgeInsets.all(12.0),
@@ -435,7 +435,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
       if (index != -1) {
         return Sheet(
           initialExtent: 180,
-          maxExtent: 180,
+          maxExtent: 250,
           minExtent: 60,
           child: Container(
             padding: const EdgeInsets.all(12.0),
@@ -541,7 +541,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         markerIcon = await NOverlayImage.fromWidget(
             widget: Icon(
               bookmarkFilterIcon[1],
-              color: bookmarkFilterColor[1],
+              color: bookmarkFilterColor[2],
             ),
             size: Size(24, 24),
             context: context);
@@ -570,7 +570,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         markerIcon = await NOverlayImage.fromWidget(
             widget: Icon(
               bookmarkFilterIcon[0],
-              color: bookmarkFilterColor[0],
+              color: bookmarkFilterColor[1],
             ),
             size: Size(24, 24),
             context: context);
@@ -599,7 +599,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         markerIcon = await NOverlayImage.fromWidget(
             widget: Icon(
               bookmarkFilterIcon[2],
-              color: bookmarkFilterColor[2],
+              color: bookmarkFilterColor[3],
             ),
             size: Size(24, 24),
             context: context);
@@ -628,7 +628,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         markerIcon = await NOverlayImage.fromWidget(
             widget: Icon(
               bookmarkFilterIcon[3],
-              color: bookmarkFilterColor[3],
+              color: bookmarkFilterColor[4],
             ),
             size: Size(24, 24),
             context: context);
@@ -690,7 +690,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
         return Scaffold(
           appBar: AppBar(
             title: const Text(
-              '내 주변',
+              '나만의 지도',
               textAlign: TextAlign.center,
             ),
           ),

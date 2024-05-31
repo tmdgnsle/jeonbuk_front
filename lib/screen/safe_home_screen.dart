@@ -35,10 +35,10 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('안심귀가'),
+            title: Text('귀가경로'),
             actions: [
               IconButton(
-                onPressed: () async{
+                onPressed: () async {
                   final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -47,7 +47,7 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                           child: AddSafeScreen(),
                         ),
                       ));
-                  if (result == true){
+                  if (result == true) {
                     context.read<SafeHomeCubit>().loadSafeHomeList(memberId);
                   }
                 },

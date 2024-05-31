@@ -114,7 +114,7 @@ class _MainScreenState extends State<SafeScreen> {
                       children: [
                         CustomBox(
                           size: boxSize,
-                          title: '안심귀가',
+                          title: '귀가경로',
                           titleIcon: const Icon(
                             Icons.home,
                             color: BLUE_COLOR,

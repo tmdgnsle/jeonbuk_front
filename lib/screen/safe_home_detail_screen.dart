@@ -32,9 +32,9 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      await context.read<MySafeHomeMapCubit>().firstLoadMySafeHomeMapFilter(
-            (widget.start.latitude + widget.end.latitude) / 2,
-            (widget.start.longitude + widget.end.longitude) / 2,
+      await context.read<MySafeHomeMapCubit>().firstLoadMySafeHomeMap(
+            widget.start.latitude,
+            widget.start.longitude,
             radius,
           );
     } catch (e) {

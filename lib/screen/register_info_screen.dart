@@ -68,16 +68,26 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                await OpenApis().register(
+                int statusCode = await OpenApis().register(
                     widget.id,
                     widget.password,
                     _nameController.text,
                     _phoneController.text,
                     _emergencyController.text);
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  (Route<dynamic> route) => false,
-                );
+                if (statusCode == 200) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('회원가입 성공!')),
+                  );
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('회원가입에 실패하셨습니다.')),
+                  );
+                }
               },
               child: Text('다음'),
               style: ElevatedButton.styleFrom(

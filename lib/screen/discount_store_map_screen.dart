@@ -182,7 +182,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
             .replaceAll('<', '\n');
         return Sheet(
           initialExtent: 180,
-          maxExtent: 180,
+          maxExtent: 250,
           minExtent: 60,
           child: Container(
             padding: const EdgeInsets.all(12.0),
@@ -298,7 +298,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 discountStoreFilterIcon[0],
-                color: discountStoreFilterColor[0],
+                color: discountStoreFilterColor[1],
               ),
               size: Size(24, 24),
               context: context);
@@ -307,7 +307,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 discountStoreFilterIcon[1],
-                color: discountStoreFilterColor[1],
+                color: discountStoreFilterColor[2],
               ),
               size: Size(24, 24),
               context: context);
@@ -316,7 +316,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 discountStoreFilterIcon[2],
-                color: discountStoreFilterColor[2],
+                color: discountStoreFilterColor[3],
               ),
               size: Size(24, 24),
               context: context);
@@ -325,7 +325,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 discountStoreFilterIcon[3],
-                color: discountStoreFilterColor[3],
+                color: discountStoreFilterColor[4],
               ),
               size: Size(24, 24),
               context: context);
@@ -334,7 +334,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 discountStoreFilterIcon[4],
-                color: discountStoreFilterColor[4],
+                color: discountStoreFilterColor[5],
               ),
               size: Size(24, 24),
               context: context);
@@ -343,7 +343,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 discountStoreFilterIcon[5],
-                color: discountStoreFilterColor[5],
+                color: discountStoreFilterColor[6],
               ),
               size: Size(24, 24),
               context: context);

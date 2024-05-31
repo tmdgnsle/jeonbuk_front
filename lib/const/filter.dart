@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Map<String, String> discountStoreFilter = {
+  '전체': 'all',
   '여가/레저': 'LEISURE',
   '잡화': 'GOODS',
   '생활': 'LIFE',
@@ -10,6 +11,7 @@ const Map<String, String> discountStoreFilter = {
 };
 
 const List<Color> discountStoreFilterColor = [
+  Colors.black,
   Color(0xFFEB4F3D),
   Color(0xFF2BB673),
   Color(0xFF3F7ACE),
@@ -28,6 +30,7 @@ const List<IconData> discountStoreFilterIcon = [
 ];
 
 const Map<String, String> restaurantFilter = {
+  '전체': 'all',
   '모범음식점': 'MODEL',
   '아이조아': 'CHILD_LIKE',
   '아동급식': 'CHILD_MEAL',
@@ -35,6 +38,7 @@ const Map<String, String> restaurantFilter = {
 };
 
 const List<Color> restaurantFilterColor = [
+  Colors.black,
   Color(0xFF007036),
   Color(0xFFFF9D26),
   Color(0xFF5A65BE),
@@ -67,6 +71,7 @@ const List<IconData> mysafeHomeIcon = [
 ];
 
 const Map<String, String> bookmarkFilter = {
+  '전체': 'ALL',
   '음식점': 'RESTAURANT',
   '할인매장': 'DISCOUNT_STORE',
   '축제': 'FESTIVAL',
@@ -74,6 +79,7 @@ const Map<String, String> bookmarkFilter = {
 };
 
 const List<Color> bookmarkFilterColor = [
+  Colors.black,
   Color(0xFFEB4F3D),
   Color(0xFFFFB21E),
   Color(0xFF014594),
@@ -86,5 +92,3 @@ const List<IconData> bookmarkFilterIcon = [
   Icons.festival,
   Icons.directions_walk
 ];
-
-

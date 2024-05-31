@@ -180,7 +180,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
             .replaceAll('<', '\n');
         return Sheet(
           initialExtent: 180,
-          maxExtent: 180,
+          maxExtent: 250,
           minExtent: 60,
           child: Container(
             padding: const EdgeInsets.all(12.0),
@@ -289,7 +289,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 restaurantFilterIcon[0],
-                color: restaurantFilterColor[0],
+                color: restaurantFilterColor[1],
               ),
               size: Size(24, 24),
               context: context);
@@ -298,7 +298,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 restaurantFilterIcon[1],
-                color: restaurantFilterColor[1],
+                color: restaurantFilterColor[2],
               ),
               size: Size(24, 24),
               context: context);
@@ -307,7 +307,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 restaurantFilterIcon[2],
-                color: restaurantFilterColor[2],
+                color: restaurantFilterColor[3],
               ),
               size: Size(24, 24),
               context: context);
@@ -316,7 +316,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 restaurantFilterIcon[3],
-                color: restaurantFilterColor[3],
+                color: restaurantFilterColor[4],
               ),
               size: Size(24, 24),
               context: context);

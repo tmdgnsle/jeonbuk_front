@@ -49,6 +49,8 @@ dependencies:
   flutter_phone_direct_caller: ^2.1.1
   google_gemini: ^0.1.2
   lottie: ^3.1.2
+  firebase_analytics: ^10.10.7
+  firebase_core: ^2.32.0
 
 dev_dependencies:
   flutter_test:
