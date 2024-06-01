@@ -70,19 +70,17 @@ class CustomSafeBox extends StatelessWidget {
                   border: Border.all(color: const Color(0xFFBDBDBD), width: 0.5),
                 ),
                 height: 150,
-                child: Expanded(
-                  child: NaverMap(
-                    onMapReady: _onMapCreated,
-                    options: NaverMapViewOptions(
-                      initialCameraPosition: NCameraPosition(
-                          target: NLatLng((start.latitude + end.latitude) / 2,
-                              (start.longitude + end.longitude) / 2),
-                          zoom: 12),
-                      rotationGesturesEnable: false,
-                      scrollGesturesEnable: false,
-                      tiltGesturesEnable: false,
-                      stopGesturesEnable: false,
-                    ),
+                child: NaverMap(
+                  onMapReady: _onMapCreated,
+                  options: NaverMapViewOptions(
+                    initialCameraPosition: NCameraPosition(
+                        target: NLatLng((start.latitude + end.latitude) / 2,
+                            (start.longitude + end.longitude) / 2),
+                        zoom: 12),
+                    rotationGesturesEnable: false,
+                    scrollGesturesEnable: false,
+                    tiltGesturesEnable: false,
+                    stopGesturesEnable: false,
                   ),
                 ),
               ),

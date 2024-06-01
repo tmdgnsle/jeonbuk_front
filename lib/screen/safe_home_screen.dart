@@ -33,6 +33,7 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<SafeHomeCubit, SafeHomeCubitState>(
       builder: (context, state) {
+
         return Scaffold(
           appBar: AppBar(
             title: const Text('귀가경로'),
