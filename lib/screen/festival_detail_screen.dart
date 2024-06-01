@@ -96,7 +96,7 @@ class _FestivalDetailScreenState extends State<FestivalDetailScreen> {
             bookmarkFilterIcon[2],
             color: bookmarkFilterColor[3],
           ),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           context: context);
 
       mapController = controller;
@@ -137,14 +137,14 @@ class _FestivalDetailScreenState extends State<FestivalDetailScreen> {
                             width: width - 100,
                             child: Text(
                               widget.festival.address,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                               softWrap: true,
                             ),
                           ),
                           Text(
                             widget.festival.schedule,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ],
                       ),
@@ -162,19 +162,19 @@ class _FestivalDetailScreenState extends State<FestivalDetailScreen> {
                           )),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Text(
                     state.festivalListResult.festivalList[0].subtitle,
                     softWrap: true,
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Image.network(widget.festival.image),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(

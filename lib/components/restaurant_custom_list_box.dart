@@ -33,7 +33,7 @@ class RestaurantCustomListBox extends StatelessWidget {
               restaurant.storeName,
               style: const TextStyle(fontSize: 20),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text(

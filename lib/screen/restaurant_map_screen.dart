@@ -51,12 +51,10 @@ class _MyAppState extends State<RestaurantMapScreen> {
   void loadMapDataAll(NLatLng centerLocation) async {
     try {
       double? zoomlevel = await _CurrentZoomLevel();
-      print('zoomlevel: $zoomlevel');
       final width = MediaQuery.of(context).size.width / 2;
       final meterPerDp = mapController!.getMeterPerDpAtLatitude(
           latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
       final radius = width * meterPerDp;
-      print('radius: $radius');
       // 위치 정보와 반지름을 Cubit에 전달
       context.read<RestaurantMapCubit>().loadRestaurantMapFilter(
           centerLocation.latitude, centerLocation.longitude, radius, 'all');
@@ -291,7 +289,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[0],
                 color: restaurantFilterColor[1],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'CHILD_LIKE':
@@ -300,7 +298,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[1],
                 color: restaurantFilterColor[2],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'CHILD_MEAL':
@@ -309,7 +307,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[2],
                 color: restaurantFilterColor[3],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'GOOD_PRICE':
@@ -318,7 +316,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 restaurantFilterIcon[3],
                 color: restaurantFilterColor[4],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
       }
@@ -329,7 +327,6 @@ class _MyAppState extends State<RestaurantMapScreen> {
         icon: markerIcon,
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
-      print('marker.iconTintColor: ${marker.iconTintColor}');
 
       marker.setOnTapListener((NMarker marker) {
         setState(() {
@@ -390,7 +387,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
               if (state is ErrorRestaurantMapCubitState)
                 Center(child: Text(state.errorMessage))
               else if (state is FirstLoadingRestaurantMapCubitState)
-                Center(child: CircularProgressIndicator())
+                const Center(child: CircularProgressIndicator())
               else if (state is LoadedRestaurantMapCubitState ||
                   state is LoadingRestaurantMapCubitState)
                 if (myLocation != null)
@@ -418,7 +415,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                           centerCoordinate, state.restaurantMapResult.category);
                     }
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.autorenew,
                     color: Colors.white,
                   ),

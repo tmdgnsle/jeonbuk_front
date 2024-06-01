@@ -11,7 +11,7 @@ import 'package:jeonbuk_front/screen/restaurant_detail_screen.dart';
 import 'package:jeonbuk_front/screen/restaurant_map_screen.dart';
 
 class RestaurantScreen extends StatefulWidget {
-  RestaurantScreen({Key? key}) : super(key: key);
+  const RestaurantScreen({Key? key}) : super(key: key);
 
   static List<Restaurant> lastNonEmptyList = [];
 
@@ -49,11 +49,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     super.dispose();
   }
 
-  Widget _loading() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
 
   Widget _error(String errMessage) {
     return Center(
@@ -123,7 +118,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
               RestaurantScreen.lastNonEmptyList = [];
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         actions: <Widget>[
           IconButton(
               onPressed: () {

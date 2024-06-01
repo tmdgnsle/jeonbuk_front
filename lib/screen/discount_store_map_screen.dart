@@ -51,12 +51,10 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
   void loadMapDataAll(NLatLng centerLocation) async {
     try {
       double? zoomlevel = await _CurrentZoomLevel();
-      print('zoomlevel: $zoomlevel');
       final width = MediaQuery.of(context).size.width / 2;
       final meterPerDp = mapController!.getMeterPerDpAtLatitude(
           latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
       final radius = width * meterPerDp;
-      print('radius: $radius');
       // 위치 정보와 반지름을 Cubit에 전달
       context.read<DiscountStoreMapCubit>().loadDiscountStoreMapFilter(
           centerLocation.latitude, centerLocation.longitude, radius, 'all');
@@ -300,7 +298,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[0],
                 color: discountStoreFilterColor[1],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'GOODS':
@@ -309,7 +307,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[1],
                 color: discountStoreFilterColor[2],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'LIFE':
@@ -318,7 +316,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[2],
                 color: discountStoreFilterColor[3],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'EDUCATION':
@@ -327,7 +325,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[3],
                 color: discountStoreFilterColor[4],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'SERVICES':
@@ -336,7 +334,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[4],
                 color: discountStoreFilterColor[5],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'ETC':
@@ -345,7 +343,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 discountStoreFilterIcon[5],
                 color: discountStoreFilterColor[6],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
       }
@@ -356,7 +354,6 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
         icon: markerIcon,
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
-      print('marker.iconTintColor: ${marker.iconTintColor}');
 
       marker.setOnTapListener((NMarker marker) {
         setState(() {
@@ -418,7 +415,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
               if (state is ErrorDiscountStoreMapCubitState)
                 Center(child: Text(state.errorMessage))
               else if (state is FirstLoadingDiscountStoreMapCubitState)
-                Center(child: CircularProgressIndicator())
+                const Center(child: CircularProgressIndicator())
               else if (state is LoadedDiscountStoreMapCubitState ||
                   state is LoadingDiscountStoreMapCubitState)
                 if (myLocation != null)
@@ -446,7 +443,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                           state.discountStoreMapResult.category);
                     }
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.autorenew,
                     color: Colors.white,
                   ),

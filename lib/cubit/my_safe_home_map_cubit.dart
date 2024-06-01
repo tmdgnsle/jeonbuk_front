@@ -34,7 +34,6 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
         'radius': radius,
       });
 
-      print('Response received: ${result.data}');
 
       emit(
         LoadedMySafeHomeMapCubitState(
@@ -46,11 +45,7 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
           'all',
         )),
       );
-      print('현재상태: $state');
-      print('loadSafeHomeFilter 실행');
-      print('MySafeHomeList:');
-      state.mysafeHomeMapResult.mySafeHomeMap
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorMySafeHomeMapCubitState(
           mysafeHomeMapResult: state.mysafeHomeMapResult,
@@ -79,7 +74,6 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
         });
       }
 
-      print('Response received: ${result.data}');
 
       emit(
         LoadedMySafeHomeMapCubitState(
@@ -91,11 +85,7 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
           category,
         )),
       );
-      print('현재상태: $state');
-      print('loadSafeHomeFilter 실행');
-      print('MySafeHomeList:');
-      state.mysafeHomeMapResult.mySafeHomeMap
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorMySafeHomeMapCubitState(
           mysafeHomeMapResult: state.mysafeHomeMapResult,

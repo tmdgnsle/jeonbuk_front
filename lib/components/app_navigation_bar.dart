@@ -13,10 +13,10 @@ class AppNavigationBar extends StatelessWidget {
   final int? currentIndex;
 
   final List _screens = [
-    HomeScreen(),
-    SafeScreen(),
+    const HomeScreen(),
+    const SafeScreen(),
     BookmarkMapScreen(),
-    MySettingScreen(),
+    const MySettingScreen(),
   ];
 
   @override
@@ -26,10 +26,10 @@ class AppNavigationBar extends StatelessWidget {
       // 아이템 고정 타입 설정
       showUnselectedLabels: true,
       selectedItemColor: GREEN_COLOR,
-      selectedIconTheme: IconThemeData(color: GREEN_COLOR, size: 32),
+      selectedIconTheme: const IconThemeData(color: GREEN_COLOR, size: 32),
       selectedFontSize: 8,
       unselectedItemColor: BLUE_COLOR,
-      unselectedIconTheme: IconThemeData(color: BLUE_COLOR, size: 32),
+      unselectedIconTheme: const IconThemeData(color: BLUE_COLOR, size: 32),
       unselectedFontSize: 8,
       backgroundColor: Colors.white,
       currentIndex: currentIndex ?? 0,
@@ -49,30 +49,30 @@ class AppNavigationBar extends StatelessWidget {
         }
       },
       items: [
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Padding(
-            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
             child: Icon(Icons.home),
           ),
           label: '홈',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Padding(
-            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
             child: Icon(Icons.health_and_safety),
           ),
           label: '안심귀가',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Padding(
-            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
             child: Icon(Icons.star),
           ),
           label: '나만의 지도',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Padding(
-            padding: const EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+            padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
             child: Icon(Icons.person),
           ),
           label: 'MY',

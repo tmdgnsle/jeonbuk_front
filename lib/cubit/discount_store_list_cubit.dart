@@ -26,7 +26,6 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
           state is ErrorDiscountStoreListCubitState) {
         return;
       }
-      print(state.discountStoreListResult.currentPage);
       emit(LoadingDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult));
       var result = await _dio.get('/discountStore/list/all', queryParameters: {
@@ -35,9 +34,7 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
       emit(LoadedDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult
               .copywithFromJson(result.data, 'all')));
-      print('DiscountStoreList:');
-      state.discountStoreListResult.discountStoreList
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult,
@@ -51,7 +48,6 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
           state is ErrorDiscountStoreListCubitState) {
         return;
       }
-      print(state.discountStoreListResult.currentPage);
       emit(LoadingDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult));
       var result =
@@ -65,9 +61,7 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
                       .copywithFromJsonFilter(result.data, category)
                   : state.discountStoreListResult
                       .copywithFromJson(result.data, category)));
-      print('DiscountStoreList:');
-      state.discountStoreListResult.discountStoreList
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorDiscountStoreListCubitState(
           discountStoreListResult: state.discountStoreListResult,
@@ -85,7 +79,6 @@ class DiscountStoreListCubit extends Cubit<DiscountStoreListCubitState> {
           discountStoreListResult: state.discountStoreListResult));
       var result = await _dio
           .get('/discountStore/search', queryParameters: {'storeName': key});
-      print('result: ${result.data}');
       emit(LoadedDiscountStoreListCubitState(
         discountStoreListResult:
             state.discountStoreListResult.copywithFromJsonSearch(result.data),

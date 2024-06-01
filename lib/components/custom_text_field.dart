@@ -35,16 +35,16 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(color: LIGHTGREY_COLOR),
+            hintStyle: const TextStyle(color: LIGHTGREY_COLOR),
             prefixIcon: prefixIcons != null
                 ? Container(
-                    margin: EdgeInsets.only(right: 8), // 오른쪽 여백 조정
+                    margin: const EdgeInsets.only(right: 8), // 오른쪽 여백 조정
                     child: prefixIcons,
                   )
                 : null,
             suffixIcon: textButton ?? suffixIcons,
-            contentPadding: EdgeInsets.fromLTRB(12, 10, 12, 10), // 상하좌우 패딩 조정
-            border: OutlineInputBorder(
+            contentPadding: const EdgeInsets.fromLTRB(12, 10, 12, 10), // 상하좌우 패딩 조정
+            border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               borderSide: BorderSide(color: LIGHTGREY_COLOR, width: 2.0),
             )),

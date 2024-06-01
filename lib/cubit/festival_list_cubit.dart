@@ -26,7 +26,6 @@ class FestivalListCubit extends Cubit<FestivalListCubitState> {
           state is ErrorFestivalListCubitState) {
         return;
       }
-      print(state.festivalListResult.currentPage);
       emit(LoadingFestivalListCubitState(
           festivalListResult: state.festivalListResult));
       var result = await _dio.get('/festival/list/all', queryParameters: {
@@ -35,9 +34,7 @@ class FestivalListCubit extends Cubit<FestivalListCubitState> {
       emit(LoadedFestivalListCubitState(
           festivalListResult:
               state.festivalListResult.copywithFromJson(result.data)));
-      print('FestivalList:');
-      state.festivalListResult.festivalList
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorFestivalListCubitState(
           festivalListResult: state.festivalListResult,

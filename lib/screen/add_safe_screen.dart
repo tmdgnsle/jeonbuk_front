@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
@@ -33,11 +32,9 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
     try {
       List<Location> locations = await locationFromAddress(address);
       Location location = locations[0];
-      print('위도: ${location.latitude}, 경도: ${location.longitude}');
       return NLatLng(location.latitude, location.longitude);
     } catch (e) {
-      print('에러: $e');
-      return NLatLng(0, 0);
+      return const NLatLng(0, 0);
     }
   }
 
@@ -52,7 +49,7 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('안심귀가 추가'),
+        title: const Text('안심귀가 추가'),
         actions: [
           TextButton(
               onPressed: () async {
@@ -61,16 +58,16 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                 NLatLng end =
                     await getCoordinatesFromAddress(endController.text);
 
-                if (start == NLatLng(0, 0) || end == NLatLng(0, 0)) {
+                if (start == const NLatLng(0, 0) || end == const NLatLng(0, 0)) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('알림'),
-                        content: Text('주소지를 정확히 입력해주세요.'),
+                        title: const Text('알림'),
+                        content: const Text('주소지를 정확히 입력해주세요.'),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('확인'),
+                            child: const Text('확인'),
                             onPressed: () {
                               Navigator.of(context).pop(); // 알림창 닫기
                             },
@@ -89,12 +86,11 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                       end.latitude,
                       end.longitude);
                   if (response == 200) {
-                    print('성공');
                     Navigator.of(context).pop(true);
                   }
                 }
               },
-              child: Text(
+              child: const Text(
                 '저장',
                 style: TextStyle(color: BLUE_COLOR),
               ))
@@ -102,36 +98,64 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('이름'),
-            CustomTextField(
-                controller: pathController,
-                hintText: '경로 이름을 정해주세요.',
-                obscure: false,
-                height: 50),
-            SizedBox(
-              height: 10,
-            ),
-            Text('출발지'),
-            CustomTextField(
-                controller: startController,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                '이름',
+                style: TextStyle(fontWeight: FontWeight.bold,),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              CustomTextField(
+                  controller: pathController,
+                  hintText: '경로 이름을 정해주세요.',
+                  obscure: false,
+                  height: 50),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                '출발지',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              CustomTextField(
+                  controller: startController,
+                  hintText: '주소를 정확하게 입력해주세요.',
+                  obscure: false,
+                  height: 50),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                '도착치',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              CustomTextField(
+                controller: endController,
                 hintText: '주소를 정확하게 입력해주세요.',
                 obscure: false,
-                height: 50),
-            SizedBox(
-              height: 10,
-            ),
-            Text('도착치'),
-            CustomTextField(
-              controller: endController,
-              hintText: '주소를 정확하게 입력해주세요.',
-              obscure: false,
-              height: 50,
-            ),
-          ],
+                height: 50,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                '현재 전주시, 군산시, 남원시, 익산시, 완주군만 지원합니다.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: GREY_COLOR, fontSize: 13),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: AppNavigationBar(

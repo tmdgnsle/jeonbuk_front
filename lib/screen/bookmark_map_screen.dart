@@ -325,8 +325,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
         String modifiedEtc = state.bookmarkMapResult.restaurantMap[index].etc
             .toString()
             .replaceAll('<', '\n');
-        print(
-            'restaurant: ${state.bookmarkMapResult.restaurantMap[index].isbookmark}');
         return Sheet(
           initialExtent: 180,
           maxExtent: 250,
@@ -543,13 +541,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[1],
               color: bookmarkFilterColor[2],
             ),
-            size: Size(24, 24),
+            size: const Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'DISCOUNT_STORE${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
@@ -561,7 +559,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
         });
 
         mapController!.addOverlay(marker);
-        print('할인매장 마크업');
       }
     }
     if (bookmarkMap.restaurantMap != null &&
@@ -572,13 +569,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[0],
               color: bookmarkFilterColor[1],
             ),
-            size: Size(24, 24),
+            size: const Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'RESTAURANT${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
@@ -590,7 +587,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
         });
 
         mapController!.addOverlay(marker);
-        print('식당 마크업');
       }
     }
     if (bookmarkMap.festivalMap != null &&
@@ -601,13 +597,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[2],
               color: bookmarkFilterColor[3],
             ),
-            size: Size(24, 24),
+            size: const Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'FESTIVAL${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
@@ -619,7 +615,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
         });
 
         mapController!.addOverlay(marker);
-        print('식당 마크업');
       }
     }
     if (bookmarkMap.townStrollMap != null &&
@@ -630,13 +625,13 @@ class _MyAppState extends State<BookmarkMapScreen> {
               bookmarkFilterIcon[3],
               color: bookmarkFilterColor[4],
             ),
-            size: Size(24, 24),
+            size: const Size(24, 24),
             context: context);
 
         var marker = NMarker(
           id: 'TOWN_STROLL${store.id.toString()}',
           position: NLatLng(store.latitude, store.longitude),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           icon: markerIcon,
           // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
         );
@@ -648,7 +643,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
         });
 
         mapController!.addOverlay(marker);
-        print('식당 마크업');
       }
     }
   }
@@ -683,7 +677,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
             IsBookmark(state.bookmarkMapResult.festivalMap, 'FESTIVAL');
             IsBookmark(state.bookmarkMapResult.townStrollMap, 'TOWN_STROLL');
             MarkUp(state.bookmarkMapResult, context);
-            print('마크업 완료');
           }
         }
 
@@ -701,7 +694,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
                   child: Text(state.errorMessage),
                 )
               else if (state is FirstLoadingBookmarkMapCubitState)
-                Center(
+                const Center(
                   child: CircularProgressIndicator(),
                 )
               else if (state is LoadedBookmarkMapCubitState ||
@@ -725,7 +718,7 @@ class _MyAppState extends State<BookmarkMapScreen> {
                   onPressed: () async {
                     loadMapDataFilter('ALL');
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.autorenew,
                     color: Colors.white,
                   ),

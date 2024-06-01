@@ -45,11 +45,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('이 아이디는 사용 가능합니다.'),
+                          title: const Text('알림'),
+                          content: const Text('이 아이디는 사용 가능합니다.'),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('확인'),
+                              child: const Text('확인'),
                               onPressed: () {
                                 Navigator.of(context).pop(); // 알림창 닫기
                               },
@@ -63,11 +63,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('이 아이디는 사용 가능하지 않습니다.'),
+                          title: const Text('알림'),
+                          content: const Text('이 아이디는 사용 가능하지 않습니다.'),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('확인'),
+                              child: const Text('확인'),
                               onPressed: () {
                                 Navigator.of(context).pop(); // 알림창 닫기
                               },
@@ -78,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   }
                 },
-                child: Text(
+                child: const Text(
                   '중복확인',
                   style: TextStyle(color: BLUE_COLOR),
                 ),
@@ -127,11 +127,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('알림'),
-                            content: Text('아이디 중복체크를 하지 않았습니다.'),
+                            title: const Text('알림'),
+                            content: const Text('아이디 중복체크를 하지 않았습니다.'),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('확인'),
+                                child: const Text('확인'),
                                 onPressed: () {
                                   Navigator.of(context).pop(); // 알림창 닫기
                                 },
@@ -146,11 +146,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('비밀번호가 일치하지 않습니다.'),
+                          title: const Text('알림'),
+                          content: const Text('비밀번호가 일치하지 않습니다.'),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('확인'),
+                              child: const Text('확인'),
                               onPressed: () {
                                 Navigator.of(context).pop(); // 알림창 닫기
                               },
@@ -165,11 +165,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('알림'),
+                        title: const Text('알림'),
                         content: Text(idError ?? passError!),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('확인'),
+                            child: const Text('확인'),
                             onPressed: () {
                               Navigator.of(context).pop(); // 알림창 닫기
                             },
@@ -180,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   );
                 }
               },
-              child: Text('다음'),
+              child: const Text('다음'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: BLUE_COLOR,

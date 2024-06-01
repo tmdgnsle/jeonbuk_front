@@ -33,7 +33,7 @@ class _MainScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    timer = Timer.periodic(Duration(seconds: 2), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       int currentPage = controller.page!.toInt();
       int nextPage = currentPage + 1;
 
@@ -43,7 +43,7 @@ class _MainScreenState extends State<HomeScreen> {
 
       controller.animateToPage(
         nextPage,
-        duration: Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 400),
         curve: Curves.linear,
       );
     });
@@ -147,7 +147,7 @@ class _MainScreenState extends State<HomeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '축제',
-                          titleIcon: Icon(Icons.festival),
+                          titleIcon: const Icon(Icons.festival),
                           firstDescription: '전북의 모든 축제정보를',
                           secontDescription: '만나보세요~',
                           onTap: () {
@@ -156,7 +156,7 @@ class _MainScreenState extends State<HomeScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
                                     create: (context) => FestivalListCubit(),
-                                    child: FestivalScreen(),
+                                    child: const FestivalScreen(),
                                   ),
                                 ));
                           },
@@ -197,7 +197,7 @@ class _MainScreenState extends State<HomeScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ChatScreen()));
+                                    builder: (context) => const ChatScreen()));
                           },
                         ),
                       ],

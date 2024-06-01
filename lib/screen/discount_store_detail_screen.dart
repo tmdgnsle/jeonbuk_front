@@ -146,7 +146,7 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
             bookmarkFilterIcon[1],
             color: bookmarkFilterColor[2],
           ),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           context: context);
 
       mapController = controller;

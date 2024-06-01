@@ -61,7 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     final bloc = BlocProvider.of<IdJwtCubit>(context);
                     bloc.Login(_idController.text, loginJwt, name, phoneNum,
                         emergencyNum);
-                    print('Id: ${bloc.state.idJwt.id}');
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                           builder: (context) => const HomeScreen()),
@@ -71,11 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('아이디 혹은 비밀번호가 틀렸습니다.'),
+                          title: const Text('알림'),
+                          content: const Text('아이디 혹은 비밀번호가 틀렸습니다.'),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('확인'),
+                              child: const Text('확인'),
                               onPressed: () {
                                 Navigator.of(context).pop(); // 알림창 닫기
                               },
@@ -86,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   }
                 },
-                child: Text('로그인'),
+                child: const Text('로그인'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: BLUE_COLOR,
@@ -97,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 8,
               ),
-              Row(
+              const Row(
                 children: <Widget>[
                   Expanded(
                     child: Divider(
@@ -106,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     // 양쪽 여백 조절
                     child: Text("OR"),
                   ),

@@ -51,16 +51,13 @@ class _MyAppState extends State<TownStrollMapScreen> {
   void loadMapDataAll(NLatLng centerLocation) async {
     try {
       double? zoomlevel = await _CurrentZoomLevel();
-      print('zoomlevel: $zoomlevel');
       final width = MediaQuery.of(context).size.width / 2;
       final meterPerDp = mapController!.getMeterPerDpAtLatitude(
           latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
       final radius = width * meterPerDp;
-      print('radius: $radius');
       // 위치 정보와 반지름을 Cubit에 전달
       context.read<TownStrollMapCubit>().loadTownStrollMap(
           centerLocation.latitude, centerLocation.longitude, radius);
-      print('현재 상태: ${context.read<TownStrollMapCubit>().state}');
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -214,7 +211,7 @@ class _MyAppState extends State<TownStrollMapScreen> {
           bookmarkFilterIcon[3],
           color: bookmarkFilterColor[4],
         ),
-        size: Size(24, 24),
+        size: const Size(24, 24),
         context: context);
 
     for (var store in storeList) {
@@ -286,7 +283,7 @@ class _MyAppState extends State<TownStrollMapScreen> {
                   child: Text(state.errorMessage),
                 )
               else if (state is FirstLoadingTownStrollMapCubitState)
-                Center(
+                const Center(
                   child: CircularProgressIndicator(),
                 )
               else if (state is LoadedTownStrollMapCubitState ||
@@ -311,7 +308,7 @@ class _MyAppState extends State<TownStrollMapScreen> {
 
                     loadMapDataAll(centerCoordinate);
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.autorenew,
                     color: Colors.white,
                   ),

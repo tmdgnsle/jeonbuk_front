@@ -46,12 +46,10 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
   void loadMapDataAll(NLatLng centerLocation) async {
     try {
       double? zoomlevel = await _CurrentZoomLevel();
-      print('zoomlevel: $zoomlevel');
       final width = MediaQuery.of(context).size.width / 2;
       final meterPerDp = mapController!.getMeterPerDpAtLatitude(
           latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
       final radius = width * meterPerDp;
-      print('radius: $radius');
       // 위치 정보와 반지름을 Cubit에 전달
       context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           centerLocation.latitude, centerLocation.longitude, radius, 'all');
@@ -107,7 +105,6 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                 onTap: () async {
                   final NLatLng centerLocation = await _CenterCoordinate();
                   loadMapDataFilter(centerLocation, filterValue!);
-                  print('filterValue: $filterValue');
                 },
                 child: Container(
                   width: filterWidth,
@@ -147,11 +144,11 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
 
   void MarkupPath() async {
     markerIcon = await NOverlayImage.fromWidget(
-        widget: Icon(
+        widget: const Icon(
           Icons.place,
           color: Color(0xFF014594),
         ),
-        size: Size(24, 24),
+        size: const Size(24, 24),
         context: context);
 
     startmarker =
@@ -165,11 +162,10 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
     var pathOverlay = NPathOverlay(
       id: 'road',
       coords: path,
-      color: Color(0xFF014594),
+      color: const Color(0xFF014594),
       width: 5,
     );
     mapController!.addOverlay(pathOverlay);
-    print('MarkupPath 완료');
   }
 
   // ignore: non_constant_identifier_names
@@ -177,7 +173,6 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
     for (var mySafeHome in mysafeHomeList) {
       NOverlayImage? markerIcon;
 
-      print('타입: ${mySafeHome.type}');
 
       switch (mySafeHome.type.toString()) {
         case 'WARNING_BELL':
@@ -186,7 +181,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                 mysafeHomeIcon[0],
                 color: safeFilterColor[1],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'CCTV':
@@ -195,7 +190,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                 mysafeHomeIcon[1],
                 color: safeFilterColor[2],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
         case 'STREET_LAMP':
@@ -204,7 +199,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                 mysafeHomeIcon[2],
                 color: safeFilterColor[3],
               ),
-              size: Size(24, 24),
+              size: const Size(24, 24),
               context: context);
           break;
       }
@@ -220,10 +215,8 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
 
-      print('marker.iconTintColor: ${marker.iconTintColor}');
 
       mapController!.addOverlay(marker);
-      print('Markup 완료');
     }
   }
 
@@ -261,9 +254,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
       builder: (context, state) {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
-          print('state: $state');
           if (state is LoadedMySafeHomeMapCubitState) {
-            print('state: $state');
             MarkupPath();
             MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
           }
@@ -281,7 +272,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
               if(state is ErrorMySafeHomeMapCubitState)
                 Center(child: Text(state.errorMessage),)
               else if (state is FirstLoadingMySafeHomeMapCubitState)
-                Center(child: CircularProgressIndicator(),)
+                const Center(child: CircularProgressIndicator(),)
               else if (state is LoadedMySafeHomeMapCubitState || state is LoadingMySafeHomeMapCubitState)
               NaverMap(
                 options: NaverMapViewOptions(
@@ -309,7 +300,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
                           state.mysafeHomeMapResult.category);
                     }
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.autorenew,
                     color: Colors.white,
                   ),

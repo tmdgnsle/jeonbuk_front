@@ -50,16 +50,11 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
       }
       emit(LoadingSafeHomeCubitState(
           safeHomeListResult: state.safeHomeListResult));
-      // _safeHomeListResult = state.safeHomeListResult;
-      print('이전: ${_safeHomeListResult}');
-      // Assuming the endpoint to delete an item is '/SafeHome/delete'
       await _dio.delete('/SafeHome/delete', queryParameters: {
         'safeReturnId': safeHomeId,
       });
       _safeHomeListResult.safehomeList
           .removeWhere((element) => element.id == safeHomeId);
-      // Reload the list to reflect changes or simply remove the item from state if appropriate
-      print('_safeHomeListResult: ${_safeHomeListResult}');
       emit(LoadedSafeHomeCubitState(safeHomeListResult: _safeHomeListResult));
     } catch (e) {
       emit(ErrorSafeHomeCubitState(
@@ -88,7 +83,6 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
       });
 
       if (response.statusCode == 200) {
-        print('이전 _safeHomeListResult: ${_safeHomeListResult.safehomeList}');
         _safeHomeListResult.safehomeList = [
           ..._safeHomeListResult.safehomeList,
           SafeHome(
@@ -99,7 +93,6 @@ class SafeHomeCubit extends Cubit<SafeHomeCubitState> {
               endLa: endLa,
               endLo: endLo)
         ];
-        print('_safeHomeListResult: ${_safeHomeListResult.safehomeList}');
 
         emit(LoadedSafeHomeCubitState(safeHomeListResult: _safeHomeListResult));
         return response.statusCode as int;

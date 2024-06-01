@@ -14,11 +14,11 @@ class FindPasswordScreen extends StatefulWidget {
 }
 
 class _FindPasswordScreenState extends State<FindPasswordScreen> {
-  TextEditingController _idController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _emergencyController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emergencyController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +80,8 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('비밀번호 변경이 완료되었습니다.'),
+                          title: const Text('알림'),
+                          content: const Text('비밀번호 변경이 완료되었습니다.'),
                           actions: <Widget>[
                             TextButton(
                                 onPressed: () {
@@ -92,7 +92,7 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
                                     (Route<dynamic> route) => false,
                                   );
                                 },
-                                child: Text('확인')),
+                                child: const Text('확인')),
                           ],
                         );
                       });
@@ -101,20 +101,20 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('입력하신 정보가 올바르지 않습니다.'),
+                          title: const Text('알림'),
+                          content: const Text('입력하신 정보가 올바르지 않습니다.'),
                           actions: <Widget>[
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('확인')),
+                                child: const Text('확인')),
                           ],
                         );
                       });
                 }
               },
-              child: Text('확인'),
+              child: const Text('확인'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: BLUE_COLOR,
@@ -125,7 +125,7 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
             const SizedBox(
               height: 8,
             ),
-            Row(
+            const Row(
               children: <Widget>[
                 Expanded(
                   child: Divider(
@@ -134,7 +134,7 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   // 양쪽 여백 조절
                   child: Text("OR"),
                 ),
@@ -146,7 +146,7 @@ class _FindPasswordScreenState extends State<FindPasswordScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Row(

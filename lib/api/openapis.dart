@@ -7,8 +7,8 @@ late String jwt;
 
 class OpenApis {
   final Dio _dio = Dio(BaseOptions(
-      connectTimeout: Duration(seconds: 30),
-      receiveTimeout: Duration(seconds: 30)));
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30)));
   final String _baseUrl = 'http://34.64.170.83:8080';
 
   OpenApis() {
@@ -64,16 +64,12 @@ class OpenApis {
         jwt = response.headers['authorization']
             .toString()
             .replaceAll(RegExp(r'[\[\]]'), '');
-        print('jwt: $jwt');
         final String name = response.data['name'].toString();
         final String phoneNum = response.data['phoneNumber'].toString();
         final String emergencyNum = response.data['emergencyNumber'].toString();
 
-        print('login successd: $jwt, $name, $phoneNum, $emergencyNum');
-
         return [jwt, name, phoneNum, emergencyNum];
       } else if (response.statusCode == 401) {
-        print('login failed');
         return ['login failed'];
       } else
         throw Exception('예상치 못한 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
@@ -88,7 +84,6 @@ class OpenApis {
     try {
       final response = await _dio.get('$_baseUrl/account/register/$id');
       // 중복되지 않은 아이디일 경우 true를 반환합니다.
-      print(response.statusCode);
       if (response.statusCode == 200) {
         return true; // 중복되지 않음
       } else if (response.statusCode == 400) {
@@ -141,7 +136,6 @@ class OpenApis {
               'Authorization': jwt,
             },
           ));
-      print('StatusCode: ${response.statusCode}');
       if (response.statusCode == 200) {
         return response.statusCode!.toInt();
       } else if (response.statusCode == 400) {
@@ -164,7 +158,6 @@ class OpenApis {
         'phoneNumber': phoneNumber,
         'emergencyNumber': emergencyNumber,
       });
-      print('StatusCode: ${response.statusCode}');
       if (response.statusCode == 200) {
         return response.statusCode!.toInt();
       } else if (response.statusCode == 400) {
@@ -195,10 +188,8 @@ class OpenApis {
         break;
     }
 
-    print('store: $store');
-
     try {
-      final response = await _dio.post('$_baseUrl/$store/bookmark',
+      await _dio.post('$_baseUrl/$store/bookmark',
           data: {
             'memberId': memberId,
             'typeId': storeId,
@@ -209,9 +200,6 @@ class OpenApis {
               'Authorization': jwt,
             },
           ));
-
-      //TODO 에러메세지일때 반환
-      print('response.data: ${response.data}');
     } catch (e) {
       throw Exception('즐겨찾기에 실패하였습니다. \n ${e.toString()}');
     }
@@ -236,7 +224,6 @@ class OpenApis {
     }
   }
 
-  //TODO 로직 수정하기 print가 되고있지않음
   Future<int> isBookmark(
       String memberId, String bookmarkType, int storeId) async {
     try {
@@ -251,10 +238,8 @@ class OpenApis {
               'Authorization': jwt,
             },
           ));
-      print('response: $response');
 
       if (response.statusCode == 200) {
-        print('북마크 아이디: ${response.data['bookmarkId'] as int}');
         return response.data['bookmarkId'] as int; // 북마크 아이디 반환
       } else if (response.statusCode == 400) {
         return 0; // 북마크 안되어있음

@@ -36,7 +36,7 @@ class FestivalCustomListBox extends StatelessWidget {
                     style: const TextStyle(fontSize: 20),
                     softWrap: true,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Text(
@@ -56,7 +56,7 @@ class FestivalCustomListBox extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Container(
@@ -82,7 +82,7 @@ class FestivalCustomListBox extends StatelessWidget {
                 },
                 errorBuilder: (BuildContext context, Object exception,
                     StackTrace? stackTrace) {
-                  return Center(
+                  return const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

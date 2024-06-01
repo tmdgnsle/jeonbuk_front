@@ -39,12 +39,10 @@ class _MyAppState extends State<MySafeHomeScreen> {
   void loadMapDataAll(NLatLng centerLocation) async {
     try {
       double? zoomlevel = await _CurrentZoomLevel();
-      print('zoomlevel: $zoomlevel');
       final width = MediaQuery.of(context).size.width / 2;
       final meterPerDp = mapController!.getMeterPerDpAtLatitude(
           latitude: centerLocation.latitude.toDouble(), zoom: zoomlevel);
       final radius = width * meterPerDp;
-      print('radius: $radius');
       // 위치 정보와 반지름을 Cubit에 전달
       context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           centerLocation.latitude, centerLocation.longitude, radius, 'all');
@@ -64,10 +62,8 @@ class _MyAppState extends State<MySafeHomeScreen> {
       final radius = width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
 
-      print('Calling loadMySafeHomeMapFilter...');
       context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
           centerLocation.latitude, centerLocation.longitude, radius, filter);
-      print('State after calling loadMySafeHomeMapFilter: ${bloc.state}');
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -129,7 +125,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
                 onTap: () async {
                   final NLatLng centerLocation = await _CenterCoordinate();
                   loadMapDataFilter(centerLocation, filterValue!);
-                  print('filterValue: $filterValue');
                 },
                 child: Container(
                   width: filterWidth,
@@ -172,7 +167,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
     for (var mySafeHome in mysafeHomeList) {
       NOverlayImage? markerIcon;
 
-      print('타입: ${mySafeHome.type}');
 
       switch (mySafeHome.type.toString()) {
         case 'WARNING_BELL':
@@ -212,7 +206,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
 
-      print('marker.iconTintColor: ${marker.iconTintColor}');
 
       mapController!.addOverlay(marker);
     }
@@ -248,7 +241,6 @@ class _MyAppState extends State<MySafeHomeScreen> {
       builder: (context, state) {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
-          print('state: $state');
           if (state is LoadedMySafeHomeMapCubitState) {
             MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
           }
@@ -286,11 +278,8 @@ class _MyAppState extends State<MySafeHomeScreen> {
                 child: FloatingActionButton(
                   onPressed: () async {
                     final NLatLng centerCoordinate = await _CenterCoordinate();
-                    print(
-                        '경도: ${centerCoordinate.latitude}, 위도: ${centerCoordinate.longitude}');
                     if (state.mysafeHomeMapResult.category == 'all') {
                       loadMapDataAll(centerCoordinate);
-                      print(state);
                     } else {
                       loadMapDataFilter(
                           centerCoordinate, state.mysafeHomeMapResult.category);

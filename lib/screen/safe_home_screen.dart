@@ -35,7 +35,7 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('귀가경로'),
+            title: const Text('귀가경로'),
             actions: [
               IconButton(
                 onPressed: () async {
@@ -44,14 +44,14 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                       MaterialPageRoute(
                         builder: (context) => BlocProvider.value(
                           value: SafeHomeCubit(),
-                          child: AddSafeScreen(),
+                          child: const AddSafeScreen(),
                         ),
                       ));
                   if (result == true) {
                     context.read<SafeHomeCubit>().loadSafeHomeList(memberId);
                   }
                 },
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
               )
             ],
           ),
@@ -114,23 +114,22 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('알림'),
+                            title: const Text('알림'),
                             content: Text(
                                 '${state.safeHomeListResult.safehomeList[index].name}을 삭제하시겠습니까?'),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('확인'),
+                                child: const Text('확인'),
                                 onPressed: () {
                                   safeCubit.deleteSafeHomeList(
                                       memberId,
                                       state.safeHomeListResult
                                           .safehomeList[index].id);
                                   Navigator.of(context).pop();
-                                  print("이전 화면으로 돌아가서 상태: ${safeCubit.state}");
                                 },
                               ),
                               TextButton(
-                                child: Text('취소'),
+                                child: const Text('취소'),
                                 onPressed: () {
                                   Navigator.of(context).pop(); // 알림창 닫기
                                 },
@@ -148,12 +147,12 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                 itemCount: state.safeHomeListResult.safehomeList.length,
               ),
             ),
-            Text(
+            const Text(
               '꾹 눌러서 삭제합니다.',
               textAlign: TextAlign.center,
               style: TextStyle(color: GREY_COLOR),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
           ],

@@ -23,11 +23,11 @@ class CustomSafeBox extends StatelessWidget {
 
     void _onMapCreated(NaverMapController controller) async {
       NOverlayImage markerIcon = await NOverlayImage.fromWidget(
-          widget: Icon(
+          widget: const Icon(
             Icons.place,
             color: Color(0xFF014594),
           ),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           context: context);
 
       mapController = controller;
@@ -63,11 +63,11 @@ class CustomSafeBox extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFFBDBDBD), width: 0.5),
+                  border: Border.all(color: const Color(0xFFBDBDBD), width: 0.5),
                 ),
                 height: 150,
                 child: Expanded(

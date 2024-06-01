@@ -66,9 +66,7 @@ class TownStrollMapCubit extends Cubit<TownStrollMapCubitState> {
         longitude,
         radius,
       )));
-      print('DiscountStoreList:');
-      state.townStrollMapResult.townStrollMap
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorTownStrollMapCubitState(
           townStrollMapResult: state.townStrollMapResult,

@@ -33,7 +33,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
       TextEditingController passwordController = TextEditingController();
 
       return AlertDialog(
-        title: Text('회원 탈퇴'),
+        title: const Text('회원 탈퇴'),
         content: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -61,7 +61,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('취소')),
+              child: const Text('취소')),
           TextButton(
               onPressed: () async {
                 final int statusCode = await OpenApis().deleteInformation(
@@ -71,8 +71,8 @@ class _MySettingScreenState extends State<MySettingScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('회원탈퇴 완료!'),
+                          title: const Text('알림'),
+                          content: const Text('회원탈퇴 완료!'),
                           actions: <Widget>[
                             TextButton(
                                 onPressed: () {
@@ -83,7 +83,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
                                     (Route<dynamic> route) => false,
                                   );
                                 },
-                                child: Text('확인'))
+                                child: const Text('확인'))
                           ],
                         );
                       });
@@ -92,41 +92,41 @@ class _MySettingScreenState extends State<MySettingScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('알림'),
-                          content: Text('입력하신 정보가 올바르지 않습니다.'),
+                          title: const Text('알림'),
+                          content: const Text('입력하신 정보가 올바르지 않습니다.'),
                           actions: <Widget>[
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('확인'))
+                                child: const Text('확인'))
                           ],
                         );
                       });
                 }
               },
-              child: Text('탈퇴')),
+              child: const Text('탈퇴')),
         ],
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('MY 설정'),
+        title: const Text('MY 설정'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('개인정보 수정'),
-              SizedBox(
+              const Text('개인정보 수정'),
+              const SizedBox(
                 height: 10,
               ),
-              Text('이름'),
-              SizedBox(
+              const Text('이름'),
+              const SizedBox(
                 height: 5,
               ),
               CustomTextField(
@@ -135,11 +135,11 @@ class _MySettingScreenState extends State<MySettingScreen> {
                 height: 50,
                 enable: modify,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text('전화번호'),
-              SizedBox(
+              const Text('전화번호'),
+              const SizedBox(
                 height: 5,
               ),
               CustomTextField(
@@ -148,11 +148,11 @@ class _MySettingScreenState extends State<MySettingScreen> {
                 height: 50,
                 enable: modify,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text('긴급연락망'),
-              SizedBox(
+              const Text('긴급연락망'),
+              const SizedBox(
                 height: 5,
               ),
               CustomTextField(
@@ -161,7 +161,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
                 height: 50,
                 enable: modify,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -169,7 +169,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         color: modify == false ? Colors.red : BLUE_COLOR),
                     width: 150,
                     height: 50,
@@ -191,7 +191,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
                       child: Center(
                         child: Text(
                           modify == false ? '수정' : '완료',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -199,8 +199,8 @@ class _MySettingScreenState extends State<MySettingScreen> {
                   )
                 ],
               ),
-              Text('계정'),
-              SizedBox(
+              const Text('계정'),
+              const SizedBox(
                 height: 10,
               ),
               Column(
@@ -216,7 +216,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
                           (Route<dynamic> route) => false,
                         );
                       },
-                      child: Text('로그아웃')),
+                      child: const Text('로그아웃')),
                   TextButton(
                       onPressed: () {
                         showDialog(
@@ -225,7 +225,7 @@ class _MySettingScreenState extends State<MySettingScreen> {
                               return Dialog();
                             });
                       },
-                      child: Text('탈퇴하기')),
+                      child: const Text('탈퇴하기')),
                 ],
               ),
             ],

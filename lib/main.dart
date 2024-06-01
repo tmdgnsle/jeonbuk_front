@@ -6,17 +6,13 @@ import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/screen/login_screen.dart';
 
 void main() async {
-  //TODO SplashScreen 만들기
-  // WidgetsBinding widgetsBinding =
   WidgetsFlutterBinding.ensureInitialized();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await NaverMapSdk.instance.initialize(
       clientId: 'nf68z75anv',
       onAuthFailed: (error) {
         print('Auth failed: $error');
       });
-  // FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
@@ -31,7 +27,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             fontFamily: 'JeonbukState_SB',
             scaffoldBackgroundColor: Colors.white,
-            appBarTheme: AppBarTheme(backgroundColor: Colors.white)),
+            appBarTheme: const AppBarTheme(backgroundColor: Colors.white)),
         debugShowCheckedModeBanner: false,
         title: 'JeonBuk',
         home: const LoginScreen(),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
@@ -25,7 +24,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('프로필 설정'),
+        title: const Text('프로필 설정'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -33,7 +32,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               '이름',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
@@ -44,7 +43,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
               height: 50.0,
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               '전화번호',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
@@ -55,7 +54,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
               height: 50.0,
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               '긴급연락망',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
             ),
@@ -76,7 +75,7 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
                     _emergencyController.text);
                 if (statusCode == 200) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('회원가입 성공!')),
+                    const SnackBar(content: Text('회원가입 성공!')),
                   );
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
@@ -85,11 +84,11 @@ class _RegisterInfoScreenState extends State<RegisterInfoScreen> {
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('회원가입에 실패하셨습니다.')),
+                    const SnackBar(content: Text('회원가입에 실패하셨습니다.')),
                   );
                 }
               },
-              child: Text('다음'),
+              child: const Text('다음'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: BLUE_COLOR,

@@ -7,7 +7,7 @@ import 'package:jeonbuk_front/model/festival.dart';
 import 'package:jeonbuk_front/screen/festival_detail_screen.dart';
 
 class FestivalScreen extends StatefulWidget {
-  FestivalScreen({Key? key}) : super(key: key);
+  const FestivalScreen({Key? key}) : super(key: key);
 
   @override
   State<FestivalScreen> createState() => _FestivalScreenState();
@@ -33,11 +33,6 @@ class _FestivalScreenState extends State<FestivalScreen> {
     super.dispose();
   }
 
-  Widget _loading() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
 
   Widget _error(String errMessage) {
     return Center(

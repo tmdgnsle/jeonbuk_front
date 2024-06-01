@@ -81,7 +81,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final height = MediaQuery.of(context).size.height / 3;
     return Scaffold(
       appBar: AppBar(
-        title: Text('챗봇'),
+        title: const Text('챗봇'),
       ),
       body: Stack(children: [
         Opacity(

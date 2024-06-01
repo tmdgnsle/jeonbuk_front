@@ -22,7 +22,6 @@ class BookmarkMapCubit extends Cubit<BookmarkMapCubitState> {
   }
 
   Future<void> firstLoadBookmarkMap(String memberId) async {
-    print('jwt bookmark: $jwt');
     try {
       emit(FirstLoadingBookmarkMapCubitState(
           bookmarkMapResult: state.bookmarkMapResult));

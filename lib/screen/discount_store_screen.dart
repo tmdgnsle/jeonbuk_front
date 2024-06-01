@@ -122,7 +122,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
               DiscountStoreScreen.lastNonEmptyList = [];
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         actions: <Widget>[
           IconButton(
               onPressed: () {

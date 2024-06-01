@@ -34,7 +34,7 @@ class _MainScreenState extends State<SafeScreen> {
   void initState() {
     super.initState();
 
-    timer = Timer.periodic(Duration(seconds: 4), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       int currentPage = controller.page!.toInt();
       int nextPage = currentPage + 1;
 
@@ -44,7 +44,7 @@ class _MainScreenState extends State<SafeScreen> {
 
       controller.animateToPage(
         nextPage,
-        duration: Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 400),
         curve: Curves.linear,
       );
     });
@@ -128,7 +128,7 @@ class _MainScreenState extends State<SafeScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => BlocProvider(
                                     create: (context) => SafeHomeCubit(),
-                                    child: SafeHomeScreen(),
+                                    child: const SafeHomeScreen(),
                                   ),
                                 ));
                           },
@@ -139,7 +139,7 @@ class _MainScreenState extends State<SafeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '내 안심귀가',
-                          titleIcon: Icon(Icons.radar),
+                          titleIcon: const Icon(Icons.radar),
                           firstDescription: '현재 내 주변의',
                           secontDescription: '안전정보 확인',
                           onTap: () {
@@ -163,7 +163,7 @@ class _MainScreenState extends State<SafeScreen> {
                         CustomBox(
                           size: boxSize,
                           title: '비상전화',
-                          titleIcon: Icon(
+                          titleIcon: const Icon(
                             Icons.phone,
                             color: Colors.red,
                           ),

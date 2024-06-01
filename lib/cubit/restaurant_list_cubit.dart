@@ -26,7 +26,6 @@ class RestaurantListCubit extends Cubit<RestaurantListCubitState> {
           state is ErrorRestaurantListCubitState) {
         return;
       }
-      print(state.restaurantListResult.currentPage);
       emit(LoadingRestaurantListCubitState(
           restaurantListResult: state.restaurantListResult));
       var result = await _dio.get('/restaurant/list/all', queryParameters: {
@@ -35,9 +34,7 @@ class RestaurantListCubit extends Cubit<RestaurantListCubitState> {
       emit(LoadedRestaurantListCubitState(
           restaurantListResult:
               state.restaurantListResult.copywithFromJson(result.data, 'all')));
-      print('RestaurantList:');
-      state.restaurantListResult.restaurantList
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorRestaurantListCubitState(
           restaurantListResult: state.restaurantListResult,
@@ -51,7 +48,6 @@ class RestaurantListCubit extends Cubit<RestaurantListCubitState> {
           state is ErrorRestaurantListCubitState) {
         return;
       }
-      print(state.restaurantListResult.currentPage);
       emit(LoadingRestaurantListCubitState(
           restaurantListResult: state.restaurantListResult));
       var result =
@@ -64,9 +60,7 @@ class RestaurantListCubit extends Cubit<RestaurantListCubitState> {
                   .copywithFromJsonFilter(result.data, category)
               : state.restaurantListResult
                   .copywithFromJson(result.data, category)));
-      print('RestaurantList:');
-      state.restaurantListResult.restaurantList
-          .forEach((store) => print('${store.toString()}'));
+
     } catch (e) {
       emit(ErrorRestaurantListCubitState(
           restaurantListResult: state.restaurantListResult,
@@ -84,7 +78,6 @@ class RestaurantListCubit extends Cubit<RestaurantListCubitState> {
           restaurantListResult: state.restaurantListResult));
       var result = await _dio
           .get('/restaurant/search', queryParameters: {'storeName': key});
-      print('result: ${result.data}');
       emit(LoadedRestaurantListCubitState(
         restaurantListResult:
             state.restaurantListResult.copywithFromJsonSearch(result.data),

@@ -136,7 +136,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             bookmarkFilterIcon[0],
             color: bookmarkFilterColor[1],
           ),
-          size: Size(24, 24),
+          size: const Size(24, 24),
           context: context);
 
       mapController = controller;
