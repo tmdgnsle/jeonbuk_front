@@ -11,7 +11,7 @@ const Map<String, String> discountStoreFilter = {
 };
 
 const List<Color> discountStoreFilterColor = [
-  Colors.black,
+  Color(0xFF323232),
   Color(0xFFEB4F3D),
   Color(0xFF2BB673),
   Color(0xFF3F7ACE),
@@ -38,7 +38,7 @@ const Map<String, String> restaurantFilter = {
 };
 
 const List<Color> restaurantFilterColor = [
-  Colors.black,
+  Color(0xFF323232),
   Color(0xFF007036),
   Color(0xFFFF9D26),
   Color(0xFF5A65BE),
@@ -53,12 +53,14 @@ const List<IconData> restaurantFilterIcon = [
 ];
 
 const Map<String, String> mysafeHomeFilter = {
+  '전체': 'all',
   '비상벨': 'WarningBell',
   'CCTV': 'CCTV',
   '가로등': 'StreetLamp'
 };
 
 const List<Color> safeFilterColor = [
+  Color(0xFF323232),
   Color(0xFFFF0000),
   Color(0xFF696969),
   Color(0xFFFF9D26),
@@ -79,7 +81,7 @@ const Map<String, String> bookmarkFilter = {
 };
 
 const List<Color> bookmarkFilterColor = [
-  Colors.black,
+  Color(0xFF323232),
   Color(0xFFEB4F3D),
   Color(0xFFFFB21E),
   Color(0xFF014594),

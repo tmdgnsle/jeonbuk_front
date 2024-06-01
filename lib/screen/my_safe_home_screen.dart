@@ -28,8 +28,8 @@ class _MyAppState extends State<MySafeHomeScreen> {
       final radius = 50.0;
       // width * meterPerDp;
       // 위치 정보와 반지름을 Cubit에 전달
-      context.read<MySafeHomeMapCubit>().loadMySafeHomeMapFilter(
-          position.latitude, position.longitude, radius, 'all');
+      context.read<MySafeHomeMapCubit>().firstLoadMySafeHomeMap(
+          position.latitude, position.longitude, radius);
     } catch (e) {
       print('에러: ${e.toString()}');
       // 오류 처리, 예: 사용자에게 오류 메시지 표시
@@ -112,57 +112,58 @@ class _MyAppState extends State<MySafeHomeScreen> {
       // 스크린의 전체 너비를 사용
       height: filterHeight,
       // 높이 지정
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: List<Widget>.generate(mysafeHomeFilter.keys.length, (index) {
-          final filterKeys = mysafeHomeFilter.keys.toList(); // Map의 키를 리스트로 변환
-          final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
-          final filterValue =
-              mysafeHomeFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
-          final filterWidth = MediaQuery.of(context).size.width / 4;
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: mysafeHomeFilter.keys.length,
+          itemBuilder: (context, index) {
+            final filterKeys =
+                mysafeHomeFilter.keys.toList(); // Map의 키를 리스트로 변환
+            final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
+            final filterValue =
+                mysafeHomeFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
+            final filterWidth = MediaQuery.of(context).size.width / 4;
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: InkWell(
-              onTap: () async {
-                final NLatLng centerLocation = await _CenterCoordinate();
-                loadMapDataFilter(centerLocation, filterValue!);
-                print('filterValue: $filterValue');
-              },
-              child: Container(
-                width: filterWidth,
-                decoration: BoxDecoration(
-                  color: safeFilterColor[index], // 이 예제에서는 색상을 고정값으로 설정
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      mysafeHomeIcon[index],
-                      color: Colors.white,
-                    ),
-                    Text(
-                      filterName, // Map의 키를 텍스트로 사용
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: InkWell(
+                onTap: () async {
+                  final NLatLng centerLocation = await _CenterCoordinate();
+                  loadMapDataFilter(centerLocation, filterValue!);
+                  print('filterValue: $filterValue');
+                },
+                child: Container(
+                  width: filterWidth,
+                  decoration: BoxDecoration(
+                    color: safeFilterColor[index], // 이 예제에서는 색상을 고정값으로 설정
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        blurRadius: 8,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (index != 0)
+                        Icon(
+                          mysafeHomeIcon[index - 1],
+                          color: Colors.white,
+                        ),
+                      Text(
+                        filterName, // Map의 키를 텍스트로 사용
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }),
-      ),
+            );
+          }),
     );
   }
 
@@ -178,7 +179,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 mysafeHomeIcon[0],
-                color: safeFilterColor[0],
+                color: safeFilterColor[1],
               ),
               size: Size(24, 24),
               context: context);
@@ -187,7 +188,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 mysafeHomeIcon[1],
-                color: safeFilterColor[1],
+                color: safeFilterColor[2],
               ),
               size: Size(24, 24),
               context: context);
@@ -196,7 +197,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 mysafeHomeIcon[2],
-                color: safeFilterColor[2],
+                color: safeFilterColor[3],
               ),
               size: Size(24, 24),
               context: context);
@@ -247,6 +248,7 @@ class _MyAppState extends State<MySafeHomeScreen> {
       builder: (context, state) {
         void _onMapCreated(NaverMapController controller) async {
           mapController = controller;
+          print('state: $state');
           if (state is LoadedMySafeHomeMapCubitState) {
             MarkUp(state.mysafeHomeMapResult.mySafeHomeMap, context);
           }
@@ -261,6 +263,11 @@ class _MyAppState extends State<MySafeHomeScreen> {
           ),
           body: Stack(
             children: [
+              if(state is ErrorMySafeHomeMapCubitState)
+                Center(child: Text(state.errorMessage),)
+              else if (state is FirstLoadingMySafeHomeMapCubitState)
+                Center(child: CircularProgressIndicator(),)
+              else if (state is LoadedMySafeHomeMapCubitState || state is LoadingMySafeHomeMapCubitState)
               if (myLocation != null)
                 NaverMap(
                   options: NaverMapViewOptions(

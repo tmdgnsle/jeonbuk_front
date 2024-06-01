@@ -90,56 +90,58 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
       // 스크린의 전체 너비를 사용
       height: filterHeight,
       // 높이 지정
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: List<Widget>.generate(mysafeHomeFilter.keys.length, (index) {
-          final filterKeys = mysafeHomeFilter.keys.toList(); // Map의 키를 리스트로 변환
-          final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
-          final filterValue =
-              mysafeHomeFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
-          final filterWidth = MediaQuery.of(context).size.width / 4;
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: mysafeHomeFilter.keys.length,
+          itemBuilder: (context, index) {
+            final filterKeys =
+            mysafeHomeFilter.keys.toList(); // Map의 키를 리스트로 변환
+            final filterName = filterKeys[index]; // 현재 인덱스에 해당하는 키
+            final filterValue =
+            mysafeHomeFilter[filterName]; // 키를 사용하여 Map에서 값을 얻음
+            final filterWidth = MediaQuery.of(context).size.width / 4;
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: InkWell(
-              onTap: () async {
-                final NLatLng centerLocation = await _CenterCoordinate();
-                loadMapDataFilter(centerLocation, filterValue.toString());
-              },
-              child: Container(
-                width: filterWidth,
-                decoration: BoxDecoration(
-                  color: safeFilterColor[index], // 이 예제에서는 색상을 고정값으로 설정
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      mysafeHomeIcon[index],
-                      color: Colors.white,
-                    ),
-                    Text(
-                      filterName, // Map의 키를 텍스트로 사용
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: InkWell(
+                onTap: () async {
+                  final NLatLng centerLocation = await _CenterCoordinate();
+                  loadMapDataFilter(centerLocation, filterValue!);
+                  print('filterValue: $filterValue');
+                },
+                child: Container(
+                  width: filterWidth,
+                  decoration: BoxDecoration(
+                    color: safeFilterColor[index], // 이 예제에서는 색상을 고정값으로 설정
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        blurRadius: 8,
+                        spreadRadius: 0,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (index != 0)
+                        Icon(
+                          mysafeHomeIcon[index - 1],
+                          color: Colors.white,
+                        ),
+                      Text(
+                        filterName, // Map의 키를 텍스트로 사용
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }),
-      ),
+            );
+          }),
     );
   }
 
@@ -182,7 +184,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 mysafeHomeIcon[0],
-                color: safeFilterColor[0],
+                color: safeFilterColor[1],
               ),
               size: Size(24, 24),
               context: context);
@@ -191,7 +193,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 mysafeHomeIcon[1],
-                color: safeFilterColor[1],
+                color: safeFilterColor[2],
               ),
               size: Size(24, 24),
               context: context);
@@ -200,7 +202,7 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
           markerIcon = await NOverlayImage.fromWidget(
               widget: Icon(
                 mysafeHomeIcon[2],
-                color: safeFilterColor[2],
+                color: safeFilterColor[3],
               ),
               size: Size(24, 24),
               context: context);
@@ -267,69 +269,61 @@ class _MyAppState extends State<SafeHomeDetailScreen> {
           }
         }
 
-        if (state is FirstLoadingMySafeHomeMapCubitState) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is ErrorMySafeHomeMapCubitState) {
-          return Center(
-            child: Text(state.errorMessage),
-          );
-        } else if (state is LoadedMySafeHomeMapCubitState ||
-            state is LoadingMySafeHomeMapCubitState) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                widget.title,
-                textAlign: TextAlign.center,
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              widget.title,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          body: Stack(
+            children: [
+              if(state is ErrorMySafeHomeMapCubitState)
+                Center(child: Text(state.errorMessage),)
+              else if (state is FirstLoadingMySafeHomeMapCubitState)
+                Center(child: CircularProgressIndicator(),)
+              else if (state is LoadedMySafeHomeMapCubitState || state is LoadingMySafeHomeMapCubitState)
+              NaverMap(
+                options: NaverMapViewOptions(
+                  initialCameraPosition: NCameraPosition(
+                    target: NLatLng(
+                        widget.start.latitude, widget.start.longitude),
+                    zoom: 18,
+                  ),
+                  locationButtonEnable: true,
+                ),
+                onMapReady: _onMapCreated,
               ),
-            ),
-            body: Stack(
-              children: [
-                NaverMap(
-                  options: NaverMapViewOptions(
-                    initialCameraPosition: NCameraPosition(
-                      target: NLatLng(
-                          widget.start.latitude, widget.start.longitude),
-                      zoom: 18,
-                    ),
-                    locationButtonEnable: true,
+              Positioned(top: 0, child: FilterView(context)),
+              Positioned(
+                top: 50,
+                right: 10,
+                child: FloatingActionButton(
+                  onPressed: () async {
+                    final NLatLng centerCoordinate =
+                    await _CenterCoordinate();
+                    if (state.mysafeHomeMapResult.category == 'all') {
+                      loadMapDataAll(centerCoordinate);
+                    } else {
+                      loadMapDataFilter(centerCoordinate,
+                          state.mysafeHomeMapResult.category);
+                    }
+                  },
+                  child: Icon(
+                    Icons.autorenew,
+                    color: Colors.white,
                   ),
-                  onMapReady: _onMapCreated,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28.0)),
+                  backgroundColor: GREEN_COLOR,
                 ),
-                Positioned(top: 0, child: FilterView(context)),
-                Positioned(
-                  top: 50,
-                  right: 10,
-                  child: FloatingActionButton(
-                    onPressed: () async {
-                      final NLatLng centerCoordinate =
-                          await _CenterCoordinate();
-                      if (state.mysafeHomeMapResult.category == 'all') {
-                        loadMapDataAll(centerCoordinate);
-                      } else {
-                        loadMapDataFilter(centerCoordinate,
-                            state.mysafeHomeMapResult.category);
-                      }
-                    },
-                    child: Icon(
-                      Icons.autorenew,
-                      color: Colors.white,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28.0)),
-                    backgroundColor: GREEN_COLOR,
-                  ),
-                ),
-              ],
-            ),
-            bottomNavigationBar: AppNavigationBar(
-              currentIndex: 1,
-            ),
-          );
-        } else {
-          return Container();
-        }
+              ),
+            ],
+          ),
+          bottomNavigationBar: AppNavigationBar(
+            currentIndex: 1,
+          ),
+        );
       },
     );
   }

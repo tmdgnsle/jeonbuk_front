@@ -173,6 +173,10 @@ class _FestivalDetailScreenState extends State<FestivalDetailScreen> {
                   SizedBox(
                     height: 20,
                   ),
+                  Image.network(widget.festival.image),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     height: height,
                     width: width,
