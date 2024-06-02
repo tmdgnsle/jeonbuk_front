@@ -732,9 +732,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(
-            currentIndex: 2,
-          ),
         );
       },
     );

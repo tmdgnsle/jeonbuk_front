@@ -232,9 +232,6 @@ class _MySettingScreenState extends State<MySettingScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: AppNavigationBar(
-        currentIndex: 3,
-      ),
     );
   }
 }

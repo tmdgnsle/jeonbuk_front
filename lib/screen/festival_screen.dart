@@ -90,7 +90,7 @@ class _FestivalScreenState extends State<FestivalScreen> {
           return Container();
         },
       ),
-      bottomNavigationBar: AppNavigationBar(),
+      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
     );
   }
 }

@@ -49,7 +49,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     super.dispose();
   }
 
-
   Widget _error(String errMessage) {
     return Center(
       child: Text(errMessage),
@@ -88,10 +87,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        blurRadius: 2,
-                        offset: const Offset(0, 0),
-                      ),
+                          color: Colors.black.withOpacity(0.25),
+                          blurRadius: 8,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 0)),
                     ],
                   ),
                   alignment: Alignment.center,
@@ -203,7 +202,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
           return Container();
         },
       ),
-      bottomNavigationBar: AppNavigationBar(),
+      bottomNavigationBar: AppNavigationBar(
+        currentIndex: 0,
+      ),
     );
   }
 }

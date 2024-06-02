@@ -183,7 +183,7 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
           bottomsheet ?? Container(),
         ],
       ),
-      bottomNavigationBar: AppNavigationBar(),
+      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
     );
   }
 }

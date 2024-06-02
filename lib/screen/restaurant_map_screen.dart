@@ -429,7 +429,7 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(),
+          bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
         );
       },
     );

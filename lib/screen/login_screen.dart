@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         emergencyNum);
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
+                          builder: (context) => HomeScreen(currentIndex: 0,)),
                     );
                   } else {
                     showDialog(

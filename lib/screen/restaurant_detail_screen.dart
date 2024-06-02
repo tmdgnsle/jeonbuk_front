@@ -173,7 +173,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           bottomsheet ?? Container(),
         ],
       ),
-      bottomNavigationBar: AppNavigationBar(),
+      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
     );
   }
 }

@@ -322,7 +322,7 @@ class _MyAppState extends State<TownStrollMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(),
+          bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
         );
       },
     );

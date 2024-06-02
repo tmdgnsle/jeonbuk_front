@@ -93,7 +93,8 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.25),
-                        blurRadius: 2,
+                        blurRadius: 8,
+                        spreadRadius: 0,
                         offset: const Offset(0, 0),
                       ),
                     ],
@@ -178,6 +179,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                         context.read<DiscountStoreListCubit>().search(value),
                   ),
                   filterView(context, screenWidth),
+                  SizedBox(height: 10,),
                   Expanded(
                     child: ListView.separated(
                       controller: scrollController,
@@ -208,7 +210,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
           return Container();
         },
       ),
-      bottomNavigationBar: AppNavigationBar(),
+      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
     );
   }
 }

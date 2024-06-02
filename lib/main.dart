@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('myapp');
     return BlocProvider(
       create: (context) => IdJwtCubit(),
       child: MaterialApp(

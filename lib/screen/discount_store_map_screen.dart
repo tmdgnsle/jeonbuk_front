@@ -457,7 +457,7 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(),
+          bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
         );
       },
     );

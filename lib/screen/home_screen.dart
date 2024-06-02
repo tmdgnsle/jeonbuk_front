@@ -2,22 +2,37 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:jeonbuk_front/api/openapis.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_box.dart';
+import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
+import 'package:jeonbuk_front/cubit/bookmark_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/festival_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
+import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
+import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
 import 'package:jeonbuk_front/cubit/town_stroll_map_cubit.dart';
+import 'package:jeonbuk_front/screen/bookmark_map_screen.dart';
 import 'package:jeonbuk_front/screen/chat_screen.dart';
 import 'package:jeonbuk_front/screen/festival_screen.dart';
+import 'package:jeonbuk_front/screen/my_safe_home_screen.dart';
+import 'package:jeonbuk_front/screen/my_setting_screen.dart';
 import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
 import 'package:jeonbuk_front/screen/safe_home_screen.dart';
+import 'package:jeonbuk_front/screen/safe_screen.dart';
 import 'package:jeonbuk_front/screen/town_stroll_map_screen.dart';
 
+import 'login_screen.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({required this.currentIndex, super.key});
+
+  int currentIndex;
 
   @override
   State<HomeScreen> createState() => _MainScreenState();
@@ -59,35 +74,46 @@ class _MainScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  List<Widget> _widgetOptions() {
+    return [
+      _homeScreen(),
+      SafeScreen(),
+      BlocProvider(
+        create: (context) => BookmarkMapCubit(),
+        child: BookmarkMapScreen(),
+      ),
+      MySettingScreen(),
+    ];
+  }
+
+  Widget _homeScreen() {
     final double boxSize = (MediaQuery.of(context).size.width - 48) / 2;
     final double notchpadding = MediaQuery.of(context).padding.top + 10;
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: notchpadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: 120,
-              child: PageView(
-                controller: controller,
-                children: [1, 2, 3, 4, 5]
-                    .map(
-                      (e) => Image.asset(
-                        'assets/images/jeonbuk_banner$e.jpg',
-                        fit: BoxFit.fill,
-                      ),
-                    )
-                    .toList(),
-              ),
+    return Padding(
+      padding: EdgeInsets.only(top: notchpadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 120,
+            child: PageView(
+              controller: controller,
+              children: [1, 2, 3, 4, 5]
+                  .map(
+                    (e) => Image.asset(
+                      'assets/images/jeonbuk_banner$e.jpg',
+                      fit: BoxFit.fill,
+                    ),
+                  )
+                  .toList(),
             ),
-            const SizedBox(
-              height: 12,
-            ),
-            Padding(
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Expanded(
+            child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
               child: SingleChildScrollView(
@@ -206,11 +232,97 @@ class _MainScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      bottomNavigationBar: AppNavigationBar(
-        currentIndex: 0,
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      widget.currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        // 뒤로 가기 버튼을 누르면 앱을 종료합니다.
+        return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('앱 종료'),
+            content: const Text('앱을 종료하시겠습니까?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('취소'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('확인'),
+              ),
+            ],
+          ),
+        );
+      },
+      child: Scaffold(
+        body: _widgetOptions().elementAt(widget.currentIndex!),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  offset: Offset(0, 0),
+                  spreadRadius: 1,
+                  blurRadius: 18)
+            ],
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            showUnselectedLabels: true,
+            selectedItemColor: GREEN_COLOR,
+            selectedIconTheme: const IconThemeData(color: GREEN_COLOR, size: 32),
+            selectedFontSize: 8,
+            unselectedItemColor: BLUE_COLOR,
+            unselectedIconTheme: const IconThemeData(color: BLUE_COLOR, size: 32),
+            unselectedFontSize: 8,
+            backgroundColor: Colors.white,
+            currentIndex: widget.currentIndex!,
+            onTap: _onItemTapped,
+            items: [
+              const BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+                  child: Icon(Icons.home),
+                ),
+                label: '홈',
+              ),
+              const BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+                  child: Icon(Icons.health_and_safety),
+                ),
+                label: '안심귀가',
+              ),
+              const BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+                  child: Icon(Icons.star),
+                ),
+                label: '나만의 지도',
+              ),
+              const BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.all(0), // 아이콘 주변 패딩 제거
+                  child: Icon(Icons.person),
+                ),
+                label: 'MY',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
