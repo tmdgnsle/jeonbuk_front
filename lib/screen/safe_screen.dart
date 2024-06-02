@@ -96,9 +96,7 @@ class _MainScreenState extends State<SafeScreen> {
                     .toList(),
               ),
             ),
-            const SizedBox(
-              height: 12,
-            ),
+
             Expanded(
               child: Padding(
                 padding:
@@ -107,6 +105,9 @@ class _MainScreenState extends State<SafeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      const SizedBox(
+                        height: 12,
+                      ),
                       Row(
                         children: [
                           CustomBox(

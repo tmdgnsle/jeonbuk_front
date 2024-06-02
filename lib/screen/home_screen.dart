@@ -109,9 +109,6 @@ class _MainScreenState extends State<HomeScreen> {
                   .toList(),
             ),
           ),
-          const SizedBox(
-            height: 12,
-          ),
           Expanded(
             child: Padding(
               padding:
@@ -120,6 +117,9 @@ class _MainScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Row(
                       children: [
                         CustomBox(
@@ -283,10 +283,12 @@ class _MainScreenState extends State<HomeScreen> {
             type: BottomNavigationBarType.fixed,
             showUnselectedLabels: true,
             selectedItemColor: GREEN_COLOR,
-            selectedIconTheme: const IconThemeData(color: GREEN_COLOR, size: 32),
+            selectedIconTheme:
+                const IconThemeData(color: GREEN_COLOR, size: 32),
             selectedFontSize: 8,
             unselectedItemColor: BLUE_COLOR,
-            unselectedIconTheme: const IconThemeData(color: BLUE_COLOR, size: 32),
+            unselectedIconTheme:
+                const IconThemeData(color: BLUE_COLOR, size: 32),
             unselectedFontSize: 8,
             backgroundColor: Colors.white,
             currentIndex: widget.currentIndex!,
