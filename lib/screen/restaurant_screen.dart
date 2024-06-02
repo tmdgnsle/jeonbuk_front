@@ -169,22 +169,30 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                   Expanded(
                     child: ListView.separated(
                       controller: scrollController,
-                      itemBuilder: (context, index) => RestaurantCustomListBox(
-                        restaurant: stores[index],
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                      create: (context) => RestaurantMapCubit(),
-                                      child: RestaurantDetailScreen(
-                                          restaurant: stores[index]),
-                                    )),
-                          );
-                        },
-                      ),
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const SizedBox(height: 5,),
+                            RestaurantCustomListBox(
+                              restaurant: stores[index],
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                        create: (context) => RestaurantMapCubit(),
+                                        child: RestaurantDetailScreen(
+                                            restaurant: stores[index]),
+                                      )),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
                       separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                       itemCount: stores.length,
                     ),
                   ),

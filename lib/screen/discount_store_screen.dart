@@ -173,30 +173,35 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                         context.read<DiscountStoreListCubit>().search(value),
                   ),
                   filterView(context, screenWidth),
-                  SizedBox(
-                    height: 10,
-                  ),
                   Expanded(
                     child: ListView.separated(
                       controller: scrollController,
-                      itemBuilder: (context, index) =>
-                          DiscountStoreCustomListBox(
-                        discountStore: stores[index],
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (context) => DiscountStoreMapCubit(),
-                                child: DiscountStoreDetailScreen(
-                                    discountStore: stores[index]),
-                              ),
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(height: 5,),
+                            DiscountStoreCustomListBox(
+                              discountStore: stores[index],
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BlocProvider(
+                                      create: (context) => DiscountStoreMapCubit(),
+                                      child: DiscountStoreDetailScreen(
+                                          discountStore: stores[index]),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
+                          ],
+                        );
+                      }
+                          ,
                       separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                       itemCount: stores.length,
                     ),
                   ),

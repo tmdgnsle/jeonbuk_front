@@ -173,6 +173,9 @@ class _MainScreenState extends State<SafeScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 12,
+                      ),
                     ],
                   ),
                 ),

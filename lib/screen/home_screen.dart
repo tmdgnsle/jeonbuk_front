@@ -228,6 +228,9 @@ class _MainScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                   ],
                 ),
               ),

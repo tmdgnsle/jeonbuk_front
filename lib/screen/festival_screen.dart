@@ -63,23 +63,31 @@ class _FestivalScreenState extends State<FestivalScreen> {
                   Expanded(
                     child: ListView.separated(
                       controller: scrollController,
-                      itemBuilder: (context, index) => FestivalCustomListBox(
-                        festival: stores[index],
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (context) => FestivalListCubit(),
-                                  child: FestivalDetailScreen(
-                                    festival: stores[index],
-                                  ),
-                                ),
-                              ));
-                        },
-                      ),
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(height: 5,),
+                            FestivalCustomListBox(
+                              festival: stores[index],
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                        create: (context) => FestivalListCubit(),
+                                        child: FestivalDetailScreen(
+                                          festival: stores[index],
+                                        ),
+                                      ),
+                                    ));
+                              },
+                            ),
+                          ],
+                        );
+                      },
                       separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 5),
                       itemCount: stores.length,
                     ),
                   ),
