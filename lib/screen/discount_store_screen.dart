@@ -32,10 +32,12 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent - 200 <=
           scrollController.offset) {
-        if(category == 'all'){
+        if (category == 'all') {
           context.read<DiscountStoreListCubit>().loadDiscountStoreList();
         } else {
-          context.read<DiscountStoreListCubit>().loadDiscountStoreListFilter(category);
+          context
+              .read<DiscountStoreListCubit>()
+              .loadDiscountStoreListFilter(category);
         }
       }
     });
@@ -90,14 +92,6 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                   decoration: BoxDecoration(
                     color: discountStoreFilterColor[index],
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        blurRadius: 8,
-                        spreadRadius: 0,
-                        offset: const Offset(0, 0),
-                      ),
-                    ],
                   ),
                   alignment: Alignment.center,
                   child: Text(
@@ -179,7 +173,9 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                         context.read<DiscountStoreListCubit>().search(value),
                   ),
                   filterView(context, screenWidth),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Expanded(
                     child: ListView.separated(
                       controller: scrollController,
@@ -192,7 +188,8 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                             MaterialPageRoute(
                               builder: (context) => BlocProvider(
                                 create: (context) => DiscountStoreMapCubit(),
-                                child: DiscountStoreDetailScreen(discountStore: stores[index]),
+                                child: DiscountStoreDetailScreen(
+                                    discountStore: stores[index]),
                               ),
                             ),
                           );
@@ -210,7 +207,9 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
           return Container();
         },
       ),
-      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
+      bottomNavigationBar: AppNavigationBar(
+        currentIndex: 0,
+      ),
     );
   }
 }

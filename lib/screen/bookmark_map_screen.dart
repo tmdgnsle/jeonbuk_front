@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:jeonbuk_front/api/openapis.dart';
-import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/bookmark_map_cubit.dart';
@@ -508,14 +507,6 @@ class _MyAppState extends State<BookmarkMapScreen> {
                   color: bookmarkFilterColor[index],
                   // 이 예제에서는 색상을 고정값으로 설정
                   borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 0),
-                    ),
-                  ],
                 ),
                 alignment: Alignment.center,
                 child: Text(

@@ -85,13 +85,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                   decoration: BoxDecoration(
                     color: restaurantFilterColor[index],
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          blurRadius: 8,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 0)),
-                    ],
                   ),
                   alignment: Alignment.center,
                   child: Text(
