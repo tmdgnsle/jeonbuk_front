@@ -6,18 +6,18 @@ import 'package:jeonbuk_front/components/custom_safe_box.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
-import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
-import 'package:jeonbuk_front/screen/add_safe_screen.dart';
+import 'package:jeonbuk_front/cubit/return_route_cubit.dart';
+import 'package:jeonbuk_front/screen/add_return_screen.dart';
 import 'package:jeonbuk_front/screen/safe_home_detail_screen.dart';
 
-class SafeHomeScreen extends StatefulWidget {
-  const SafeHomeScreen({super.key});
+class ReturnRouteScreen extends StatefulWidget {
+  const ReturnRouteScreen({super.key});
 
   @override
-  State<SafeHomeScreen> createState() => _SafeHomeScreenState();
+  State<ReturnRouteScreen> createState() => _ReturnRouteScreenState();
 }
 
-class _SafeHomeScreenState extends State<SafeHomeScreen> {
+class _ReturnRouteScreenState extends State<ReturnRouteScreen> {
   late String memberId;
 
   @override
@@ -26,14 +26,13 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
     super.initState();
     final bloc = BlocProvider.of<IdJwtCubit>(context);
     memberId = bloc.state.idJwt.id!;
-    context.read<SafeHomeCubit>().loadSafeHomeList(memberId);
+    context.read<ReturnRouteCubit>().loadReturnRouteList(memberId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SafeHomeCubit, SafeHomeCubitState>(
+    return BlocBuilder<ReturnRouteCubit, ReturnRouteCubitState>(
       builder: (context, state) {
-
         return Scaffold(
           appBar: AppBar(
             title: const Text('귀가경로'),
@@ -44,12 +43,14 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => BlocProvider.value(
-                          value: SafeHomeCubit(),
-                          child: const AddSafeScreen(),
+                          value: ReturnRouteCubit(),
+                          child: const AddReturnScreen(),
                         ),
                       ));
                   if (result == true) {
-                    context.read<SafeHomeCubit>().loadSafeHomeList(memberId);
+                    context
+                        .read<ReturnRouteCubit>()
+                        .loadReturnRouteList(memberId);
                   }
                 },
                 icon: const Icon(Icons.add),
@@ -65,12 +66,12 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
     );
   }
 
-  Widget _buildBody(SafeHomeCubitState state) {
-    if (state is ErrorSafeHomeCubitState) {
+  Widget _buildBody(ReturnRouteCubitState state) {
+    if (state is ErrorReturnRouteCubitState) {
       return _error(state.errorMessage);
     }
-    if (state is LoadedSafeHomeCubitState ||
-        state is LoadingSafeHomeCubitState) {
+    if (state is LoadedReturnRouteCubitState ||
+        state is LoadingReturnRouteCubitState) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
@@ -80,13 +81,18 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   return CustomSafeBox(
-                    name: state.safeHomeListResult.safehomeList[index].name,
+                    name:
+                        state.returnRouteListResult.returnRouteList[index].name,
                     start: NLatLng(
-                        state.safeHomeListResult.safehomeList[index].startLa,
-                        state.safeHomeListResult.safehomeList[index].startLo),
+                        state.returnRouteListResult.returnRouteList[index]
+                            .startLa,
+                        state.returnRouteListResult.returnRouteList[index]
+                            .startLo),
                     end: NLatLng(
-                        state.safeHomeListResult.safehomeList[index].endLa,
-                        state.safeHomeListResult.safehomeList[index].endLo),
+                        state
+                            .returnRouteListResult.returnRouteList[index].endLa,
+                        state.returnRouteListResult.returnRouteList[index]
+                            .endLo),
                     onTap: () {
                       Navigator.push(
                           context,
@@ -95,37 +101,38 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                               create: (context) => MySafeHomeMapCubit(),
                               child: SafeHomeDetailScreen(
                                   start: NLatLng(
-                                      state.safeHomeListResult
-                                          .safehomeList[index].startLa,
-                                      state.safeHomeListResult
-                                          .safehomeList[index].startLo),
+                                      state.returnRouteListResult
+                                          .returnRouteList[index].startLa,
+                                      state.returnRouteListResult
+                                          .returnRouteList[index].startLo),
                                   end: NLatLng(
-                                      state.safeHomeListResult
-                                          .safehomeList[index].endLa,
-                                      state.safeHomeListResult
-                                          .safehomeList[index].endLo),
-                                  title: state.safeHomeListResult
-                                      .safehomeList[index].name),
+                                      state.returnRouteListResult
+                                          .returnRouteList[index].endLa,
+                                      state.returnRouteListResult
+                                          .returnRouteList[index].endLo),
+                                  title: state.returnRouteListResult
+                                      .returnRouteList[index].name),
                             ),
                           ));
                     },
                     onLongPress: () {
-                      final safeCubit = context.read<SafeHomeCubit>();
+                      final safeCubit = context.read<ReturnRouteCubit>();
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('알림'),
                             content: Text(
-                                '${state.safeHomeListResult.safehomeList[index].name}을 삭제하시겠습니까?'),
+                                '${state.returnRouteListResult.returnRouteList[index].name}을 삭제하시겠습니까?'),
                             actions: <Widget>[
                               TextButton(
                                 child: const Text('확인'),
                                 onPressed: () {
-                                  safeCubit.deleteSafeHomeList(
+                                  safeCubit.deleteReturnRouteList(
                                       memberId,
-                                      state.safeHomeListResult
-                                          .safehomeList[index].id);
+                                      state.returnRouteListResult
+                                          .returnRouteList[index].id);
+                                  print('state: $state');
                                   Navigator.of(context).pop();
                                 },
                               ),
@@ -145,7 +152,7 @@ class _SafeHomeScreenState extends State<SafeHomeScreen> {
                 separatorBuilder: (context, index) => const SizedBox(
                   height: 16,
                 ),
-                itemCount: state.safeHomeListResult.safehomeList.length,
+                itemCount: state.returnRouteListResult.returnRouteList.length,
               ),
             ),
             const Text(

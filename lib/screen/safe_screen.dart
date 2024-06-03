@@ -9,9 +9,9 @@ import 'package:jeonbuk_front/components/custom_box.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
-import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
+import 'package:jeonbuk_front/cubit/return_route_cubit.dart';
 import 'package:jeonbuk_front/screen/my_safe_home_screen.dart';
-import 'package:jeonbuk_front/screen/safe_home_screen.dart';
+import 'package:jeonbuk_front/screen/return_route_screen.dart';
 
 class SafeScreen extends StatefulWidget {
   const SafeScreen({super.key});
@@ -96,7 +96,6 @@ class _MainScreenState extends State<SafeScreen> {
                     .toList(),
               ),
             ),
-
             Expanded(
               child: Padding(
                 padding:
@@ -125,8 +124,8 @@ class _MainScreenState extends State<SafeScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => BlocProvider(
-                                      create: (context) => SafeHomeCubit(),
-                                      child: const SafeHomeScreen(),
+                                      create: (context) => ReturnRouteCubit(),
+                                      child: const ReturnRouteScreen(),
                                     ),
                                   ));
                             },
@@ -184,7 +183,6 @@ class _MainScreenState extends State<SafeScreen> {
           ],
         ),
       ),
-
     );
   }
 }

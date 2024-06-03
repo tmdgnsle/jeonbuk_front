@@ -14,7 +14,7 @@ import 'package:jeonbuk_front/cubit/festival_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
 import 'package:jeonbuk_front/cubit/my_safe_home_map_cubit.dart';
 import 'package:jeonbuk_front/cubit/restaurant_list_cubit.dart';
-import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
+import 'package:jeonbuk_front/cubit/return_route_cubit.dart';
 import 'package:jeonbuk_front/cubit/town_stroll_map_cubit.dart';
 import 'package:jeonbuk_front/screen/bookmark_map_screen.dart';
 import 'package:jeonbuk_front/screen/chat_screen.dart';
@@ -23,7 +23,7 @@ import 'package:jeonbuk_front/screen/my_safe_home_screen.dart';
 import 'package:jeonbuk_front/screen/my_setting_screen.dart';
 import 'package:jeonbuk_front/screen/restaurant_screen.dart';
 import 'package:jeonbuk_front/screen/discount_store_screen.dart';
-import 'package:jeonbuk_front/screen/safe_home_screen.dart';
+import 'package:jeonbuk_front/screen/return_route_screen.dart';
 import 'package:jeonbuk_front/screen/safe_screen.dart';
 import 'package:jeonbuk_front/screen/town_stroll_map_screen.dart';
 

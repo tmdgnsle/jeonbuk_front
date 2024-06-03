@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class SafeHome extends Equatable {
+class ReturnRoute extends Equatable {
   final int id;
   final String name;
   final double startLa;
@@ -8,7 +8,7 @@ class SafeHome extends Equatable {
   final double endLa;
   final double endLo;
 
-  SafeHome({
+  ReturnRoute({
     required this.id,
     required this.name,
     required this.startLa,
@@ -17,8 +17,8 @@ class SafeHome extends Equatable {
     required this.endLo,
   });
 
-  factory SafeHome.fromJson(Map<String, dynamic> json) {
-    return SafeHome(
+  factory ReturnRoute.fromJson(Map<String, dynamic> json) {
+    return ReturnRoute(
         id: json['id'],
         name: json['name'],
         startLa: json['startLatitude'],

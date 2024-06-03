@@ -6,16 +6,16 @@ import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/cubit/id_jwt_cubit.dart';
-import 'package:jeonbuk_front/cubit/safe_home_cubit.dart';
+import 'package:jeonbuk_front/cubit/return_route_cubit.dart';
 
-class AddSafeScreen extends StatefulWidget {
-  const AddSafeScreen({super.key});
+class AddReturnScreen extends StatefulWidget {
+  const AddReturnScreen({super.key});
 
   @override
-  State<AddSafeScreen> createState() => _AddSafeScreenState();
+  State<AddReturnScreen> createState() => _AddReturnScreenState();
 }
 
-class _AddSafeScreenState extends State<AddSafeScreen> {
+class _AddReturnScreenState extends State<AddReturnScreen> {
   final TextEditingController pathController = TextEditingController();
   final TextEditingController startController = TextEditingController();
   final TextEditingController endController = TextEditingController();
@@ -41,7 +41,7 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
   @override
   void initState() {
     getMemberId();
-    context.read<SafeHomeCubit>().loadSafeHomeList(memberId!);
+    context.read<ReturnRouteCubit>().loadReturnRouteList(memberId!);
     super.initState();
   }
 
@@ -58,7 +58,8 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                 NLatLng end =
                     await getCoordinatesFromAddress(endController.text);
 
-                if (start == const NLatLng(0, 0) || end == const NLatLng(0, 0)) {
+                if (start == const NLatLng(0, 0) ||
+                    end == const NLatLng(0, 0)) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -77,7 +78,7 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                     },
                   );
                 } else {
-                  final safeCubit = context.read<SafeHomeCubit>();
+                  final safeCubit = context.read<ReturnRouteCubit>();
                   final int response = await safeCubit.SafeAdd(
                       memberId!,
                       pathController.text,
@@ -85,6 +86,7 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
                       start.longitude,
                       end.latitude,
                       end.longitude);
+                  print('response: $response');
                   if (response == 200) {
                     Navigator.of(context).pop(true);
                   }
@@ -105,7 +107,9 @@ class _AddSafeScreenState extends State<AddSafeScreen> {
             children: [
               const Text(
                 '이름',
-                style: TextStyle(fontWeight: FontWeight.bold,),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(
                 height: 5,
