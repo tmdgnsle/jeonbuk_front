@@ -21,8 +21,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  print('firebase 연결');
-
   await NaverMapSdk.instance.initialize(
       clientId: 'nf68z75anv',
       onAuthFailed: (error) {

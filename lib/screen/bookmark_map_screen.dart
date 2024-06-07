@@ -281,8 +281,10 @@ class _MyAppState extends State<BookmarkMapScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(state
-                        .bookmarkMapResult.discountStoreMap[index].storeName),
+                    Text(
+                      state.bookmarkMapResult.discountStoreMap[index].storeName,
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.star,
@@ -341,7 +343,9 @@ class _MyAppState extends State<BookmarkMapScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                        state.bookmarkMapResult.restaurantMap[index].storeName),
+                      state.bookmarkMapResult.restaurantMap[index].storeName,
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.star,
@@ -394,7 +398,10 @@ class _MyAppState extends State<BookmarkMapScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(state.bookmarkMapResult.festivalMap[index].title),
+                    Text(
+                      state.bookmarkMapResult.festivalMap[index].title,
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.star,
@@ -446,7 +453,10 @@ class _MyAppState extends State<BookmarkMapScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(state.bookmarkMapResult.townStrollMap[index].name),
+                    Text(
+                      state.bookmarkMapResult.townStrollMap[index].name,
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.star,

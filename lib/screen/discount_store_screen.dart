@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jeonbuk_front/components/app_navigation_bar.dart';
 import 'package:jeonbuk_front/components/custom_text_field.dart';
 import 'package:jeonbuk_front/components/discountstore_custom_list_box.dart';
+import 'package:jeonbuk_front/const/color.dart';
 import 'package:jeonbuk_front/const/filter.dart';
 import 'package:jeonbuk_front/cubit/discount_store_list_cubit.dart';
 import 'package:jeonbuk_front/cubit/discount_store_map_cubit.dart';
@@ -26,21 +28,12 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
 
   String category = 'all';
 
+  bool extended = true;
+
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent - 200 <=
-          scrollController.offset) {
-        if (category == 'all') {
-          context.read<DiscountStoreListCubit>().loadDiscountStoreList();
-        } else {
-          context
-              .read<DiscountStoreListCubit>()
-              .loadDiscountStoreListFilter(category);
-        }
-      }
-    });
+    scrollController.addListener(_scrollListener);
   }
 
   @override
@@ -48,6 +41,31 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
     textEditingController.dispose();
     scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      setState(() {
+        extended = true;
+      });
+    } else if (scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      setState(() {
+        extended = false;
+      });
+    }
+
+    if (scrollController.position.maxScrollExtent - 200 <=
+        scrollController.offset) {
+      if (category == 'all') {
+        context.read<DiscountStoreListCubit>().loadDiscountStoreList();
+      } else {
+        context
+            .read<DiscountStoreListCubit>()
+            .loadDiscountStoreListFilter(category);
+      }
+    }
   }
 
   Widget _loading() {
@@ -118,21 +136,6 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
               Navigator.of(context).pop();
             },
             icon: const Icon(Icons.arrow_back)),
-        actions: <Widget>[
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) => DiscountStoreMapCubit(),
-                      child: DiscountStoreMapScreen(),
-                    ),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.map)),
-        ],
       ),
       body: BlocBuilder<DiscountStoreListCubit, DiscountStoreListCubitState>(
         builder: (context, state) {
@@ -180,7 +183,9 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            SizedBox(height: 5,),
+                            SizedBox(
+                              height: 5,
+                            ),
                             DiscountStoreCustomListBox(
                               discountStore: stores[index],
                               onTap: () {
@@ -188,7 +193,8 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => BlocProvider(
-                                      create: (context) => DiscountStoreMapCubit(),
+                                      create: (context) =>
+                                          DiscountStoreMapCubit(),
                                       child: DiscountStoreDetailScreen(
                                           discountStore: stores[index]),
                                     ),
@@ -198,8 +204,7 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
                             ),
                           ],
                         );
-                      }
-                          ,
+                      },
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 5),
                       itemCount: stores.length,
@@ -214,6 +219,30 @@ class _DiscountStoreScreenState extends State<DiscountStoreScreen> {
       ),
       bottomNavigationBar: AppNavigationBar(
         currentIndex: 0,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => DiscountStoreMapCubit(),
+                child: DiscountStoreMapScreen(),
+              ),
+            ),
+          );
+        },
+        label: Text(
+          '내 주변',
+          style: TextStyle(fontSize: 16),
+        ),
+        icon: Icon(Icons.travel_explore),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        backgroundColor: BLUE_COLOR,
+        foregroundColor: Colors.white,
+        isExtended: extended,
       ),
     );
   }

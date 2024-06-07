@@ -192,8 +192,10 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(state
-                        .restaurantMapResult.restaurantMap[index].storeName),
+                    Text(
+                      state.restaurantMapResult.restaurantMap[index].storeName,
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.star,
@@ -421,7 +423,9 @@ class _MyAppState extends State<RestaurantMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
+          bottomNavigationBar: AppNavigationBar(
+            currentIndex: 0,
+          ),
         );
       },
     );

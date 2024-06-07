@@ -74,7 +74,10 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(state.restaurantMapResult.restaurantMap[0].storeName),
+                  Text(
+                    state.restaurantMapResult.restaurantMap[0].storeName,
+                    style: TextStyle(fontSize: 20),
+                  ),
                   IconButton(
                     icon: Icon(
                       Icons.star,
@@ -148,13 +151,15 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
 
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
-      marker.setOnTapListener((NMarker marker) {
-        setState(() {
-          bottomsheet = bottomSheet(widget.restaurant.id, memberId);
-        });
-      });
+      // marker.setOnTapListener((NMarker marker) {
+      //   setState(() {
+      //     bottomsheet = bottomSheet(widget.restaurant.id, memberId);
+      //   });
+      // });
       mapController!.addOverlay(marker);
     }
+
+    bottomsheet = bottomSheet(widget.restaurant.id, memberId);
 
     return Scaffold(
       appBar: AppBar(),
@@ -173,7 +178,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           bottomsheet ?? Container(),
         ],
       ),
-      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
+      bottomNavigationBar: AppNavigationBar(
+        currentIndex: 0,
+      ),
     );
   }
 }

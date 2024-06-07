@@ -78,8 +78,10 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(state
-                      .discountStoreMapResult.discountStoreMap[0].storeName),
+                  Text(
+                    state.discountStoreMapResult.discountStoreMap[0].storeName,
+                    style: TextStyle(fontSize: 20),
+                  ),
                   IconButton(
                     icon: Icon(
                       Icons.star,
@@ -158,13 +160,15 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
 
         // 여기에 마커에 추가할 수 있는 다른 속성들을 추가할 수 있습니다.
       );
-      marker.setOnTapListener((NMarker marker) {
-        setState(() {
-          bottomsheet = bottomSheet(widget.discountStore.id, memberId);
-        });
-      });
+      // marker.setOnTapListener((NMarker marker) {
+      //   setState(() {
+      //     bottomsheet = bottomSheet(widget.discountStore.id, memberId);
+      //   });
+      // });
       mapController!.addOverlay(marker);
     }
+
+    bottomsheet = bottomSheet(widget.discountStore.id, memberId);
 
     return Scaffold(
       appBar: AppBar(),
@@ -183,7 +187,9 @@ class _DiscountStoreDetailScreenState extends State<DiscountStoreDetailScreen> {
           bottomsheet ?? Container(),
         ],
       ),
-      bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
+      bottomNavigationBar: AppNavigationBar(
+        currentIndex: 0,
+      ),
     );
   }
 }

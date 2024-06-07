@@ -194,8 +194,11 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(state.discountStoreMapResult.discountStoreMap[index]
-                        .storeName),
+                    Text(
+                      state.discountStoreMapResult.discountStoreMap[index]
+                          .storeName,
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.star,
@@ -449,7 +452,9 @@ class _MyAppState extends State<DiscountStoreMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
+          bottomNavigationBar: AppNavigationBar(
+            currentIndex: 0,
+          ),
         );
       },
     );

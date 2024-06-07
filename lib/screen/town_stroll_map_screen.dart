@@ -170,7 +170,10 @@ class _MyAppState extends State<TownStrollMapScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(state.townStrollMapResult.townStrollMap[index].name),
+                    Text(
+                      state.townStrollMapResult.townStrollMap[index].name,
+                      style: TextStyle(fontSize: 20),
+                    ),
                     IconButton(
                       icon: Icon(
                         Icons.star,
@@ -322,7 +325,9 @@ class _MyAppState extends State<TownStrollMapScreen> {
                 const Center(child: CircularProgressIndicator()),
             ],
           ),
-          bottomNavigationBar: AppNavigationBar(currentIndex: 0,),
+          bottomNavigationBar: AppNavigationBar(
+            currentIndex: 0,
+          ),
         );
       },
     );
