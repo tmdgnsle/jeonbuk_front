@@ -36,22 +36,7 @@ class OpenApis {
     }
   }
 
-  // 추가 정보(이름, 전화번호, 비상연락망) 등록 기능을 수행합니다.
-  Future<void> registerInfo(String id, String name, String phoneNumber,
-      String emergencyNumber) async {
-    try {
-      await _dio.post('$_baseUrl/account/register/info', data: {
-        'id': id,
-        'name': name,
-        'phoneNumber': phoneNumber,
-        'emergencyNumber': emergencyNumber,
-      });
-      // 정보 등록 성공 시, 별도의 반환값은 없습니다.
-    } catch (e) {
-      // 정보 등록 실패 시, 예외를 발생시킵니다.
-      throw Exception('정보 등록에 실패하였습니다.\n ${e.toString()}');
-    }
-  }
+
 
   // 로그인 기능을 수행합니다. 사용자 아이디와 비밀번호를 서버로 전송합니다.
   Future<List<String>> login(String id, String password) async {
