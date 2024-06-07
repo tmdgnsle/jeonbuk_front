@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "916441125401",
+    "project_id": "jeonbuk-front-6aff4",
+    "storage_bucket": "jeonbuk-front-6aff4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916441125401:android:f6ace38eea82c432aad088",
+        "android_client_info": {
+          "package_name": "com.example.jeonbuk_front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjF97rQiT6-26O8tVcQhWVfvGL6bPMHZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
