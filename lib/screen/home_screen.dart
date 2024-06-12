@@ -149,8 +149,8 @@ class _MainScreenState extends State<HomeScreen> {
                             Icons.shopping_bag,
                           ),
                           backgroundColor: const Color(0xFF69F7B4),
-                          firstDescription: '전북의 알뜰 소식을',
-                          secontDescription: '한눈에 쏘옥~',
+                          firstDescription: '문화누리카드',
+                          secontDescription: '할인 사용처',
                           onTap: () {
                             Navigator.push(
                                 context,
