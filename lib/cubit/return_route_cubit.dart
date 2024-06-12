@@ -29,7 +29,7 @@ class ReturnRouteCubit extends Cubit<ReturnRouteCubitState> {
       }
       emit(LoadingReturnRouteCubitState(
           returnRouteListResult: state.returnRouteListResult));
-      var result = await _dio.get('/ReturnRoute/list', queryParameters: {
+      var result = await _dio.get('/returnRoute/list', queryParameters: {
         'memberId': memberId,
       });
       _returnRouteListResult = ReturnRouteListResult.fromJson(result.data);
@@ -50,7 +50,7 @@ class ReturnRouteCubit extends Cubit<ReturnRouteCubitState> {
       }
       emit(LoadingReturnRouteCubitState(
           returnRouteListResult: state.returnRouteListResult));
-      await _dio.delete('/ReturnRoute/delete', queryParameters: {
+      await _dio.delete('/returnRoute/delete', queryParameters: {
         'returnRouteId': returnRouteId,
       });
       _returnRouteListResult.returnRouteList
@@ -74,7 +74,7 @@ class ReturnRouteCubit extends Cubit<ReturnRouteCubitState> {
       emit(LoadingReturnRouteCubitState(
           returnRouteListResult: state.returnRouteListResult));
       // _returnRouteListResult = state.returnRouteListResult;
-      final response = await _dio.post('/ReturnRoute/add', queryParameters: {
+      final response = await _dio.post('/returnRoute/add', queryParameters: {
         'memberId': memberId,
         'name': name,
         'startLatitude': startLa,
