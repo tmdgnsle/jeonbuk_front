@@ -28,7 +28,7 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
       emit(FirstLoadingMySafeHomeMapCubitState(
           mysafeHomeMapResult: state.mysafeHomeMapResult));
 
-      result = await _dio.get('/mySafeHome/', queryParameters: {
+      result = await _dio.get('/mySafeHome', queryParameters: {
         'latitude': latitude,
         'longitude': longitude,
         'radius': radius,
@@ -60,7 +60,7 @@ class MySafeHomeMapCubit extends Cubit<MySafeHomeMapCubitState> {
       emit(LoadingMySafeHomeMapCubitState(
           mysafeHomeMapResult: state.mysafeHomeMapResult));
       if (category == 'all') {
-        result = await _dio.get('/mySafeHome/', queryParameters: {
+        result = await _dio.get('/mySafeHome', queryParameters: {
           'latitude': latitude,
           'longitude': longitude,
           'radius': radius,
