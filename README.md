@@ -1,16 +1,25 @@
-# jeonbuk_front
+개발환경
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Dart SDK version: 3.3.3
+Flutter 3.19.5
+cupertino_icons 1.0.6
+dio 5.4.1
+firebase_analytics 10.10.7
+firebase_analytics_platform_interface 3.10.8
+firebase_analytics_web 0.5.7+7
+firebase_core 2.32.0
+firebase_core_platform_interface 5.0.0
+firebase_core_web 2.17.0
+flutter_bloc 8.1.5
+flutter_lints 3.0.1
+flutter_naver_map 1.2.2
+geolocator 11.0.0
+geolocator_android 4.5.4
+geolocator_platform_interface 4.2.2
+geolocator_web 3.0.0
+path_provider 2.1.2
+path_provider_foundation 2.4.0
+url_launcher 6.2.6
+url_launcher_android 6.3.1
+url_launcher_ios 6.2.5
+url_launcher_macos 3.1.0
